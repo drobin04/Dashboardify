@@ -83,7 +83,7 @@
 			foreach($results as $row) {
 
 				If ($row["RecID"] == $WidgetID) {
-					echo "Widget " . $row["RecID"] . "selected for editing.";
+					//echo "Widget " . $row["RecID"] . "selected for editing.";
 					$WidgetTypeValue = $row["WidgetType"];
 					$WidgetURLValue = $row["WidgetURL"];
 					$WidgetDisplayText = $row["BookmarkDisplayText"];
@@ -111,9 +111,6 @@
 		}
 		?>
 			
-
-			
-
                     <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
                     <br />
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
@@ -171,6 +168,7 @@
         <div>
 
 			<script>
+				<!--If EditRecID is present, open the new/edit widget box-->
 				if (window.location.href.indexOf("EditRecID") != -1) {
 					document.getElementById('light').style.display='block';
 				}
@@ -180,8 +178,6 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
             
-
-
             <br />
 
 			<?php
@@ -273,23 +269,11 @@
 				}
 				echo "</table>";
 
-				
-				//iterate thru results
-					//if statement that builds html widgets based on widget type
-
-
-
 			?>
 
-
         </div>
-
-
-
     </form>
-    <script type="text/javascript">
-
-
+    <script type="text/javascript"> <!--Script for drawing widget boundary with mouse-->
 
 		var canvas = null,
 
@@ -298,10 +282,6 @@
 		    rect = {},
 
 		    drag = false;
-
-
-
-
 
 		function init() {
 
@@ -327,11 +307,7 @@
 
     		document.body.appendChild(canvas);
 
-
-
     		ctx = canvas.getContext('2d');
-
-
 
 		   	document.getElementById('txtpositionx').value = 0;
 
@@ -341,8 +317,6 @@
 
 		    document.getElementById('txtsizeY').value = 0;
 
-
-
 			canvas.addEventListener('mousedown', mouseDown, false);
 
 			canvas.addEventListener('mouseup', mouseUp, false);
@@ -350,8 +324,6 @@
 			canvas.addEventListener('mousemove', mouseMove, false);
 
 		}
-
-
 
 		function mouseDown(e) {
 
@@ -362,8 +334,6 @@
 		  drag = true;
 
 		}
-
-
 
 		function mouseUp(e) {
 
@@ -382,8 +352,6 @@
 			}
 
 		    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-
 
 		    destroy_canvas();
 
@@ -413,8 +381,6 @@
 
 		}
 
-
-
 		function draw() {
 
 		    ctx.setLineDash([6]);
@@ -422,8 +388,6 @@
 			ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
 
 		}
-
-
 
 		function destroy_canvas(){
 
@@ -440,11 +404,7 @@
 			ctx = null;
 
 			rect = {};
-
 		}
-
-
-
     </script>
 </body>
 </html>
