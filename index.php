@@ -87,7 +87,13 @@
 					$WidgetTypeValue = $row["WidgetType"];
 					$WidgetURLValue = $row["WidgetURL"];
 					$WidgetDisplayText = $row["BookmarkDisplayText"];
-					echo $WidgetTypeValue . ", " . $WidgetURLValue;
+					$WidgetPositionX = $row["PositionX"];
+					$WidgetPositionY = $row["PositionY"];
+					$WidgetSizeX = $row["SizeX"];
+					$WidgetSizeY = $row["SizeY"];
+					$WidgetCSSClass = $row["WidgetCSSClass"];
+					$WidgetNotes = $row["Notes"];
+					//echo $WidgetTypeValue . ", " . $WidgetURLValue;
 				}
 			}
 		} else {
@@ -101,6 +107,7 @@
 			$WidgetSizeY = "";
 			$WidgetCSSClass = "";
 			$WidgetNotes = "";
+			$WidgetID = "";
 		}
 		?>
 			
@@ -130,17 +137,19 @@
                         <button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button>
 
                         <br />
-                        <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX"></input>
+                        <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input>
                         <br />
-                        <label>PositionY: </label><input ID="txtpositiony" Text="0" name="PositionY"></input>
+                        <label>PositionY: </label><input ID="txtpositiony" Text="0" name="PositionY" value="<?php echo $WidgetPositionY; ?>"></input>
                         <br />
-                        <label>SizeX: </label><input ID="txtsizeX" Text="0" name="SizeX"></input>
+                        <label>SizeX: </label><input ID="txtsizeX" Text="0" name="SizeX" value="<?php echo $WidgetSizeX; ?>"></input>
                         <br />
-                        <label>SizeY: </label><input ID="txtsizeY" Text="0" name="SizeY"></input>
+                        <label>SizeY: </label><input ID="txtsizeY" Text="0" name="SizeY" value="<?php echo $WidgetSizeY; ?>"></input>
                         <br />
-                        <label>CSS Class: </label><input ID="txtCSSClass" name="CSSClass"></input>
+                        <label>CSS Class: </label><input ID="txtCSSClass" name="CSSClass" value="<?php echo $WidgetCSSClass; ?>"></input>
                         <br />
-                        <input ID="txtNotes"  TextMode="MultiLine" name="Notes"></input>
+                        <input ID="txtNotes"  TextMode="MultiLine" name="Notes" value="<?php echo $WidgetNotes; ?>"></input>
+                        <br />
+						Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input>
                         <br />
                         <button id="btnSubmitNewWidget">Submit</button>
 
