@@ -15,7 +15,8 @@
 	$stmt->execute();
 	echo "<script>window.close();</script>Complete. Window should close now. <br />Query Executed: " . $select;
 	
-	echo "<a href='http://douglasrobinson.me/Dashboardify/'>Return to Management</a>"
+	echo "<a href='http://douglasrobinson.me/Dashboardify/'>Return to Management</a>";
+	header("Location: index.php");
 ?>
 
 </body>
