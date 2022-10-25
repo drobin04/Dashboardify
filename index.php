@@ -39,7 +39,7 @@
                 right: 0;
                 border-radius: 25px;
             }
-            <?php
+            <?php //Grab custom CSS from Database - This part is important for background colors for example
             	// Create and connect to SQLite database file.
 				$db_file = new PDO('sqlite:Dashboardify.s3db');
 				// Prepare SELECT statement.
@@ -61,7 +61,8 @@
 <body>
     <form id="form1" method="POST" action="NewWidget.php" >
 
-<div id="light" class="white_content">
+	<!-- New Widget box-->
+		<div id="light" class="white_content">
                     <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
                     <br />
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
@@ -99,8 +100,9 @@
                         <button id="btnSubmitNewWidget">Submit</button>
 
                     </div>
-                </div>
+		</div>
 
+		<!--Edit CSS Box-->
         <div id="light2" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
                     <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='none';">Close</button>
                     <br />
@@ -110,15 +112,15 @@
                         <input ID="txtCSS"  TextMode="MultiLine" style="width:100%; height:80%;"></input>
                         
                     </div>
-                </div>
+		</div>
 
         <div>
 
-                    <script>
-            if (window.location.href.indexOf("EditRecID") != -1) {
-                document.getElementById('light').style.display='block';
-            }
-        </script>
+			<script>
+				if (window.location.href.indexOf("EditRecID") != -1) {
+					document.getElementById('light').style.display='block';
+				}
+			</script>
 
             <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
@@ -144,17 +146,20 @@
 				// Get the results.
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				
+				//Variable for site url
+				$siteurl = "http://localhost/";
+
 				foreach($results as $row) {
 					If ($row["WidgetType"] == "Bookmark") {
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>
 						
-		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='https://trebuchetsoftware.com/Dashboardify/?EditRecID=" . $row["RecID"] . "'>
-							<img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/edit.png'></img>
+		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 						</a>
 		
-		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='http://douglasrobinson.me/Dashboardify/DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-							<img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/cancel.png'></img>
+		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 						</a>
 					</div>";
 					};
@@ -164,12 +169,12 @@
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
 					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='https://trebuchetsoftware.com/Dashboardify/?EditRecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/edit.png'></img>
+					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 					                </a>
 					
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='http://douglasrobinson.me/Dashboardify/DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/cancel.png'></img>
+					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 					                </a>
 					
 					<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a>
@@ -182,12 +187,12 @@
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
 					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='https://trebuchetsoftware.com/Dashboardify/?EditRecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/edit.png'></img>
+					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 					                </a>
 					
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='http://douglasrobinson.me/Dashboardify/DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/cancel.png'></img>
+					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 					                </a>
 					
 					<p>". $row["Notes"] ."</p>
@@ -199,12 +204,12 @@
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
 					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='https://trebuchetsoftware.com/Dashboardify/?EditRecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/edit.png'></img>
+					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 					                </a>
 					
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='http://douglasrobinson.me/Dashboardify/DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='http://douglasrobinson.me/icons/cancel.png'></img>
+					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 					                </a>
 					
 					". $row["Notes"] ."
@@ -225,18 +230,6 @@
 			?>
 
 
-
-
-
-			<!--
-            <asp:Panel ID="Panel1" >
-
-                <asp:Literal ID="litBookMarks" ></asp:Literal>
-            </asp:Panel>
-
-            <asp:Panel ID="panIFrames" >
-                <asp:Literal ID="litIFrames" ></asp:Literal>
-            </asp:Panel>-->
         </div>
 
 
