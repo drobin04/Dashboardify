@@ -63,22 +63,67 @@
 
 	<!-- New Widget box-->
 		<div id="light" class="white_content">
+		<?php   
+
+			$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
+			$WidgetID = str_replace("EditRecID=","",$querystring); //Strip out extra junk
+
+			If ($WidgetID <> "") {
+				// Connect to SQLite database file.
+			$db_file = new PDO('sqlite:Dashboardify.s3db');
+			// Prepare SELECT statement.
+			$select = "SELECT * FROM Widgets";
+			$stmt = $db_file->prepare($select);
+			
+			// Execute statement.
+			$stmt->execute();
+			
+			// Get the results.
+			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			foreach($results as $row) {
+
+				If ($row["RecID"] == $WidgetID) {
+					echo "Widget " . $row["RecID"] . "selected for editing.";
+					$WidgetTypeValue = $row["WidgetType"];
+					$WidgetURLValue = $row["WidgetURL"];
+					$WidgetDisplayText = $row["BookmarkDisplayText"];
+					echo $WidgetTypeValue . ", " . $WidgetURLValue;
+				}
+			}
+		} else {
+			// Prepare unused variables
+			$WidgetTypeValue = "Bookmark";
+			$WidgetURLValue = "";
+			$WidgetDisplayText = "";
+			$WidgetPositionX = "";
+			$WidgetPositionY = "";
+			$WidgetSizeX = "";
+			$WidgetSizeY = "";
+			$WidgetCSSClass = "";
+			$WidgetNotes = "";
+		}
+		?>
+			
+
+			
+
                     <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
                     <br />
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
                         <header >New Widget<hr /></header>
                         
                         <label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType">
-                            <option value="Bookmark">Bookmark</option>
+							<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option>
+                            <!--<option value="Bookmark">Bookmark</option> Removed because duplicated by default value in line above-->
                             <option value="IFrame">IFrame</option>
                             <option value="Collapseable IFrame">Collapseable IFrame</option>
                             <option value="Notes">Notes</option>
                             <option value="HTMLEmbed">HTMLEmbed</option>
                         </select>
                         <br />
-                        <label>Widget URL: </label><input ID="txtWidgetURL" name="URL"></input>
+                        <label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input>
                         <br />
-                        <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText"></input>
+                        <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input>
                         <br />
                         <hr>
 
@@ -131,10 +176,7 @@
             <br />
 
 			<?php
-				//Todo - 
-				//Connect to s3db
-
-				// Create and connect to SQLite database file.
+				// Connect to SQLite database file.
 				$db_file = new PDO('sqlite:Dashboardify.s3db');
 				// Prepare SELECT statement.
 				$select = "SELECT * FROM Widgets";
@@ -150,6 +192,7 @@
 				$siteurl = "http://localhost/";
 
 				foreach($results as $row) {
+					
 					If ($row["WidgetType"] == "Bookmark") {
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>
