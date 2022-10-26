@@ -24,6 +24,7 @@
 	
 	// Execute statement.
 	$stmt->execute();
+	header("Location: index.php");
 ?>
 
 </body>
