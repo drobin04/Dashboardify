@@ -86,7 +86,8 @@
 
     //Save session ID into cookie
 
-   
+    header("Location: index.php");
+    
 ?>
 
 </body>
