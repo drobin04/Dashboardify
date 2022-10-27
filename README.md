@@ -9,14 +9,6 @@ If this is not done, you may get a blank screen when loading the app, as almost 
 
 - There is a line of code in index.php that controls the link structure for edit and delete buttons, called $siteurl , this needs to be updated with the base URL for the site. It is likely defaulted to localhost. 
 
-# To-Do
-
-- Add either a new column to track user ID, or use the existing Dashboard ID column (leaning towards new column, so dashboard ID column can be used for multiple dashboards)
-
-- Work on functionality to create and select between multiple dashboards
-
-- Update NewWidget code to save new widgets with current user's UserID so they get added properly and not filtered out...
-
 # File / DB Structure
 
 The UI consists of a Dashboard made up of multiple user-defined Widgets.
@@ -31,5 +23,13 @@ When a user logs in, the interface queries for the current user ID from the sess
 
 Later feature can be to add a way of tracking default dashboard for user (for now just load first one).
 
+# To-Do
+
+- Work on functionality to create and select between multiple dashboards
+
+- Consider loading a small image from a site's root /favicon.ico above each bookmark for a more natural look, maybe this could be an optional feature.
+
 # fix bug
 Start-login has a bug when run from localhost where it appends /dashboardify/ to the url which breaks on my desktop...
+
+For now, have added code when saving a widget to find the dashboard for the user as just looking up  their first dashboard... Later will need to update to properly receive from index.php which dashboard the user is on. 
