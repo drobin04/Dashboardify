@@ -9,7 +9,7 @@
     $userid = "";
 
     function GetUserIDFromEmail() {
-        $localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); //NECESSARY - Failed to load when referencing db_file from outside function block!!!
+        $localdb = $db_file = new PDO('sqlite:Dashboardify.s3db');
         //echo "1...";
         $select = "SELECT RecID FROM Users Where Email = '" . $email . "'";
         //echo "2...";
