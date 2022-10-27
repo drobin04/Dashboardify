@@ -5,6 +5,9 @@
 <?php
     $db_file = new PDO('sqlite:Dashboardify.s3db');
     $email = $_POST["email"];
+    $sessionid = "";
+    $userid = "";
+
     function GetUserIDFromEmail() {
         $localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); //NECESSARY - Failed to load when referencing db_file from outside function block!!!
         //echo "1...";
@@ -69,7 +72,6 @@
         echo "<br />About to try creating user id. <br />";
         CreateUserIDForEmail();
 
-        
         $userid = GetUserIDFromEmail();
 
     }
@@ -82,10 +84,7 @@
 
         CreateSessionForID($userid, $sessionid);
         echo "Creating cookie...";
-        setcookie("SessionID", $sessionid);
-
-    //Save session ID into cookie
-
+        setcookie("SessionID", $sessionid); //Save session ID into cookie
    
 ?>
 
