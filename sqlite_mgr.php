@@ -11,16 +11,8 @@
   |     - One click sql cmd buttons                                                    |
   |     - Auto type sql cmd from history box by clicking                               |
   |                                                                                    |
-  |     For a SQLite2 database file, just change the Data Source Name (DSN) 'sqlite:'  |
-  |     by 'sqlite2:' but there are a few differences with that DSN:                   |
-  |       - sqlite2 Driver requires a file extention when creating a new database with |
-  |         the PDO class constructor                                                  |
-  |    	  - does not suppot 'IF NOT EXISTS' syntax, so change code below accordingly.  |
-  |    	  - genearates larger files.                                                   |
-  |    	  - SQLite2 is dead meat. So, if you can, upgrade your db files to SQLite3     |
-  |                                                                                    |
   |     The original 'SQLIte DSManager' has been heavily modified by Jan Zumwalt of    |
-  |     net-wrench.com for integration into BugLite (buglight.sourcforge.net)          |
+  |     net-wrench.com for integration into BugLite (buglight.sourceforge.net)         |
   |                                                                                    |
   |   Copyright:  COPYRIGHT 2007-2008 by Jan Zumwalt, www.net-Wrence.com               |
   |               Licensed under the GNU public lincense.                              |
@@ -269,6 +261,12 @@
 
 <?php
 
+function debuglog( $object=null, $label=null ){
+  $message = json_encode($object, JSON_PRETTY_PRINT);
+  $label = "Debug" . ($label ? " ($label): " : ': ');
+  echo "<script>console.log(\"$label\", $message);</script>";
+}
+
 /*	Variable Initialisation */
 $exception = $tableSet = $histo = $form = $recordSet = $dbase = $count = NULL;
 
@@ -278,9 +276,14 @@ foreach(scandir($cfg_dbaseDir) as $file){
 	if (is_file($cfg_dbaseDir.$file)){
 		/*	test if $file is a sqlite3 file */
 		$pdo = new PDO('sqlite:'.$cfg_dbaseDir.$file);
-		if(is_object($pdo) && $pdo->query('SELECT type FROM sqlite_master')){
-			$list_databases[] = $file;
-		}
+    try {
+      if(is_object($pdo) && $pdo->query('SELECT type FROM sqlite_master')){
+        $list_databases[] = $file;
+      }
+    } catch (Exception $ex) {
+      debuglog($ex,"Exception thrown when scanning files.");
+    }
+		
 	}
 }
 
