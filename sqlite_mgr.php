@@ -2,23 +2,26 @@
 /*
   +------------------------------------------------------------------------------------+
   |                                                                                    |
-  |   File:       sqlite_mgr.php                        Version:    2013.09.03         |
+  |   File:       sqlite_mgr.php                        Version:    2022.10.27         |
   |                                                                                    |
   |   Purpose:                                                                         |
   |     Single file manager for sqlite databases.                                      |
   |     - Requires: PHP 5 with sqlite3 PDO driver.                                     |
-  |     - Works on SQLite 2 & 3 files.                                                 |
+  |     - Works on SQLite 3 files.                                                     |
   |     - One click sql cmd buttons                                                    |
   |     - Auto type sql cmd from history box by clicking                               |
   |                                                                                    |
   |     The original 'SQLIte DSManager' has been heavily modified by Jan Zumwalt of    |
   |     net-wrench.com for integration into BugLite (buglight.sourceforge.net)         |
+  |     Some tweaks added by Doug Robinson when implementing in this app. Removed refs |
+  |     to SQLite 2, added try catch to prevent failures when evaluating files as db's |
   |                                                                                    |
   |   Copyright:  COPYRIGHT 2007-2008 by Jan Zumwalt, www.net-Wrence.com               |
   |               Licensed under the GNU public lincense.                              |
   |   ---------------------------------------------------------------------------------|
   |   Latest source: https://sourceforge.net/projects/sqlitephpmgr/ or Net-Wrench.com  |
   |                                                                                    |
+  |   Changes:    2022.10.27  Doug Robinson - added TryCatch fix when scanning for db's|
   |   Changes:    2013.09.03  jz - added 'About' information & hide button             |
   |   Changes:    2013.10.01  jz - added sql template buttons                          |
   |                           jz - changed calls to $_SERVER['PHP_SELF']               |
@@ -36,9 +39,9 @@
     $now           = date("Y-m-d H:i:s");       // date & time w/leading zeros, dec 1 = 2010-12-01 00:00:00  
     $today         = date("Y-m-d");             // date w/leading zeros, dec 1 = 2010-12-01   
     $year          = date("Y");                 // date w/leading zeros  
-    $page_title    = "SqLite 2&thinsp;/&thinsp;3 Database Manager &nbsp;-&nbsp;";
+    $page_title    = "SqLite 3 Database Manager &nbsp;-&nbsp;";
     $page_name     = "sqlitemgr";
-    $version       = "2013.09.01";
+    $version       = "2022.10.27";
     $require_login = "true";                    // true/false
     $menu          = "<center>[ <a href='/'>Home</a> | <a href='".$_SERVER['PHP_SELF']."?action=about'>About</a> ]</center>";
     
@@ -74,7 +77,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
   <head>
-  	<title>SqLite 2/3 Manager</title>
+  	<title>SqLite 3 Manager</title>
   	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   	<meta name="author" content="ripat" />
   	<meta name="generator" content="Linux and vim" />
@@ -432,7 +435,7 @@ foreach ($list_databases as $db){
   |   Purpose:                                                                         |
   |     Single file manager for sqlite databases.                                      |
   |     - Requires: PHP 5 with sqlite3 PDO driver.                                     |
-  |     - Works on SQLite 2 & 3 files.                                                 |
+  |     - Works on SQLite 3 files.                                                     |
   |     - one click sql cmd buttons                                                    |
   |     - auto type sql cmd from history box by clicking                               |
   |                                                                                    |
