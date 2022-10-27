@@ -196,7 +196,7 @@ body {
    
 	<div class="screen">
 		<div class="screen__content">
-			<form class="login" method="POST" action="/Dashboardify/verify-login.php">
+			<form class="login" method="POST" action="/verify-login.php">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" placeholder="Email" name="email">

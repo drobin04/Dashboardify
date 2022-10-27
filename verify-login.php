@@ -86,6 +86,8 @@
         echo "Creating cookie...";
         setcookie("SessionID", $sessionid); //Save session ID into cookie
    
+        header("Location: index.php");
+
 ?>
 
 </body>

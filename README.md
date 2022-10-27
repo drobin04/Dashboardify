@@ -34,3 +34,5 @@ When a user logs in, the interface needs to query for the current user ID from t
 
 Later feature can be to add a way of tracking default dashboard for user (for now just load first one).
 
+# fix bug
+Start-login has a bug when run from localhost where it appends /dashboardify/ to the url which breaks on my desktop...
