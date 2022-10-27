@@ -15,3 +15,24 @@ If this is not done, you may get a blank screen when loading the app, as almost 
 - Add either a new column to track user ID, or use the existing Dashboard ID column (leaning towards new column, so dashboard ID column can be used for multiple dashboards)
 
 - Work on functionality to create and select between multiple dashboards
+
+
+
+# File / DB Structure
+
+The UI consists of a Dashboard made up of multiple user-defined Widgets.
+
+Dashboards are stored in the Dashboardify sqlite database table 'Dashboards'.
+
+Widgets are stored in the table 'Widgets', and have a foreign key linking dashboards, 'DashboardRecID', which mathes Dashboards.RecID .
+
+Dashboards table has a foreign key linking Users table, User ID.
+
+When a user logs in, the interface needs to query for the current user ID from the session ID, then search for Dashboards for the current user ID, and then select one. 
+
++ If there are no dashboards for the current user, the interface needs to create one, and then grab the new guid for it and load that dashboard.
+
+Later feature can be to add a way of tracking default dashboard for user (for now just load first one).
+
+# fix bug
+Start-login has a bug when run from localhost where it appends /dashboardify/ to the url which breaks on my desktop...

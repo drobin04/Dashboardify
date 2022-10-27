@@ -57,6 +57,12 @@
 				}
             ?>
     </style>
+<?php
+	//If not logged in, redirect to login page
+	if (!isset($_COOKIE["SessionID"])) {
+		header("Location: start-login.php");
+	}  
+?>
 </head>
 <body>
     <form id="form1" method="POST" action="NewWidget.php" >
@@ -69,46 +75,46 @@
 			$WidgetID = str_replace("EditRecID=","",$querystring); //Strip out extra junk
 
 			If ($WidgetID <> "") {
-				// Connect to SQLite database file.
-			$db_file = new PDO('sqlite:Dashboardify.s3db');
-			// Prepare SELECT statement.
-			$select = "SELECT * FROM Widgets";
-			$stmt = $db_file->prepare($select);
-			
-			// Execute statement.
-			$stmt->execute();
-			
-			// Get the results.
-			$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			foreach($results as $row) {
+					// Connect to SQLite database file.
+				$db_file = new PDO('sqlite:Dashboardify.s3db');
+				// Prepare SELECT statement.
+				$select = "SELECT * FROM Widgets";
+				$stmt = $db_file->prepare($select);
+				
+				// Execute statement.
+				$stmt->execute();
+				
+				// Get the results.
+				$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+				foreach($results as $row) {
 
-				If ($row["RecID"] == $WidgetID) {
-					//echo "Widget " . $row["RecID"] . "selected for editing.";
-					$WidgetTypeValue = $row["WidgetType"];
-					$WidgetURLValue = $row["WidgetURL"];
-					$WidgetDisplayText = $row["BookmarkDisplayText"];
-					$WidgetPositionX = $row["PositionX"];
-					$WidgetPositionY = $row["PositionY"];
-					$WidgetSizeX = $row["SizeX"];
-					$WidgetSizeY = $row["SizeY"];
-					$WidgetCSSClass = $row["WidgetCSSClass"];
-					$WidgetNotes = $row["Notes"];
-					//echo $WidgetTypeValue . ", " . $WidgetURLValue;
+					If ($row["RecID"] == $WidgetID) {
+						//echo "Widget " . $row["RecID"] . "selected for editing.";
+						$WidgetTypeValue = $row["WidgetType"];
+						$WidgetURLValue = $row["WidgetURL"];
+						$WidgetDisplayText = $row["BookmarkDisplayText"];
+						$WidgetPositionX = $row["PositionX"];
+						$WidgetPositionY = $row["PositionY"];
+						$WidgetSizeX = $row["SizeX"];
+						$WidgetSizeY = $row["SizeY"];
+						$WidgetCSSClass = $row["WidgetCSSClass"];
+						$WidgetNotes = $row["Notes"];
+						//echo $WidgetTypeValue . ", " . $WidgetURLValue;
+						}
 				}
+			} else {
+				// Prepare unused variables
+				$WidgetTypeValue = "Bookmark";
+				$WidgetURLValue = "";
+				$WidgetDisplayText = "";
+				$WidgetPositionX = "";
+				$WidgetPositionY = "";
+				$WidgetSizeX = "";
+				$WidgetSizeY = "";
+				$WidgetCSSClass = "";
+				$WidgetNotes = "";
+				$WidgetID = "";
 			}
-		} else {
-			// Prepare unused variables
-			$WidgetTypeValue = "Bookmark";
-			$WidgetURLValue = "";
-			$WidgetDisplayText = "";
-			$WidgetPositionX = "";
-			$WidgetPositionY = "";
-			$WidgetSizeX = "";
-			$WidgetSizeY = "";
-			$WidgetCSSClass = "";
-			$WidgetNotes = "";
-			$WidgetID = "";
-		}
 		?>
 			
                     <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
@@ -173,16 +179,68 @@
 					document.getElementById('light').style.display='block';
 				}
 			</script>
-
+			<!--Buttons at top left-->
             <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
-            
             <br />
 
-			<?php
+			<?php 
+				function selectquery($sql) {
+					$localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); 
+					$stmt1 = $localdb->prepare($sql);
+					$stmt1->execute();
+					$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+					return $results;
+				}
+				function execquery($sql) {
+					$localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); 
+					$stmt1 = $localdb->prepare($sql);
+					$stmt1->execute();
+					
+				}
+				function GUID()
+				{
+					if (function_exists('com_create_guid') === true)
+					{
+						return trim(com_create_guid(), '{}');
+					}
+				
+					return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
+				}
+
+
+
+				//Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				// Connect to SQLite database file.
 				$db_file = new PDO('sqlite:Dashboardify.s3db');
+				
+				//Get session ID.
+				$sessionid = $_COOKIE["SessionID"];
+				//Get User for Session ID
+				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"];
+				//echo "USER ID FOUND - User - " . $userid;
+				// Query for dashboards for user. 
+				$dashboards = selectquery("Select RecID From Dashboards Where UserID = '" . $userid . "'");
+				$dashboardid = "";
+				Try {
+
+					if (count($dashboards) >= 1) {
+						echo "DASHBOARDS FOUND: " . (count($dashboards));
+					} else { // If dash not found, create one
+						//echo "NO DASHBOARDS FOUND.";
+						$dashboardid = GUID(); 
+						//echo "INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')";
+						execquery("INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')");
+					} 
+				} catch (exception $ex) {
+						echo $ex;
+				}
+				//
+
+
+
+
 				// Prepare SELECT statement.
 				$select = "SELECT * FROM Widgets";
 				$stmt = $db_file->prepare($select);
