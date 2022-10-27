@@ -16,6 +16,7 @@ If this is not done, you may get a blank screen when loading the app, as almost 
 
 - Work on functionality to create and select between multiple dashboards
 
+- Update login page to properly create user accounts if they don't exist - seems to fail when i test
 
 
 # File / DB Structure
@@ -36,3 +37,4 @@ Later feature can be to add a way of tracking default dashboard for user (for no
 
 # fix bug
 Start-login has a bug when run from localhost where it appends /dashboardify/ to the url which breaks on my desktop...
+

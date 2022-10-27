@@ -219,7 +219,7 @@
 				$sessionid = $_COOKIE["SessionID"];
 				//Get User for Session ID
 				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"];
-				//echo "USER ID FOUND - User - " . $userid;
+				echo "USER ID FOUND - User - " . $userid;
 				// Query for dashboards for user. 
 				$dashboards = selectquery("Select RecID From Dashboards Where UserID = '" . $userid . "'");
 				$dashboardid = "";
@@ -228,9 +228,9 @@
 					if (count($dashboards) >= 1) {
 						echo "DASHBOARDS FOUND: " . (count($dashboards));
 					} else { // If dash not found, create one
-						//echo "NO DASHBOARDS FOUND.";
+						echo "NO DASHBOARDS FOUND.";
 						$dashboardid = GUID(); 
-						//echo "INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')";
+						echo "INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')";
 						execquery("INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')");
 					} 
 				} catch (exception $ex) {
