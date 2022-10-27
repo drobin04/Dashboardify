@@ -208,8 +208,11 @@
 				
 					return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 				}
-
-
+				function debuglog( $object=null, $label=null ){
+					$message = json_encode($object, JSON_PRETTY_PRINT);
+					$label = "Debug" . ($label ? " ($label): " : ': ');
+					echo "<script>console.log(\"$label\", $message);</script>";
+				}
 
 				//Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				// Connect to SQLite database file.
@@ -219,36 +222,33 @@
 				$sessionid = $_COOKIE["SessionID"];
 				//Get User for Session ID
 				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"];
-				echo "USER ID FOUND - User - " . $userid;
+				debuglog($userid, "User ID found for user");
 				// Query for dashboards for user. 
 				$dashboards = selectquery("Select RecID From Dashboards Where UserID = '" . $userid . "'");
 				$dashboardid = "";
 				Try {
 
 					if (count($dashboards) >= 1) {
-						echo "DASHBOARDS FOUND: " . (count($dashboards));
+						//echo "DASHBOARDS FOUND: " . (count($dashboards));
+						debuglog($dashboards, "Dashboards Array");
+						$dashboardid = $dashboards[0]["RecID"];
+						debuglog($dashboardid, "Selected Dashboard ID.");
 					} else { // If dash not found, create one
-						echo "NO DASHBOARDS FOUND.";
+						//echo "NO DASHBOARDS FOUND.";
 						$dashboardid = GUID(); 
-						echo "INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')";
-						execquery("INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')");
+						$sql1 = "INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')";
+						debuglog($sql1,"SQL Dashboard Insert Query");
+						execquery($sql1);
 					} 
 				} catch (exception $ex) {
 						echo $ex;
+						debuglog($ex,"Exception found during dashboard checks");
 				}
-				//
-
-
-
-
-				// Prepare SELECT statement.
-				$select = "SELECT * FROM Widgets";
+				
+				// Load Widgets For Selected Dashboard
+				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'";
 				$stmt = $db_file->prepare($select);
-				
-				// Execute statement.
 				$stmt->execute();
-				
-				// Get the results.
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				
 				//Variable for site url
@@ -464,5 +464,7 @@
 			rect = {};
 		}
     </script>
+	<br />
+	<a href="/logout.php">Log Out</a>
 </body>
 </html>

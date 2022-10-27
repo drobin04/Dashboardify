@@ -8,20 +8,23 @@
     $sessionid = "";
     $userid = "";
 
-    function GetUserIDFromEmail() {
+    function debuglog( $object=null, $label=null ){
+        $message = json_encode($object, JSON_PRETTY_PRINT);
+        $label = "Debug" . ($label ? " ($label): " : ': ');
+        echo "<script>console.log(\"$label\", $message);</script>";
+    }
+    function GetUserIDFromEmail($eml) {
         $localdb = $db_file = new PDO('sqlite:Dashboardify.s3db');
-        //echo "1...";
-        $select = "SELECT RecID FROM Users Where Email = '" . $email . "'";
-        //echo "2...";
+        $select = "SELECT RecID FROM Users Where Email = '" . $eml . "'";
+        debuglog($select,"SQL Query Searching For User By Email");
         $stmt = $localdb->prepare($select);
-        //echo "3...";
         // Execute statement.
         $stmt->execute();
-        //echo "4...";
         // Get the results.
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+        debuglog($results,"Results from SQL Query search");
         $user = $results[0]["RecID"];
+        debuglog($user,"User info selected");
         return $user;
         //return "hello";
     }
@@ -34,8 +37,8 @@
     
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
-    function CreateUserIDForEmail() {
-        $insert = "Insert Into Users (Email) VALUES ('". $email . "')";
+    function CreateUserIDForEmail($eml) {
+        $insert = "Insert Into Users (Email) VALUES ('". $eml . "')";
         $localdb = new PDO('sqlite:Dashboardify.s3db'); //NECESSARY - Failed to load when referencing db_file from 
         $stmt = $localdb->prepare($insert);
         
@@ -58,34 +61,30 @@
     }
      
     echo $_POST["email"] . ". <br />Trying to open sqlite db.<br />";
+    debuglog($_POST, "Incoming POST arguments");
+    debuglog($_POST["email"], "Email address to be used for search");
 
-    $userid = GetUserIDFromEmail();
 
-    echo "User Found?: " . $userid;
+    $userid = GetUserIDFromEmail($email);
 
     If (is_scalar($userid)) {
         // do nothing, proceed to next section, where we'll set up their session id
-        echo "User ID Found in DB! - " . $userid;
+        debuglog("User ID is Scalar, creating session ID");
     }
     else {
         // Create User record, re-run statement
-        echo "<br />About to try creating user id. <br />";
-        CreateUserIDForEmail();
-
-        $userid = GetUserIDFromEmail();
+        debuglog("User ID Not Found, Creating one.");
+        CreateUserIDForEmail($email);
+        $userid = GetUserIDFromEmail($email);
 
     }
 
 
     //Create new session for user
-        //If is_scalar(...The result of the sql query to get user ID from table...)
         $sessionid = GUID();
-        echo "Session ID: " . $sessionid;
-
         CreateSessionForID($userid, $sessionid);
-        echo "Creating cookie...";
+        debuglog($sessionid,"Session ID Created");
         setcookie("SessionID", $sessionid); //Save session ID into cookie
-   
         header("Location: index.php");
 
 ?>
