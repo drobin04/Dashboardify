@@ -26,6 +26,9 @@ Later feature can be to add a way of tracking default dashboard for user (for no
 # To-Do
 
 - Work on functionality to create and select between multiple dashboards
+-- Dropdownlist next to existing buttons at top left, with list of dashboards user has (probably just by recid for now).
+-- Probably javascript that handles the event when dropdownlist is changed, to load the selected dashboard. 
+-- 
 
 - Consider loading a small image from a site's root /favicon.ico above each bookmark for a more natural look, maybe this could be an optional feature.
 
