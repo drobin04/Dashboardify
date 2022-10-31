@@ -9,6 +9,11 @@ If this is not done, you may get a blank screen when loading the app, as almost 
 
 - There is a line of code in index.php that controls the link structure for edit and delete buttons, called $siteurl , this needs to be updated with the base URL for the site. It is likely defaulted to localhost. 
 
+- For SQL Server connectivity, the following extensions need to be enabled (uncommented) in php.ini, and the 2 included dll files in the /ext folder are needed, which contain microsoft's sql server driver for PHP.
+    extension=php_sqlsrv_56_ts.dll
+    extension=php_pdo_sqlsrv_56_ts.dll  
+
+
 # File / DB Structure
 
 The UI consists of a Dashboard made up of multiple user-defined Widgets.
