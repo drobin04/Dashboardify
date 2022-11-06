@@ -1,3 +1,8 @@
+if (window.location.href.indexOf("EditRecID") != -1) {
+	document.getElementById('light').style.display='block';
+}		
+		
+		
 		var canvas = null,
 
 		    ctx = null,

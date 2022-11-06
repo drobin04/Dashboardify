@@ -1,5 +1,5 @@
 <html>
-<head></head>
+<head>    <?php include("logoutredirect.php");?> </head>
 <body>
 
 <?php
