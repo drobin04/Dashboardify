@@ -267,6 +267,9 @@
 				$siteurl = "http://localhost/";
 
 				foreach($results as $row) {
+
+					//Re-useable texts
+					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 					
 					If ($row["WidgetType"] == "SQLServerScalarQuery") {
 						$sqlservaddress = $row["sqlserveraddress"];
@@ -280,7 +283,7 @@
 						try { // reference for sql query from PHP - https://social.technet.microsoft.com/wiki/contents/articles/1258.accessing-sql-server-databases-from-php.aspx
 							$connectionInfo = array( "Database"=>$sqldbname, "UID"=>$sqlserveruser, "PWD"=>$sqlserverpass);
 							// Turn this off after debugging ->
-							debuglog($connectionInfo,"debug - connection info");
+							//debuglog($connectionInfo,"debug - connection info");
 							
 							$conn = sqlsrv_connect( $sqlservaddress, $connectionInfo);
 					   
@@ -311,11 +314,11 @@
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] . ": " . $result ."</a>
 						
-		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
 							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 						</a>
 		
-		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+						" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
 							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 						</a>
 					</div>";
@@ -325,11 +328,11 @@
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>
 						
-		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
 							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 						</a>
 		
-		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+						" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
 							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 						</a>
 					</div>";
@@ -340,11 +343,11 @@
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
 					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
 					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 					                </a>
 					
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
 					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 					                </a>
 					
@@ -358,11 +361,11 @@
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
 					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
 					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 					                </a>
 					
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
 					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 					                </a>
 					
@@ -375,160 +378,25 @@
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
 					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
 					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
 					                </a>
 					
-					<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
 					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
 					                </a>
 					
 					". $row["Notes"] ."
-					
 					</div>
 					";
 					}
 					
 				}
 				echo "</table>";
-
 			?>
-
         </div>
     </form>
-    <script type="text/javascript"> <!--Script for drawing widget boundary with mouse-->
-
-		var canvas = null,
-
-		    ctx = null,
-
-		    rect = {},
-
-		    drag = false;
-
-		function init() {
-
-			if(canvas || ctx) return;
-
-    		canvas = document.createElement('canvas');
-
-    		canvas.width = document.body.clientWidth;
-
-    		canvas.height = document.body.clientHeight;
-
-    		canvas.style.position = 'absolute';
-
-    		canvas.style.top = '0px';
-
-    		canvas.style.left = '0px';
-
-    		canvas.style.cursor = 'crosshair';
-
-    		// canvas.style.background = "#f2f2f2";
-
-    		canvas.style.zIndex = 9999;
-
-    		document.body.appendChild(canvas);
-
-    		ctx = canvas.getContext('2d');
-
-		   	document.getElementById('txtpositionx').value = 0;
-
-		    document.getElementById('txtpositiony').value = 0;
-
-		    document.getElementById('txtsizeX').value = 0;
-
-		    document.getElementById('txtsizeY').value = 0;
-
-			canvas.addEventListener('mousedown', mouseDown, false);
-
-			canvas.addEventListener('mouseup', mouseUp, false);
-
-			canvas.addEventListener('mousemove', mouseMove, false);
-
-		}
-
-		function mouseDown(e) {
-
-		  rect.startX = e.pageX - this.offsetLeft;
-
-		  rect.startY = e.pageY - this.offsetTop;
-
-		  drag = true;
-
-		}
-
-		function mouseUp(e) {
-
-			drag = false;
-
-			rect.endX = e.pageX - this.offsetLeft;
-
-			rect.endY = e.pageY - this.offsetTop;
-
-			if(rect.endX < rect.startX || rect.endY < rect.startY) {
-
-			   	document.getElementById('txtpositionx').value = rect.endX;
-
-			    document.getElementById('txtpositiony').value = rect.endY;
-
-			}
-
-		    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-		    destroy_canvas();
-
-		}
-
-		function mouseMove(e) {
-
-		  if (drag) {
-
-		    rect.w = (e.pageX - this.offsetLeft) - rect.startX;
-
-		    rect.h = (e.pageY - this.offsetTop) - rect.startY ;
-
-		    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-		    draw();
-
-		   	document.getElementById('txtpositionx').value = rect.startX;
-
-		    document.getElementById('txtpositiony').value = rect.startY;
-
-		    document.getElementById('txtsizeX').value = Math.abs(rect.w);
-
-		    document.getElementById('txtsizeY').value = Math.abs(rect.h);
-
-		  }
-
-		}
-
-		function draw() {
-
-		    ctx.setLineDash([6]);
-
-			ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
-
-		}
-
-		function destroy_canvas(){
-
-			canvas.removeEventListener('mousedown', mouseDown);
-
-			canvas.removeEventListener('mouseup', mouseUp);
-
-			canvas.removeEventListener('mousemove', mouseMove);
-
-			document.body.removeChild(canvas);
-
-			canvas = null;
-
-			ctx = null;
-
-			rect = {};
-		}
-    </script>
+    <script type="text/javascript" src="index.js"></script>
 	<br />
 	<a href="logout.php">Log Out</a>
 </body>
