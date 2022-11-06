@@ -1,0 +1,1 @@
+<?php $siteurl = "http://localhost/"; ?>

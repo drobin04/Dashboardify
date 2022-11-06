@@ -144,7 +144,7 @@
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 				
 				//Variable for site url
-				$siteurl = "http://localhost/";
+				include("siteurlconfig.php");
 
 				foreach($results as $row) {
 
