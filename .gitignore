@@ -1,3 +1,4 @@
 *.s3db
 *.s3db
 Dashboardify.s3db
+sqlite3dsmHistory

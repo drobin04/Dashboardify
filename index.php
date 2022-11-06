@@ -155,12 +155,16 @@
                         <br />
 						Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input>
 						<br />
-						SQL Server Address / DBName <input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php ?>"></input>
+						SQL Server Address<input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php ?>"></input>
+                        <br />
+						SQL DBName<input ID="SQLDBName" name="SQLDBName" value="<?php ?>"></input>
                         <br />
 						<br />
-						SQLServer Username: (Empty for windows auth) <input ID="sqluser" name="sqluser" value="<?php  ?>"></input>
+						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php  ?>"></input>
 						<br />
 						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php  ?>"></input>
+						<br />
+						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php  ?>"></input>
 						<br />
                         <button id="btnSubmitNewWidget">Submit</button>
 
@@ -265,11 +269,45 @@
 				foreach($results as $row) {
 					
 					If ($row["WidgetType"] == "SQLServerScalarQuery") {
-						$sqlservaddress = "";
-						$sqlserveruser = "";
-						$sqlquery = "";
+						$sqlservaddress = $row["sqlserveraddress"];
+						$sqldbname = $row["sqldbname"];
+						$sqlserveruser = $row["sqluser"];
+						$sqlserverpass = $row["sqlpass"];
+						$sqlquery = $row["sqlquery"];
+						debuglog($sqlquery,"sql query about to be executed");
 						$result = "";
 						
+						try { // reference for sql query from PHP - https://social.technet.microsoft.com/wiki/contents/articles/1258.accessing-sql-server-databases-from-php.aspx
+							$connectionInfo = array( "Database"=>$sqldbname, "UID"=>$sqlserveruser, "PWD"=>$sqlserverpass);
+							// Turn this off after debugging ->
+							debuglog($connectionInfo,"debug - connection info");
+							
+							$conn = sqlsrv_connect( $sqlservaddress, $connectionInfo);
+					   
+							if( $conn ) {
+								 debuglog("Connection established.");
+								// $getProducts = sqlsrv_query($conn, $tsql, $params, $options);
+								$tempresult = sqlsrv_query($conn,$sqlquery);
+								if ( sqlsrv_fetch( $tempresult ) )
+
+									{
+										$result = sqlsrv_get_field( $tempresult, 0);
+										debuglog($result, "Results of SQL query");
+
+									}
+								
+								
+							}else{
+								debuglog("Connection could not be established.");
+								 debuglog(sqlsrv_errors());
+							}
+					   
+					   
+					   }
+					   catch (Exception $ex) {
+							debuglog($ex, "error during SQL server connection");
+					   }
+
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] . ": " . $result ."</a>
 						

@@ -42,9 +42,14 @@ Start-login has a bug when run from localhost where it appends /dashboardify/ to
 
 For now, have added code when saving a widget to find the dashboard for the user as just looking up  their first dashboard... Later will need to update to properly receive from index.php which dashboard the user is on. 
 
-# Ideas
+# Future Ideas
 
 - Ability to query scalar values as widget results, as well as show a result list. 
 - For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
 - API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
 - personal idea - api for capturing results from an app that logs cpu, memory, gpu data while in a game. 
+
+
+# SQL Server Connectivity
+
+Note - When adding SQL Server connections, server names may need to be entered in serveraddress\instance format, if an instance other than the default is needed. 

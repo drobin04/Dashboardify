@@ -38,10 +38,30 @@
 		echo "DELETED WIDGET WITH ID '" . $_POST["ID"] . "', Inserting new copy now...";
 		header("Location: index.php");
 	}
-	$dashboardid = GetUsersDashboard();
 
-	// Prepare INSERT statement.
-	$select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID) VALUES ('" . $_POST["WidgetType"] . "','" . $_POST["DisplayText"] . "','" . $_POST["PositionX"] . "','" . $_POST["PositionY"] . "','" . $_POST["SizeX"] . "','" . $_POST["SizeY"] . "','" . $_POST["URL"] . "','" . $_POST["CSSClass"] . "', '" . $_POST["Notes"] . "', '" . $dashboardid . "')";
+
+
+
+    //Insert new Widget
+	$dashboardid = GetUsersDashboard(); //Identify which dashboard the widget needs to be added to.
+
+    //Prepare Variables
+    $sep = "','"; // Seperator
+    $sqlserveraddress = $_POST["SQLServerAddressName"];
+    $sqldbname = $_POST["SQLDBName"];
+    $sqlusername = $_POST["sqluser"];
+    $sqlpass = $_POST["sqlpass"];
+    $sqlquery = $_POST["sqlquery"];
+    
+    //$_POST[""]
+	
+    // Prepare INSERT statement.
+	$select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
+    ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery) 
+    VALUES ('" . $_POST["WidgetType"] . $sep . $_POST["DisplayText"] . $sep . $_POST["PositionX"] . $sep . $_POST["PositionY"] . $sep . 
+    $_POST["SizeX"] . $sep . $_POST["SizeY"] . $sep . $_POST["URL"] . $sep . $_POST["CSSClass"] . $sep . $_POST["Notes"] . $sep . $dashboardid . $sep .
+    $sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
+    "')";
 	$stmt = $db_file->prepare($select);
 	
 	// Execute statement.
