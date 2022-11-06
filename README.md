@@ -41,3 +41,10 @@ Later feature can be to add a way of tracking default dashboard for user (for no
 Start-login has a bug when run from localhost where it appends /dashboardify/ to the url which breaks on my desktop...
 
 For now, have added code when saving a widget to find the dashboard for the user as just looking up  their first dashboard... Later will need to update to properly receive from index.php which dashboard the user is on. 
+
+# Ideas
+
+- Ability to query scalar values as widget results, as well as show a result list. 
+- For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
+- API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
+- personal idea - api for capturing results from an app that logs cpu, memory, gpu data while in a game. 
