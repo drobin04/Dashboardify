@@ -270,7 +270,7 @@
 
 					//Re-useable texts
 					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
-					
+					$imgstylecss = "<img style='height:24px; width:24px;' src='";
 					If ($row["WidgetType"] == "SQLServerScalarQuery") {
 						$sqlservaddress = $row["sqlserveraddress"];
 						$sqldbname = $row["sqldbname"];
@@ -315,11 +315,11 @@
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] . ": " . $result ."</a>
 						
 						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
+							" . $imgstylecss . $siteurl . "icons/edit.png'></img>
 						</a>
 		
 						" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
+							" . $imgstylecss . $siteurl . "icons/cancel.png'></img>
 						</a>
 					</div>";
 					}
@@ -327,68 +327,45 @@
 					If ($row["WidgetType"] == "Bookmark") {
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>
-						
 						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
-						</a>
-		
+							" . $imgstylecss . $siteurl . "icons/edit.png'></img>
+						</a>		
 						" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
-						</a>
-					</div>";
+							" . $imgstylecss . $siteurl . "icons/cancel.png'></img>
+						</a></div>";
 					};
-
 					
 					If ($row["WidgetType"] == "IFrame") {
-						echo "
-					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
-					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
-					                </a>
-					
+						echo "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
+						left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
+						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					                    " . $imgstylecss . $siteurl . "icons/edit.png'></img></a>
 									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
+					                    " . $imgstylecss . $siteurl . "icons/cancel.png'></img>
 					                </a>
-					
-					<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a>
-					
-					</div>
-					";
+						<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";
 					}
 					
 					If ($row["WidgetType"] == "Notes") {
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
-					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
-					                </a>
-					
+						left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
+						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					                    " . $imgstylecss . $siteurl . "icons/edit.png'></img></a>
 									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
-					                </a>
-					
-					<p>". $row["Notes"] ."</p>
-					
-					</div>
-					";
+					                    " . $imgstylecss . $siteurl . "icons/cancel.png'></img>
+						</a><p>". $row["Notes"] ."</p></div>";
 					}
+
 					If ($row["WidgetType"] == "HTMLEmbed") {
 						echo "
 					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;
-					left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
-					" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
-					                </a>
-					
-									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    <img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
-					                </a>
-					
-					". $row["Notes"] ."
-					</div>
-					";
+						left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>
+						" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+					                    " . $imgstylecss . $siteurl . "icons/edit.png'></img></a>
+										" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+					                    " . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>
+						". $row["Notes"] ."</div>";
 					}
 					
 				}
