@@ -129,6 +129,7 @@
                             <option value="Collapseable IFrame">Collapseable IFrame</option>
                             <option value="Notes">Notes</option>
                             <option value="HTMLEmbed">HTMLEmbed</option>
+							<option value="SQLServerScalarQuery">SQLServerScalarQuery</option>
                         </select>
                         <br />
                         <label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input>
@@ -150,10 +151,17 @@
                         <br />
                         <label>CSS Class: </label><input ID="txtCSSClass" name="CSSClass" value="<?php echo $WidgetCSSClass; ?>"></input>
                         <br />
-                        <input ID="txtNotes"  TextMode="MultiLine" name="Notes" value="<?php echo $WidgetNotes; ?>"></input>
+                        Notes/HTML Embed: <input ID="txtNotes"  TextMode="MultiLine" name="Notes" value="<?php echo $WidgetNotes; ?>"></input>
                         <br />
 						Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input>
+						<br />
+						SQL Server Address / DBName <input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php ?>"></input>
                         <br />
+						<br />
+						SQLServer Username: (Empty for windows auth) <input ID="sqluser" name="sqluser" value="<?php  ?>"></input>
+						<br />
+						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php  ?>"></input>
+						<br />
                         <button id="btnSubmitNewWidget">Submit</button>
 
                     </div>
@@ -256,6 +264,25 @@
 
 				foreach($results as $row) {
 					
+					If ($row["WidgetType"] == "SQLServerScalarQuery") {
+						$sqlservaddress = "";
+						$sqlserveruser = "";
+						$sqlquery = "";
+						$result = "";
+						
+						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
+						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] . ": " . $result ."</a>
+						
+		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
+							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/edit.png'></img>
+						</a>
+		
+		<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
+							<img style='height:24px; width:24px;' src='" . $siteurl . "icons/cancel.png'></img>
+						</a>
+					</div>";
+					}
+
 					If ($row["WidgetType"] == "Bookmark") {
 						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
 						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>

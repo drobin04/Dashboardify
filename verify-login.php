@@ -66,6 +66,7 @@
 
 
     $userid = GetUserIDFromEmail($email);
+    debuglog("Results of GetUserIDFromEmail: " . $userid);
 
     If (is_scalar($userid)) {
         // do nothing, proceed to next section, where we'll set up their session id
