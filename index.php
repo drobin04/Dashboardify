@@ -1,11 +1,6 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
-    <style>  
-            <?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
-    </style>
-    <?php include("logoutredirect.php");?> 
-</head>
-<body>
-    <form id="form1" method="POST" action="NewWidget.php" >
+    <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include("logoutredirect.php");?></head>
+<body><form id="form1" method="POST" action="NewWidget.php" >
 	<!-- New Widget box-->
 		<div id="light" class="white_content">
 		<?php   
@@ -140,8 +135,4 @@
 					If ($row["WidgetType"] == "Notes") {echo $combined . "<p>". $row["Notes"] ."</p></div>";}
 					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}} echo "</table>";
 			?>
-        </div>
-    </form>
-    <script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a>
-</body>
-</html>
+        </div></form><script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a></body></html>
