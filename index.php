@@ -108,41 +108,10 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button><br />
 
-			<?php 
-				function selectquery($sql) {
-					$localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); 
-					$stmt1 = $localdb->prepare($sql);
-					$stmt1->execute();
-					$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-					return $results;
-				}
-				function execquery($sql) {
-					$localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); 
-					$stmt1 = $localdb->prepare($sql);
-					$stmt1->execute();
-					
-				}
-				function GUID()
-				{
-					if (function_exists('com_create_guid') === true)
-					{
-						return trim(com_create_guid(), '{}');
-					}
-				
-					return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
-				}
-				function debuglog( $object=null, $label=null ){
-					$message = json_encode($object, JSON_PRETTY_PRINT);
-					$label = "Debug" . ($label ? " ($label): " : ': ');
-					echo "<script>console.log(\"$label\", $message);</script>";
-				}
-
-				//Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
-				// Connect to SQLite database file.
-				$db_file = new PDO('sqlite:Dashboardify.s3db');
-				
-				//Get session ID.
-				$sessionid = $_COOKIE["SessionID"];
+			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
+				include("shared_functions.php");
+				$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
+				$sessionid = $_COOKIE["SessionID"]; //Get session ID.
 				//Get User for Session ID
 				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"];
 				debuglog($userid, "User ID found for user");
@@ -231,35 +200,15 @@
 							" . $imgstylecss . $siteurl . "icons/cancel.png'></img>
 						</a></div>";
 					};
-					
+					$combined = "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 					If ($row["WidgetType"] == "IFrame") {
-						echo "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass .
-						$editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-					                    " . $imgstylecss . $siteurl . "icons/edit.png'></img></a>
-									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    " . $imgstylecss . $siteurl . "icons/cancel.png'></img>
-					                </a>
-						<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";
+						echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";
 					}
-					
 					If ($row["WidgetType"] == "Notes") {
-						echo "
-					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . 
-						$editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-					                    " . $imgstylecss . $siteurl . "icons/edit.png'></img></a>
-									" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    " . $imgstylecss . $siteurl . "icons/cancel.png'></img>
-						</a><p>". $row["Notes"] ."</p></div>";
+						echo $combined . "<p>". $row["Notes"] ."</p></div>";
 					}
-
 					If ($row["WidgetType"] == "HTMLEmbed") {
-						echo "
-					            <div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . 
-						$editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>
-					                    " . $imgstylecss . $siteurl . "icons/edit.png'></img></a>
-										" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>
-					                    " . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>
-						". $row["Notes"] ."</div>";
+						echo $combined . $row["Notes"] ."</div>";
 					}
 					
 				}
