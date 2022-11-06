@@ -100,6 +100,7 @@
 					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 					$imgstylecss = "<img style='height:24px; width:24px;' src='";
 					$PositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>";
+					$combined = "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 					If ($row["WidgetType"] == "SQLServerScalarQuery") {
 						$sqlservaddress = $row["sqlserveraddress"];
 						$sqldbname = $row["sqldbname"];
@@ -117,20 +118,14 @@
 								$tempresult = sqlsrv_query($conn,$sqlquery);
 								if ( sqlsrv_fetch( $tempresult ) )
 									{$result = sqlsrv_get_field( $tempresult, 0);debuglog($result, "Results of SQL query");}
-							}else{
-								debuglog("Connection could not be established.");
-								 debuglog(sqlsrv_errors());
-							}
+							}else{debuglog("Connection could not be established."); debuglog(sqlsrv_errors());}
 					   }
 					   catch (Exception $ex) {
 							debuglog($ex, "error during SQL server connection");
 					   }
-						echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'>
-						<a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] . ": " . $result ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img>
-						</a></div>";
+						echo $combined . "<p>" . $row["BookmarkDisplayText"] . ": " . $result ."</p></div>";
 					}
 					If ($row["WidgetType"] == "Bookmark") {echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
-					$combined = "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 					If ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
 					If ($row["WidgetType"] == "Notes") {echo $combined . "<p>". $row["Notes"] ."</p></div>";}
 					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}} echo "</table>";
