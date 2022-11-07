@@ -30,8 +30,6 @@ Later feature can be to add a way of tracking default dashboard for user (for no
 
 # To-Do
 
--SQL connectivity - Update handling for SQL query field to properly escape single quotation marks when encoded into the DB, then also unescape them when it's time to query db for results. 
-
 - Work on functionality to create and select between multiple dashboards
 -- Dropdownlist next to existing buttons at top left, with list of dashboards user has (probably just by recid for now).
 -- Probably javascript that handles the event when dropdownlist is changed, to load the selected dashboard. 
@@ -46,11 +44,9 @@ For now, have added code when saving a widget to find the dashboard for the user
 
 # Future Ideas
 
-- Ability to query scalar values as widget results, as well as show a result list. 
+- Ability to query widget results, show a result list. 
 - For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
 - API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
-- personal idea - api for capturing results from an app that logs cpu, memory, gpu data while in a game. 
-
 
 # SQL Server Connectivity
 

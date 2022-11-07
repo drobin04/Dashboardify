@@ -51,7 +51,7 @@
     $sqldbname = $_POST["SQLDBName"];
     $sqlusername = $_POST["sqluser"];
     $sqlpass = $_POST["sqlpass"];
-    $sqlquery = $_POST["sqlquery"];
+    $sqlquery = str_replace("'","''",$_POST["sqlquery"]);
     
     //$_POST[""]
 	
