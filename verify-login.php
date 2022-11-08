@@ -38,33 +38,29 @@
         return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
     }
     function CreateUserIDForEmail($eml) {
-        $insert = "Insert Into Users (Email) VALUES ('". $eml . "')";
+        global $db_file;
+        $select = "Insert Into Users (Email) VALUES ('". $eml . "')";
         $localdb = new PDO('sqlite:Dashboardify.s3db'); //NECESSARY - Failed to load when referencing db_file from 
-        $stmt = $localdb->prepare($insert);
-        
+        $stmt = $db_file->prepare($select);
+        debuglog($stmt);
         // Execute statement.
         $stmt->execute();
-                    
+        debuglog($stmt);
     }
 
     function CreateSessionForID($id, $sessid) {
-        
-        $insert = "Insert Into Sessions (UserID, SessionID) VALUES ('". $id . "', '" . $sessid . "')";
-        $localdb = new PDO('sqlite:Dashboardify.s3db'); //NECESSARY - Failed to load when referencing db_file from 
-        $stmt = $localdb->prepare($insert);
-        
-        // Execute statement.
+        global $db_file;
+        //$insert = "Insert Into Sessions (UserID, SessionID) VALUES ('". $id . "', '" . $sessid . "')";
+        $insert = "Insert Into Sessions (UserID, SessionID) VALUES ('2', 'C231E0C0-FBF1-4C7D-A113-725FF06D91F0')";
+        debuglog($insert,"Create Session insert query");
+        $stmt = $$db_file->prepare($insert);
         $stmt->execute();
         
-
-             
     }
      
     echo $_POST["email"] . ". <br />Trying to open sqlite db.<br />";
     debuglog($_POST, "Incoming POST arguments");
     debuglog($_POST["email"], "Email address to be used for search");
-
-
     $userid = GetUserIDFromEmail($email);
     debuglog("Results of GetUserIDFromEmail: " . $userid);
 
@@ -86,7 +82,7 @@
         CreateSessionForID($userid, $sessionid);
         debuglog($sessionid,"Session ID Created");
         setcookie("SessionID", $sessionid, 2147483640); //Save session ID into cookie
-        header("Location: index.php");
+        //header("Location: index.php");
 
 ?>
 

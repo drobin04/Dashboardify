@@ -1,13 +1,21 @@
 <?php 
 				function selectquery($sql) {
-					$localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); 
-					$stmt1 = $localdb->prepare($sql);
+					debuglog($sql,"about to execute query");
+
+					$rootdbpath = $_SERVER['DOCUMENT_ROOT'] . "/Dashboardify/Dashboardify.s3db";
+				
+					// Create and connect to SQLite database file.
+					$db_file = new PDO('sqlite:' . $rootdbpath);
+
+					//debuglog($localdb,"DB file");
+					$stmt1 = $db_file->prepare($sql);
 					$stmt1->execute();
 					$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+					//debuglog($results,"Query results");
 					return $results;
 				}
 				function execquery($sql) {
-					$localdb = $db_file = new PDO('sqlite:Dashboardify.s3db'); 
+					$localdb = new PDO('sqlite:' . $rootdbpath); 
 					$stmt1 = $localdb->prepare($sql);
 					$stmt1->execute();
 					

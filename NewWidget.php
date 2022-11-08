@@ -1,5 +1,5 @@
 <html>
-<head>    <?php include("logoutredirect.php");?> </head>
+<head>    <?php include(dirname(__FILE__) . "/modules/logoutredirect.php");?> </head>
 <body>
 
 <?php

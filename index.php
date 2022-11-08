@@ -1,5 +1,5 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
-    <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include("logoutredirect.php");?></head>
+    <style><?php include(dirname(__FILE__) . "/modules/usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include(dirname(__FILE__) . "/modules/logoutredirect.php");?></head>
 <body><form id="form1" method="POST" action="NewWidget.php" >
 	<!-- New Widget box-->
 		<div id="light" class="white_content">
@@ -73,9 +73,10 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button><br />
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
-				include("shared_functions.php");
+				include(dirname(__FILE__) . "/modules/shared_functions.php");
+				debuglog("shared functions module loaded.");
 				$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
-				$sessionid = $_COOKIE["SessionID"]; //Get session ID.
+				$sessionid = $_COOKIE["SessionID"]; debuglog($sessionid, "SessionID");
 				//Get User for Session ID
 				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"];
 				debuglog($userid, "User ID found for user");
@@ -95,7 +96,7 @@
 				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'";
 				$stmt = $db_file->prepare($select); $stmt->execute();
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-				include("siteurlconfig.php"); //Variable for site url
+				include(dirname(__FILE__) . "/modules/siteurlconfig.php"); //Variable for site url
 				foreach($results as $row) { //Starting with Re-useable texts
 					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 					$imgstylecss = "<img style='height:24px; width:24px;' src='";
