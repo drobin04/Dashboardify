@@ -1,5 +1,5 @@
 <html>
-<head>    <?php include(dirname(__FILE__) . "/modules/logoutredirect.php");?> </head>
+<head>    <?php include("/logoutredirect.php");?> </head>
 <body>
 
 <?php
@@ -43,7 +43,7 @@
 
 
     //Insert new Widget
-	$dashboardid = GetUsersDashboard(); //Identify which dashboard the widget needs to be added to.
+	$dashboardid = $_POST["dashboardID"]; //Identify which dashboard the widget needs to be added to.
 
     //Prepare Variables
     $sep = "','"; // Seperator
@@ -66,7 +66,7 @@
 	
 	// Execute statement.
 	$stmt->execute();
-	header("Location: index.php");
+	header("Location: index.php" . "?SelectDashboardID=" . $dashboardid);
 ?>
 
 </body>

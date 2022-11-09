@@ -1,15 +1,21 @@
 # To-Do
 
-- Work on functionality to create and select between multiple dashboards
--- Dropdownlist next to existing buttons at top left, with list of dashboards user has (probably just by recid for now).
--- Probably javascript that handles the event when dropdownlist is changed, to load the selected dashboard. 
--- 
+# User-Defineable API's
+- Widget type for custom API
+- Writes out a custom php file in the background to host the API. 
+- Renders a note on the screen , or perhaps a collapseable iframe, with the api details.
+- I imagine it'll hook requests and save them into a sqlite db, but could, in the end, just have a flat user-specified php script. Think more on this.
+
+# todo / Events API / db
+
+- pre-built API that can receive webhooks and stores the content and headers into fields in a row in a sqlite db. This way someone can quickly ping it, then query the events db for results. 
 
 - Consider loading a small image from a site's root /favicon.ico above each bookmark for a more natural look, maybe this could be an optional feature.
 
 # fix bug
 
-For now, have added code when saving a widget to find the dashboard for the user as just looking up  their first dashboard... Later will need to update to properly receive from index.php which dashboard the user is on. 
+- If no 'default' dashboard is found, load the first one. Ran into a bug when deploying updated code due to this and had to manually update DB.
+- Have an interface somewhere where you can mark your default dashboard or set the current one as default. 
 
 # Future Ideas
 

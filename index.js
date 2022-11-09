@@ -2,6 +2,14 @@ if (window.location.href.indexOf("EditRecID") != -1) {
 	document.getElementById('light').style.display='block';
 }		
 		
+		function loadselecteddashboard() {
+			var e = document.getElementById("ddlSelectedDashboard");
+			var value = e.value;
+			var text = e.options[e.selectedIndex].text;
+			var newurl = window.location.href.split("?")[0] + "?SelectDashboardID=" + value;
+			window.location.href = newurl;
+			//console.log(newurl);
+		}
 		
 		var canvas = null,
 
