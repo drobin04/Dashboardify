@@ -6,9 +6,6 @@
 - Renders a note on the screen , or perhaps a collapseable iframe, with the api details.
 - I imagine it'll hook requests and save them into a sqlite db, but could, in the end, just have a flat user-specified php script. Think more on this.
 
-- restore Collapseable iframe functionality
--- Have <a> for the div , when clicked, it sets display to not be none. If clicked again, or if a minimize button is clicked, it is then collapsed. 
-
 # todo / Events API / db
 
 - pre-built API that can receive webhooks and stores the content and headers into fields in a row in a sqlite db. This way someone can quickly ping it, then query the events db for results. 
@@ -19,6 +16,7 @@
 
 - If no 'default' dashboard is found, load the first one. Ran into a bug when deploying updated code due to this and had to manually update DB.
 - Have an interface somewhere where you can mark your default dashboard or set the current one as default. 
+
 
 # Future Ideas
 

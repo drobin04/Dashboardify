@@ -2,6 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 // get request method
 $method = $_SERVER['REQUEST_METHOD'];
+
 if ($method == 'GET') {
 	echo "THIS IS A GET REQUEST";
 }

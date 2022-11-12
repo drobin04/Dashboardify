@@ -1,7 +1,17 @@
+
+
 if (window.location.href.indexOf("EditRecID") != -1) {
 	document.getElementById('light').style.display='block';
 }		
-		
+
+function opencollapsediframe(recid) {
+	//alert(recid);
+	document.getElementById(recid).style.display='block';
+	var iframeID = recid + '/iframe';
+	//alert(document.getElementById(iframeID).getAttribute('src2'));
+	document.getElementById(iframeID).setAttribute("src", document.getElementById(iframeID).getAttribute("src2"));
+}
+
 		function loadselecteddashboard() {
 			var e = document.getElementById("ddlSelectedDashboard");
 			var value = e.value;
