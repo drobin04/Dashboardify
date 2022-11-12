@@ -32,7 +32,6 @@
 
 						foreach($dashboards as $row) {
 							$recid = $row["RecID"];
-							debuglog($row);
 							if ($row["DefaultDB"] == "Y") {
 								$dashboardid = $recid;
 								$dashboardphotourl = $row["BackgroundPhotoURL"];
