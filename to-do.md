@@ -23,3 +23,4 @@
 - Ability to query widget results, show a result list. 
 - For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
 - API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
+

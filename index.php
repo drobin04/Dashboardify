@@ -1,6 +1,6 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
     <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include("logoutredirect.php");?></head>
-<body><form id="form1" method="POST" action="NewWidget.php" >
+<body id='dashboardcontent'><form id="form1" method="POST" action="NewWidget.php" >
 	
         <div>
 			<!--Buttons at top left-->
@@ -197,4 +197,4 @@
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a></body></html>
+		<script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script></html>

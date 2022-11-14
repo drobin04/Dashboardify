@@ -1,0 +1,19 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Dashboardify</title>
+		<link type="text/css" rel="stylesheet" href="index.css">
+    <style>
+			
+		</style>
+		</head>
+		
+<body id="dashboardcontent"><form id="form1" method="POST" action="NewWidget.php" >
+	
+        <div>
+			<!--Buttons at top left-->
+            <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
+            <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
+			<script>document.getElementById("dashboardcontent").innerHTML = localStorage.getItem("dashboardcontent")</script>
+			</body></html>

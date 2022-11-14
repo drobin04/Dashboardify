@@ -41,7 +41,7 @@
         global $db_file;
         $select = "Insert Into Users (Email) VALUES ('". $eml . "')";
         $localdb = new PDO('sqlite:Dashboardify.s3db'); //NECESSARY - Failed to load when referencing db_file from 
-        $stmt = $db_file->prepare($select);
+        $stmt = $localdb->prepare($select);
         debuglog($stmt);
         // Execute statement.
         $stmt->execute();
@@ -52,8 +52,9 @@
         global $db_file;
         $insert = "Insert Into Sessions (UserID, SessionID) VALUES ('". $id . "', '" . $sessid . "')";
         //$insert = "Insert Into Sessions (UserID, SessionID) VALUES ('2', 'C231E0C0-FBF1-4C7D-A113-725FF06D91F0')";
+        $localdb = new PDO('sqlite:Dashboardify.s3db');
         debuglog($insert,"Create Session insert query");
-        $stmt = $$db_file->prepare($insert);
+        $stmt = $localdb->prepare($insert);
         $stmt->execute();
         
     }
