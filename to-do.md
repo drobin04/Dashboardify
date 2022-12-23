@@ -24,3 +24,5 @@
 - For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
 - API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
 
+for sqlite code - build api page to query for SQLite widget values.
+Check for widget details where a dashboard id / user id matches so you can't plug in random person's user ID. 

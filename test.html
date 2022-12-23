@@ -1,0 +1,33 @@
+<html>
+    <head></head>
+    <body>
+        <script>
+            var readCsv = async () => {
+    try {
+        //read .csv file on a server
+        const target = `https://docs.google.com/spreadsheets/d/1CoOUFuFR-oWHiAptjjhgbXNnACivX58VmPfoEEP9bKI/gviz/tq?tqx=out:csv`;
+
+        const res = await fetch(target, {
+            method: 'get',
+            headers: {
+                'content-type': 'text/csv;charset=UTF-8'
+            }
+        });
+
+        if (res.status === 200) {
+            const data = await res.text();
+            console.log(data);
+
+        } else {
+            console.log(`Error code ${res.status}`);
+        }
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+readCsv()
+
+        </script>
+    </body>
+</html>
