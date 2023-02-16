@@ -26,3 +26,7 @@
 
 for sqlite code - build api page to query for SQLite widget values.
 Check for widget details where a dashboard id / user id matches so you can't plug in random person's user ID. 
+Have javascript load the data from the API in all cases so that it works either on the php page OR on the html cached copy.
+
+For E Book Viewer: 
+https://github.com/futurepress/epub.js/
