@@ -11,6 +11,7 @@
     right: 0;
 }
     .arrow {
+    z-index: 1000;
         position: fixed;
         top: 50%;
         margin-top: -32px;
@@ -34,10 +35,22 @@
 
         </div>
 
+
+
+        
 <script>
-   
+    // Get the search parameters from the URL
+    const searchParams = new URLSearchParams(window.location.search);
+
+    // Get the value of the 'bookurl' parameter
+    const bookUrl = searchParams.get('bookurl');
+
+    // Print the value of the 'bookurl' parameter
+    console.log('Loading ' + bookUrl);
+
+   const bookname = bookUrl;
     // Load the opf
-    var book = ePub("moby-dick.epub");
+    var book = ePub(bookname);
     var rendition = book.renderTo("area", {
       width: "100%",
       height: 600,
@@ -88,18 +101,45 @@ function saveViewerState() {
 var currentLocation = rendition.currentLocation();
 
 // save the current location in localStorage
-localStorage.setItem("currentLocation", JSON.stringify(currentLocation));
+localStorage.setItem(bookname, JSON.stringify(currentLocation));
 }
 }
 
 // Retrieve the saved state from local storage and set the book to the saved page
 function setBookToSavedState() {
   // get the saved location from localStorage
-var savedLocation = JSON.parse(localStorage.getItem("currentLocation"));
+var savedLocation = localStorage.getItem(bookname);
 
 // display the saved location
-rendition.display(savedLocation);
+//book.locations.currentLocation = savedLocation;
+rendition.display(JSON.parse(savedLocation).start.cfi);
+//console.log(rendition.currentLocation);
 }
+
+function nextUntilLocationMatched() { //NOT NEEDED ANYMORE. stopgap to auto-page to saved state because was running into issues. 
+    // Load the saved location from local storage
+const savedLocation = JSON.parse(localStorage.getItem(bookname));
+
+// Navigate through the book until the current location matches the saved location
+const navigateToSavedLocation = () => {
+  const currentLocation = rendition.currentLocation();
+  if (currentLocation.start.index !== savedLocation.start.index ||
+      currentLocation.start.href !== savedLocation.start.href ||
+      currentLocation.start.cfi !== savedLocation.start.cfi) {
+    rendition.next();
+    setTimeout(navigateToSavedLocation, 80); // Set a delay to allow the next page to load
+  }
+};
+
+// Call the navigateToSavedLocation function to start navigating to the saved location
+navigateToSavedLocation();
+}
+
+function getSavedLocation() {
+    return JSON.parse(localStorage.getItem(bookname));
+}
+
+setTimeout(setBookToSavedState, 1200); 
 
   </script>
 

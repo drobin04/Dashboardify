@@ -1,5 +1,3 @@
-
-
 if (window.location.href.indexOf("EditRecID") != -1) {
 	document.getElementById('light').style.display='block';
 }		
@@ -151,3 +149,57 @@ function opencollapsediframe(recid) {
 
 			rect = {};
 		}
+		
+				function syncbookstatus(){
+			const bookname = 'https://test.site/Dashboardify/madrigals.epub'
+			// Retrieve the localstorage item
+			const localstorageItem = localStorage.getItem(bookname);
+
+			// Parse the localstorage item to a JSON object
+			const data = JSON.parse(localstorageItem);
+
+			// Create a new object with the userID, bookname, and location
+			const payload = {
+			userID: localStorage.getItem('userID'),
+			bookname: bookname,
+			location: data
+			};
+
+			// Send the payload to the PHP web page using an API request
+			fetch('syncbookprogress.php', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+			})
+			.then(response => {
+			if (response.ok) {
+				console.log('Data sent successfully');
+			} else {
+				console.error('Error sending data');
+			}
+			})
+			.catch(error => {
+			console.error('Error sending data:', error);
+			});
+		}
+		function getLocation(userID, bookname) {
+			// Set the data to be sent in the message body as an object
+			const data = { userID: userID, bookname: bookname };
+			
+			// Send a POST request to the PHP page with the data in the message body
+			fetch('getbookprogress.php', {
+			  method: 'POST',
+			  headers: { 'Content-Type': 'application/json' },
+			  body: JSON.stringify(data)
+			})
+			  .then(response => response.json())
+			  .then(data => {
+				// Update the local storage item with the retrieved location data
+				localStorage.setItem(bookname, JSON.stringify(data));
+			  })
+			  .catch(error => {
+				console.error('Error retrieving location:', error);
+			  });
+		  }
