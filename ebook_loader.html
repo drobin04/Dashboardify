@@ -123,7 +123,7 @@ function getSavedLocation() {
 
 getLocation(localStorage.getItem('userID'), bookfriendlyname);
 
-setInterval(CheckBookProgressForSync, 5000);
+setInterval(CheckBookProgressForSync, 20000);
 setTimeout(setBookToSavedState, 1200);
 
 function getLocation(userID) {
