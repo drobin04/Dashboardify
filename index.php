@@ -151,7 +151,7 @@
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
                         <header >New Widget<hr /></header>
                         
-                        <label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType">
+                        <label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType" onclick="renderNewWidgetOptionsByDropdown()">
 							<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option><!--<option value="Bookmark">Bookmark</option> Removed because duplicated by default value in line above-->
                             <option value="IFrame">IFrame</option>
                             <option value="Collapseable IFrame">Collapseable IFrame</option>
@@ -159,7 +159,7 @@
                             <option value="HTMLEmbed">HTMLEmbed</option>
 							<option value="SQLServerScalarQuery">SQLServerScalarQuery</option>
                         </select><br />
-                        <label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br />
+                        <span id="widgetURL"><label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br /></span>
                         <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br /><hr>
                         <button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button><br />
                         <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input><br />
@@ -168,13 +168,14 @@
                         <label>SizeY: </label><input ID="txtsizeY" Text="0" name="SizeY" value="<?php echo $WidgetSizeY; ?>"></input><br />
                         <label>CSS Class: </label><input ID="txtCSSClass" name="CSSClass" value="<?php echo $WidgetCSSClass; ?>"></input><br />
                         Notes/HTML Embed: <input ID="txtNotes"  TextMode="MultiLine" name="Notes" value="<?php echo $WidgetNotes; ?>"></input><br />
-						Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input><br />
-						Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input><br />
-						SQL Server Address<input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php ?>"></input><br />
+						<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input><br />
+						Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input></span><br />
+						
+						<span id="SQL">SQL Server Address<input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php ?>"></input><br />
 						SQL DBName<input ID="SQLDBName" name="SQLDBName" value="<?php ?>"></input><br />
 						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php  ?>"></input><br />
 						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php  ?>"></input><br />
-						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php  ?>"></input><br />
+						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php  ?>"></input><br /></span>
                         <button id="btnSubmitNewWidget">Submit</button>
                     </div>
 		</div></form>

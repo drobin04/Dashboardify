@@ -2,6 +2,20 @@ if (window.location.href.indexOf("EditRecID") != -1) {
 	document.getElementById('light').style.display='block';
 }		
 
+function renderNewWidgetOptionsByDropdown() {
+
+	var dropdownvalue = document.getElementById("ddlWidgetType").value;
+
+	switch(dropdownvalue) {
+		case "SQLServerScalarQuery":
+			document.getElementById("SQL").style.display = 'block';
+		  break;
+		
+		}
+
+
+}
+
 function opencollapsediframe(recid) {
 	//alert(recid);
 	document.getElementById(recid).style.display='block';
@@ -198,6 +212,7 @@ function opencollapsediframe(recid) {
 			  .then(data => {
 				// Update the local storage item with the retrieved location data
 				localStorage.setItem(bookname, JSON.stringify(data));
+				console.log('updated localstorage with book position: ' + JSON.stringify(data));
 			  })
 			  .catch(error => {
 				console.error('Error retrieving location:', error);

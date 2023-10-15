@@ -1,6 +1,10 @@
 html, body{
     height: 100%;
 }
+
+#SQL {display: none;}
+
+
     .highlight {
         border-color: black;
         border: 2px dashed;

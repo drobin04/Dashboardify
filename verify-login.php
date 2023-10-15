@@ -83,7 +83,7 @@
         CreateSessionForID($userid, $sessionid);
         debuglog($sessionid,"Session ID Created");
         setcookie("SessionID", $sessionid, 2147483640); //Save session ID into cookie
-        //header("Location: index.php");
+        header("Location: index.php");
 
 ?>
 
