@@ -1,4 +1,6 @@
-<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head><title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+<script src="/js/textboxes.js"></script>
+<title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
     <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include("logoutredirect.php");?></head>
 <body id='dashboardcontent'><form id="form1" method="POST" action="NewWidget.php" >
 	
@@ -14,7 +16,7 @@
 				$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
 				$sessionid = $_COOKIE["SessionID"]; debuglog($sessionid, "SessionID"); //Get User for Session ID
 				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; debuglog($userid, "User ID found for user");
-				echo "<script>localstorage.setItem('userID', '$userid') = </script>";
+				echo "<script>localStorage.setItem('userID', '$userid');</script>";
 				$dashboards = selectquery("Select * From Dashboards Where UserID = '" . $userid . "'"); // Query for dashboards for user. 
 				
 				$dashboardid = "";
