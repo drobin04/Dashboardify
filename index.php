@@ -1,9 +1,11 @@
 <?php include("checkifdbexists.php");?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
-<script type="module" src="https://md-block.verou.me/md-block.js"></script>
+<script type="module" src="js/md-block.js"></script>
 <!--<script src="/js/textboxes.js"></script>-->
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
-    <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include("logoutredirect.php");?></head>
+    <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
+	md-block:not([rendered]) { display: none }
+	</style><?php include("logoutredirect.php");?></head>
 <body id='dashboardcontent'>
 	
         <div>

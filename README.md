@@ -33,3 +33,13 @@ Later feature can be to add a way of tracking default dashboard for user (for no
 # SQL Server Connectivity
 
 Note - When adding SQL Server connections, server names may need to be entered in serveraddress\instance format, if an instance other than the default is needed. 
+
+
+# Attribution notes
+
+## Markdown support
+
+Markdown is used and/or supported in various places within this application. Markdown support is provided by [Verou.Me's md-block custom element.](https://md-block.verou.me/)
+
+A copy of Verou.Me's md-block.js file is included in this distribution, to prevent any dependency issues should the copy hosted at their official URL be removed or moved to a new location. 
+
