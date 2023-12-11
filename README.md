@@ -13,6 +13,9 @@ If this is not done, you may get a blank screen when loading the app, as almost 
     extension=php_pdo_sqlsrv_56_ts.dll  
 
 
+## To-do: Update setup documentation.... Start to finish of deploying app to new server...
+
+
 # File / DB Structure
 
 The UI consists of a Dashboard made up of multiple user-defined Widgets.

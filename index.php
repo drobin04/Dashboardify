@@ -1,8 +1,10 @@
+<?php include("checkifdbexists.php");?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
-<script src="/js/textboxes.js"></script>
+<script type="module" src="https://md-block.verou.me/md-block.js"></script>
+<!--<script src="/js/textboxes.js"></script>-->
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
     <style><?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?></style><?php include("logoutredirect.php");?></head>
-<body id='dashboardcontent'><form id="form1" method="POST" action="NewWidget.php" >
+<body id='dashboardcontent'>
 	
         <div>
 			<!--Buttons at top left-->
@@ -10,6 +12,7 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
+			<a href="indexattempt.html">Cached Page</a> <a href="index.php">Main Page / Reload Cache</a>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include("shared_functions.php");
 				//debuglog("shared functions module loaded.");
@@ -21,11 +24,17 @@
 				
 				$dashboardid = "";
 				$dashboardphotourl = ""; // Used later at end of script to pre-populate value into input for CSS box.
-				Try {
+				Try { // Load Dashboard list
 					$count = count($dashboards);
 					debuglog($count, "Count variable");
 					if ((int)$count == 1) {
-						debuglog($dashboards, "Dashboards Array - Single Result"); $dashboardid = $dashboards[0]["RecID"]; debuglog($dashboardid, "Selected Dashboard ID."); $dashboardphotourl = $row["BackgroundPhotoURL"]; $usercss = $row["CustomCSS"];
+						foreach($dashboards as $row) {
+							debuglog($dashboards, "Dashboards Array - Single Result"); 
+							$dashboardid = $dashboards[0]["RecID"]; 
+							debuglog($dashboardid, "Selected Dashboard ID."); 
+							$dashboardphotourl = $row["BackgroundPhotoURL"]; 
+							$usercss = $row["CustomCSS"];
+						}
 					} elseif ((int)$count > 1) {
 						debuglog($dashboards, "Dashboards Array - Multiple Results"); 
 						echo "<label> Dashboard: </label><select ID='ddlSelectedDashboard' name='SelectedDashboard' onchange='loadselecteddashboard()'>";
@@ -104,7 +113,7 @@
 					   }
 						echo $combined . "<p>" . $row["BookmarkDisplayText"] . ": " . $result ."</p></div>";
 					}
-					If ($row["WidgetType"] == "Bookmark") {echo "<div style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
+					If ($row["WidgetType"] == "Bookmark") {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
 					If ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
 					If ($row["WidgetType"] == "Collapseable IFrame") {
 						$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
@@ -116,18 +125,18 @@
 						echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
 						echo "</div>"; //this wraps combined variable, into a surrounding div.
 					}
-					If ($row["WidgetType"] == "Notes") {echo $combined . "<p>". $row["Notes"] ."</p></div>";}
+					If ($row["WidgetType"] == "Notes") {echo $combined . "<p><md-block>". $row["Notes"] ."</md-block></p></div>";}
 					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}} echo "</table>";
 			?>
 			<!-- New Widget box-->
-		<div id="light" class="white_content">
-		<?php   
+		<div id="light" class="white_content"><form id="form1" method="POST" action="NewWidget.php" >
+		<?php   //Check if this is an 'Edit' or 'New' widget submission , set up.  
 			$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
 			//$WidgetID = str_replace("EditRecID=","",$querystring); //Strip out extra junk
 			If (Isset($_GET["EditRecID"])) {
 				$WidgetID = $_GET["EditRecID"];
 				$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
-				$select = "SELECT * FROM Widgets"; // Prepare SELECT statement.
+				$select = "SELECT * FROM Widgets Where RecID = '" . $WidgetID . "'"; // Prepare SELECT statement.
 				$stmt = $db_file->prepare($select);
 				$stmt->execute(); // execute
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); // Get the results.
@@ -147,6 +156,7 @@
 			} else {$WidgetTypeValue = "Bookmark";$WidgetURLValue = "";$WidgetDisplayText = "";$WidgetPositionX = "";$WidgetPositionY = "";$WidgetSizeX = "";$WidgetSizeY = "";$WidgetCSSClass = "";$WidgetNotes = "";$WidgetID = "";} // Prepare unused variables
 		?>
                     <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
+                    <button id="btnSubmitNewWidget">Submit</button>
                     <br />
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
                         <header >New Widget<hr /></header>
@@ -167,7 +177,7 @@
                         <label>SizeX: </label><input ID="txtsizeX" Text="0" name="SizeX" value="<?php echo $WidgetSizeX; ?>"></input><br />
                         <label>SizeY: </label><input ID="txtsizeY" Text="0" name="SizeY" value="<?php echo $WidgetSizeY; ?>"></input><br />
                         <label>CSS Class: </label><input ID="txtCSSClass" name="CSSClass" value="<?php echo $WidgetCSSClass; ?>"></input><br />
-                        Notes/HTML Embed: <input ID="txtNotes"  TextMode="MultiLine" name="Notes" value="<?php echo $WidgetNotes; ?>"></input><br />
+                        Notes/HTML Embed: <textarea ID="txtNotes" rows="4" cols="50" name="Notes"><?php echo $WidgetNotes; ?></textarea><br />
 						<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input><br />
 						Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input></span><br />
 						
@@ -176,7 +186,7 @@
 						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php  ?>"></input><br />
 						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php  ?>"></input><br />
 						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php  ?>"></input><br /></span>
-                        <button id="btnSubmitNewWidget">Submit</button>
+
                     </div>
 		</div></form>
 
@@ -201,4 +211,23 @@
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script></html>
+		<script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script>
+function deleteElement(link) {
+    // Replace 'your-url-here' with the actual URL
+    var url = 'your-url-here';
+
+    // Send a GET request to the specified URL
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Request was successful, hide the parent element
+            var elementToDelete = link.parentNode;
+            elementToDelete.style.display = 'none';
+        }
+    };
+    xhr.send();
+}
+</script>
+		</html>

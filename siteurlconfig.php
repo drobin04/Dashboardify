@@ -1,1 +1,1 @@
-<?php $siteurl = "http://localhost/Dashboardify/"; ?>
+<?php $siteurl = "https://douglasrobinson.me/Dashboardify/"; ?>
