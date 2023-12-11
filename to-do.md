@@ -9,9 +9,6 @@
 * Maybe a checkbox or button somewhere that acknowledges all new-user-experience items and makes them all go away at once
 	* This could be a boolean flag on their user in the DB, maybe? 
 
-## Ability to place bookmarks in custom locations on the screen as placeable widgets
-Should be pretty simple, just read the X/Y and ignore the Size X / Size Y components. 
-
 
 ## Add a default page theme to the app, and have it customizeable from the Setup page
 
@@ -125,6 +122,8 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Moved the initial 'form' element from the very beginning of the document, down to the 'light' box being used for the New Widget box. For some reason this was left wrapping nearly ALL of the content into the first form. Now it's in the right spot, which also makes it easier to recognize that that box is using a form element when reading the code. 
 * Updates logoutredirect.php logic to check if the Session ID being used actually matches a user. If it doesn't match any users, redirect to the start-login.php page. This was done when testing deleting the DB entirely and creating a new one, where it became apparent that holding an old SessionID made it appear as if you were logged into a user, even though one wouldn't exist yet. 
 * Removed code related to an e-book viewing widget. Was not able to get this into a finished position, and it was introducing large scope creep, so have removed this code for now. It may be an idea for the future, but is impeding progress in other, more important areas for now. 
+* Ability to place bookmarks in custom locations on the screen as placeable widgets
+	* Was relatively simple in concept; had to duplicate and modify some shared variables to support this one. One extra spaghetti noodle on the plate. 
 
 
 

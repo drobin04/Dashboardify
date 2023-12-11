@@ -12,7 +12,7 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
-			<a href="indexattempt.html">Cached Page</a> <a href="index.php">Main Page / Reload Cache</a>
+			<a href="cachedpage.html">Cached Page</a> <a href="index.php">Main Page / Reload Cache</a>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include("shared_functions.php");
 				//debuglog("shared functions module loaded.");
@@ -89,6 +89,13 @@
 					$imgstylecss = "<img style='height:24px; width:24px;' src='";
 					$PositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>";
 					$combined = "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+					$floatingbookmarkPositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px;' class='" . $row["WidgetCSSClass"] . "'>";
+					$floatingbookmark = "<div id='" . $row["RecID"] . "' class='bookmark' style='position: absolute; width:100px; background-color: lightgrey;  border: 1px solid black; " 
+					. $floatingbookmarkPositionAndCSSClass . $editbuttonscss 
+					. $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" 
+					. $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss 
+					. $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+					
 					If ($row["WidgetType"] == "SQLServerScalarQuery") {
 						$sqlservaddress = $row["sqlserveraddress"];
 						$sqldbname = $row["sqldbname"];
@@ -113,7 +120,16 @@
 					   }
 						echo $combined . "<p>" . $row["BookmarkDisplayText"] . ": " . $result ."</p></div>";
 					}
-					If ($row["WidgetType"] == "Bookmark") {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
+					If ($row["WidgetType"] == "Bookmark" && $row["PositionX"] != 0) {
+						echo $floatingbookmark 
+						." <div style='padding: 5px; width: 100%; class='bookmark'"
+						. $row["WidgetCSSClass"] 
+						. "'><a target='_blank' href='" 
+						. $row["WidgetURL"] 
+						. "'>" 
+						. $row["BookmarkDisplayText"] 
+						."</a></div></div>";};
+					If ($row["WidgetType"] == "Bookmark" && $row["PositionX"] == 0) {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
 					If ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
 					If ($row["WidgetType"] == "Collapseable IFrame") {
 						$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
