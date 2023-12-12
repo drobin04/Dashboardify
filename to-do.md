@@ -22,7 +22,6 @@ This page should guide a new user through first steps to deploy the app, as well
 
 Things that may belong here: 
 
-* Configuring 'siteurlconfig.php'
 * Configuring site-wide / default CSS
 * Management interface for users? 
 	* Display a table format list of users in the DB, User ID, Email.
@@ -121,6 +120,7 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 	* Was relatively simple in concept; had to duplicate and modify some shared variables to support this one. One extra spaghetti noodle on the plate. 
 * Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
 * Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
+* Added Setup for siteurlconfig, and redirect to force entry if empty.
 
 
 # Scrapped Ideas
