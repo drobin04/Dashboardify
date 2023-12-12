@@ -13,11 +13,6 @@
 ## Add a default page theme to the app, and have it customizeable from the Setup page
 
 
-## Check when loading Dashboardify/index.php - Does database exist? 
-If database doesn't exist(yet?), direct to the setup / admin page to run a first time setup. 
-
-Can use a url parameter for that if needed.
-
 ## Bugfix - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 
 If I strip out the weird Dashboard ID from the URL bar, it will save the widget and load the widget properly the next time the page is loaded. 
@@ -73,7 +68,7 @@ Expected behavior: Reloads the page with the selected dashboard shown based on t
 # Future Ideas
 
 - Ability to drag and drop an existing widget to a new position. When 'dropping' the item, record the new position and we change the X/Y coords for the widget with a background request over javascript to a PHP page that acts as an API, while also changing it locally on the client so that we don't have to reload the page. 
-- Ability to query widget results from a DB file, show a result list. 
+- Ability to query widget results from a local DB file, show a result list. 
 - For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
 - API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
 
@@ -116,7 +111,7 @@ foreach($dashboards as $row) {
 The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $usercss assignments were failing because they were referencing an array that did not exist. 
 
 
-# Changes
+# Other Changes
 * Updated logic for loading the new/edit widget dialog / form, to not loop through every widget in the DB when trying to find the widget being edited and THEN checking if RecID matches. Instead, now filters the query on where recid = value. 
 * Added markdown support to Notes widgets
 * Moved the initial 'form' element from the very beginning of the document, down to the 'light' box being used for the New Widget box. For some reason this was left wrapping nearly ALL of the content into the first form. Now it's in the right spot, which also makes it easier to recognize that that box is using a form element when reading the code. 
@@ -125,6 +120,7 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Ability to place bookmarks in custom locations on the screen as placeable widgets
 	* Was relatively simple in concept; had to duplicate and modify some shared variables to support this one. One extra spaghetti noodle on the plate. 
 * Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
+* Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
 
 
 # Scrapped Ideas
