@@ -1,8 +1,5 @@
 # To-Do
 
-## Doublecheck that the same activities happen on logout.php as happen on the logoutredirect.php when a user's session expires
-I made some code recently when testing what would happen if the DB were deleted and new user experience went through, and want to make sure what I added is also addressed on the logout.php file.
-
 ## New-User Experience
 
 ### Initial background image
