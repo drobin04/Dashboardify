@@ -2,6 +2,24 @@
 
 ## New-User Experience
 
+### Setup widgets that appear on the page by default for new users. 
+^ This can be turned off or the individual widgets to be created for new users / SQL statements can be altered in the Setup page... Maybe a feature to copy existing widget ID's under each new user, or a direct SQL insert (less preferred).
+
+Could use javascript on the client side to handle sending each NewWidget request on a new user event, then reloading the dashboard after each request was submitted. 
+
+### User settings page
+
+* could have things like User CSS moved here
+* background image setup
+* FUTURE BACKGROUND IMAGE / SLIDESHOW SETTINGS
+* Some GUI selectors or buttons to fill in user CSS for bookmark CSS or background color
+* label somewhere telling someone they can write in something like 'lightgrey' for the background color, or pick from a dropdown?
+	* ideally a color splotch appears that can update in realtime (future luxury)
+
+### Add 'Setup' button to top row / menu
+Should appear for everyone for now. 
+At some point in the future, will constrain visibility to only appear for users that have admin rights, once a method for defining those rights has been defined. 
+
 ### Initial background image
 
 * Maybe setup a background image or individual widgets located under the main menu buttons, explaining what they are for, etc. 
@@ -16,6 +34,8 @@
 ## Bugfix - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 
 If I strip out the weird Dashboard ID from the URL bar, it will save the widget and load the widget properly the next time the page is loaded. 
+
+Double check that this isn't related to the previous new user widget bug fixed on 12/9 in notes below. 
 
 ## Add / Continue developing Setup.php / Admin.php Page
 This page should guide a new user through first steps to deploy the app, as well as perhaps serve as a place to update any environment-wide variables that don't need to be seen / managed on the end-user screen. 

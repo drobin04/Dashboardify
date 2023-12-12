@@ -12,6 +12,17 @@ If this is not done, you may get a blank screen when loading the app, as almost 
     extension=php_sqlsrv_56_ts.dll
     extension=php_pdo_sqlsrv_56_ts.dll  
 
+# Important Missing Features
+
+The following are important items that have not yet been implemented, either not properly or entirely missing
+
+* User Authentication / security
+    * Currently just asks for a username / email address, no authentication / PW or otherwise occurs.
+        * Could make a PW auth or an email code authenticator at some point in the future but would require future code to safely store a PW hash and/or storing SMTP config for sending mail. 
+    
+* Admin / User permissions gate on setup.php page
+    * Currently anyone could access setup.php and perform destructive changes on the DB file. 
+    * To solve this issue, need to setup a functional user management and permissions system so that we can delineate normal users from privileged users. 
 
 ## To-do: Update setup documentation.... Start to finish of deploying app to new server...
 
