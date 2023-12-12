@@ -1,5 +1,5 @@
 <html>
-<head>    <?php include("/logoutredirect.php");?> </head>
+<head>    <?php include("logoutredirect.php");?> </head>
 <body>
 
 <?php
@@ -59,10 +59,12 @@
 	$select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
     ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery) 
     VALUES ('" . $_POST["WidgetType"] . $sep . $_POST["DisplayText"] . $sep . $_POST["PositionX"] . $sep . $_POST["PositionY"] . $sep . 
-    $_POST["SizeX"] . $sep . $_POST["SizeY"] . $sep . $_POST["URL"] . $sep . $_POST["CSSClass"] . $sep . $_POST["Notes"] . $sep . $dashboardid . $sep .
+    $_POST["SizeX"] . $sep . $_POST["SizeY"] . $sep . $_POST["URL"] . $sep . $_POST["CSSClass"] . $sep . str_replace("'", "''",$_POST["Notes"]) . $sep . $dashboardid . $sep .
     $sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
     "')";
-	$stmt = $db_file->prepare($select);
+	debuglog($select);
+    $stmt = $db_file->prepare($select);
+    //$stmt->bindParam(':notes', $_POST["Notes"]); // Failed, don't understand why.
 	
 	// Execute statement.
 	$stmt->execute();

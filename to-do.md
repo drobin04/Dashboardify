@@ -1,5 +1,8 @@
 # To-Do
 
+## Doublecheck that the same activities happen on logout.php as happen on the logoutredirect.php when a user's session expires
+I made some code recently when testing what would happen if the DB were deleted and new user experience went through, and want to make sure what I added is also addressed on the logout.php file.
+
 ## New-User Experience
 
 ### Initial background image
@@ -124,7 +127,7 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Removed code related to an e-book viewing widget. Was not able to get this into a finished position, and it was introducing large scope creep, so have removed this code for now. It may be an idea for the future, but is impeding progress in other, more important areas for now. 
 * Ability to place bookmarks in custom locations on the screen as placeable widgets
 	* Was relatively simple in concept; had to duplicate and modify some shared variables to support this one. One extra spaghetti noodle on the plate. 
-
+* Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
 
 
 # Scrapped Ideas

@@ -143,7 +143,7 @@
 						echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
 						echo "</div>"; //this wraps combined variable, into a surrounding div.
 					}
-					If ($row["WidgetType"] == "Notes") {echo $combined . "<p><md-block>". $row["Notes"] ."</md-block></p></div>";}
+					If ($row["WidgetType"] == "Notes") {echo $combined . "<p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $row["Notes"] ."</md-block></p></div>";}
 					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}} echo "</table>";
 			?>
 			<!-- New Widget box-->
