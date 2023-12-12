@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <script type="module" src="js/md-block.js"></script>
+
+</head>
+<body>
 <?php
 include("shared_functions.php");
 
@@ -52,3 +59,9 @@ execquery($DashboardsSQL);
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
 ?>
+
+<md-block>
+If you're finished setting up the database, feel free to continue to [the main page](./index.php) or to [go back to the setup page](setup.php) to continue setup.
+</md-block>
+</body>
+</html>

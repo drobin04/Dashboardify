@@ -32,6 +32,9 @@ There are some items that will need to reference the base URL for this webpage.
 Please configure the box below with the site URL, in the format of ' https://example.com/this_site_directory/'
 
 
+## Delete Database
+WARNING: There is no confirmation after clicking this link!!!
+[Delete Dashboardify DB](delete-dashboardify-db.php)
 
         </md-block>
     </body>
