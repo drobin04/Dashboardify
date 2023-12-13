@@ -36,20 +36,12 @@ This page should guide a new user through first steps to deploy the app, as well
 
 Things that may belong here: 
 
-* Configuring site-wide / default CSS
 * Management interface for users? 
 	* Display a table format list of users in the DB, User ID, Email.
 * Defining session timeout options (Is timeout needed? If so, how long?)
     * Would need to add some code to support this, but is a logical feature request.
 		* Code for this should ideally be located in the logoutredirect.php page, OR could be implemented as a timeout on the session cookie!
 
-
-
-
-## Update Widget Entry Box
-
-### Needs to accept multiline Entry for Notes / HTML embed
--Done
 
 
 ## Update readme.md with proper setup documentation, and/or set up a separate document for it.
