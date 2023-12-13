@@ -21,7 +21,7 @@
 	debuglog(array($select,$CSS,$backgroundurl,$dashboardid), "Data at time of write to DB");
 	
 	$stmt->execute();
-	//header("Location: index.php");
+	header("Location: index.php");
 ?>
 
 </body>

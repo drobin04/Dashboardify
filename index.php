@@ -213,9 +213,9 @@
 			<div id="light2" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
 				<button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='none';">Close</button><br />
 				<div id="columnd" class="column" style="width: 85% !important; height:100% !important; clear: both; margin: 0 auto;">
-					<header >CSS<hr /></header>
+					<header >Dashboard-Specific CSS<hr /></header>
 					<button ID="btnUpdateCSS" >Save CSS</button><br />
-					<textarea ID="txtCSS" name="txtCSS" cols="40" rows="5" style="width:100%; height:80%;"><?php echo $usercss ?></textarea><br />
+					<textarea ID="txtCSS" name="txtCSS" cols="40" rows="5" style="width:100%; height:50%;"><?php echo $usercss ?></textarea><br />
 					Background Image URL: <input ID="backgroundurl" name="backgroundurl" value="<?php echo $dashboardphotourl ?>"></input><br /> 
 					Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input><br />
 				</div>
