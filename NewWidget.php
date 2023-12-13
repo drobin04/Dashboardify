@@ -3,7 +3,8 @@
 <body>
 
 <?php
-	
+	$sessionID = $_COOKIE["SessionID"];
+
 	function debuglog( $object=null, $label=null ){
         $message = json_encode($object, JSON_PRETTY_PRINT);
         $label = "Debug" . ($label ? " ($label): " : ': ');
@@ -63,11 +64,16 @@
     $sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
     "')";
 	debuglog($select);
+    debuglog($sessionID, "Session ID");
+    debuglog($dashboardid, "Dashboard ID");
+
+
     $stmt = $db_file->prepare($select);
     //$stmt->bindParam(':notes', $_POST["Notes"]); // Failed, don't understand why.
 	
 	// Execute statement.
 	$stmt->execute();
+    //echo "Finished; click <a href='index.php'>Here</a> to return to main dashboard.";
 	header("Location: index.php" . "?SelectDashboardID=" . $dashboardid);
 ?>
 

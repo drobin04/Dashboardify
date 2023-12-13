@@ -11,7 +11,7 @@ include("shared_functions.php");
 
 $widgetsSQL = "CREATE TABLE [Widgets] (
     [RecID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
-    [DashboardRecID] INTEGER  NULL,
+    [DashboardRecID] TEXT  NULL,
     [WidgetType] NVARCHAR(50)  NULL,
     [BookmarkDisplayText] NVARCHAR(100)  NULL,
     [PositionX] INTEGER  NULL,

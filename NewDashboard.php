@@ -22,7 +22,8 @@
     $sep = "','"; // Seperator
 
     // Prepare INSERT statement.
-	$select = "INSERT INTO Dashboards (Name,UserID) VALUES ('" . $dashboardname . "','" . $userid . "')";
+    $dashboardid = GUID();
+	$select = "INSERT INTO Dashboards (Name, DashboardID,UserID) VALUES ('" . $dashboardname . "', '" . $dashboardid . "','" . $userid . "')";
 	$stmt = $db_file->prepare($select);
 	
 	// Execute statement.

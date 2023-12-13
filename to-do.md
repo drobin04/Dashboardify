@@ -31,12 +31,6 @@ At some point in the future, will constrain visibility to only appear for users 
 ## Add a default page theme to the app, and have it customizeable from the Setup page
 
 
-## Bugfix - New User Experience / First widget creation bugged
-Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 
-If I strip out the weird Dashboard ID from the URL bar, it will save the widget and load the widget properly the next time the page is loaded. 
-
-Double check that this isn't related to the previous new user widget bug fixed on 12/9 in notes below. 
-
 ## Add / Continue developing Setup.php / Admin.php Page
 This page should guide a new user through first steps to deploy the app, as well as perhaps serve as a place to update any environment-wide variables that don't need to be seen / managed on the end-user screen. 
 
@@ -142,6 +136,21 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
 * Added Setup for siteurlconfig, and redirect to force entry if empty.
 
+## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
+Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 
+It will save the widget and load the widget properly the next time the page is loaded. 
+
+Notes:
+* It's the DashboardRecID being messed up here....
+* When dashboard is created, it gets a RecID, but then a DashboardID. RecID is an autonumber but DashboardID is a GUID. 
+* When saving the WIDGET, it tries to save the widget under the new Dashboard GUID, which doesn't get stored into the widget.dashboard ID field because it's an INTEGER ONLY field.
+* WHEN LOADING THE DASHBOARD, Dashboard ID is getting populated as the RecID autonumber and NOT the dashboardID GUID, possibly as a result of issues with this bug in the past that couldn't be solved at the time.
+ 
+* Changed Widget.DashboardID from Integer to TEXT
+* Changed index.php to load dashboard from the user and set dashboard ID to the GUID value / Dashboard ID field, NOT the recID autonumber field. 
+* Changed index.php to populate the NewWidget.php form with the GUID 
+* Verified index.php properly loads widgets where dashboard ID = GUID (should happen automatically after other steps done)
+* Tested afterwards that NewDashboard functionality works
 
 # Scrapped Ideas
 

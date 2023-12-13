@@ -33,7 +33,7 @@
 					if ((int)$count == 1) {
 						foreach($dashboards as $row) {
 							debuglog($dashboards, "Dashboards Array - Single Result"); 
-							$dashboardid = $dashboards[0]["RecID"]; 
+							$dashboardid = $dashboards[0]["DashboardID"]; 
 							debuglog($dashboardid, "Selected Dashboard ID."); 
 							$dashboardphotourl = $row["BackgroundPhotoURL"]; 
 							$usercss = $row["CustomCSS"];
@@ -46,25 +46,25 @@
 						If (Isset($_GET["SelectDashboardID"])) { $matcheddashboardid = $_GET["SelectDashboardID"];}
 
 						foreach($dashboards as $row) {
-							$recid = $row["RecID"];
+							$recid = $row["DashboardID"];
 							if ($row["DefaultDB"] == "Y") {
 								$dashboardid = $recid;
 								$dashboardphotourl = $row["BackgroundPhotoURL"];
 								$usercss = $row["CustomCSS"];
 								debuglog($dashboardid, "Selected Dashboard ID.");
 								
-								echo "<option value='" . $row["RecID"] . "'";
+								echo "<option value='" . $row["DashboardID"] . "'";
 								If ($recid == $matcheddashboardid){echo "selected='selected'";} elseif ($matcheddashboardid <> -1) {} else {echo "selected='selected'";}
 								echo ">" . $row["Name"] . "</option>";
 
 							} else {
-								echo "<option value='" . $row["RecID"] . "'";
+								echo "<option value='" . $row["DashboardID"] . "'";
 								If ($recid == $matcheddashboardid){echo "selected='selected'";}
 								echo ">" . $row["Name"] . "</option>";
 
 							}
 
-							if ($row["RecID"] == $_GET["SelectDashboardID"]) { $match = 1; debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); }
+							if ($row["DashboardID"] == $_GET["SelectDashboardID"]) { $match = 1; debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); }
 						}
 						echo "</select><br />";
 
