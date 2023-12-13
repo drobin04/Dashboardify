@@ -29,6 +29,9 @@ if (file_exists('config/siteurlconfig.txt')) {
     $urlvalue = file_get_contents('config/siteurlconfig.txt');
 
 }
+if (file_exists('config/globalcss.css')) {
+    $css = file_get_contents('config/globalcss.css');
+}
 ?>
 
 
@@ -44,7 +47,28 @@ Please configure the box below with the site URL, in the format of ' https://exa
 WARNING: There is no confirmation after clicking this link!!!
 [Delete Dashboardify DB](delete-dashboardify-db.php)
 
-        </md-block>
+
+
+## Global Dashboard CSS - Default For All Users
+
+This is the default CSS that will be loaded for everyone's dashboards, underneath any user-supplied custom CSS for their dashboards. 
+
+</md-block>
+<form action="config/savecss.php">
+<textarea cols="50" rows="5" name="CSS"><?php echo $css ?></textarea><br />
+<button>Submit</button>
+</form>
+
+<md-block>
+
+
+
+
+
+
+
+
+</md-block>
     </body>
 
 </html>
