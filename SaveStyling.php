@@ -12,7 +12,7 @@
 
     //debuglog("shared functions module loaded.");
     $db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
-	$select = "Update Dashboards Set BackgroundPhotoURL = ?, CustomCSS = ? Where RecID = ?";
+	$select = "Update Dashboards Set BackgroundPhotoURL = ?, CustomCSS = ? Where DashboardID = ?";
 
 	$stmt = $db_file->prepare($select);
     $stmt->bindParam(1,$backgroundurl,PDO::PARAM_STR);
