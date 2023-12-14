@@ -30,6 +30,11 @@ At some point in the future, will constrain visibility to only appear for users 
 
 ## Add a default page theme to the app, and have it customizeable from the Setup page
 
+## Add a module that can check if user is admin or not, perhaps a function that returns true if admin
+
+
+## Add make_admin.php and delete_user.php
+* Need checks that current user has admin rights / perms to do this
 
 ## Add / Continue developing Setup.php / Admin.php Page
 This page should guide a new user through first steps to deploy the app, as well as perhaps serve as a place to update any environment-wide variables that don't need to be seen / managed on the end-user screen. 
