@@ -1,11 +1,22 @@
 # To-Do
 
+* Add ability to remove admin rights in setup page
+* Add delete_user.php
+
 ## New-User Experience
 
 ### Setup widgets that appear on the page by default for new users. 
 ^ This can be turned off or the individual widgets to be created for new users / SQL statements can be altered in the Setup page... Maybe a feature to copy existing widget ID's under each new user, or a direct SQL insert (less preferred).
 
 Could use javascript on the client side to handle sending each NewWidget request on a new user event, then reloading the dashboard after each request was submitted. 
+
+* these could be defined on the setup page
+* copy the new widget dialog from index.php
+* add a flag to the copied dialog when on setup.php that marks it as a global widget
+* add column to widgets table to make this a global widget
+* add code to the index.php page so that when a new dashboard is created, it creates new widgets for the new DB automatically. 
+* At this point is where we should figure out how to trigger the URL for a new widget in the background or something, so that we don't have to reload the page several times. Dunno. 
+
 
 ### User settings page
 
@@ -16,10 +27,6 @@ Could use javascript on the client side to handle sending each NewWidget request
 * label somewhere telling someone they can write in something like 'lightgrey' for the background color, or pick from a dropdown?
 	* ideally a color splotch appears that can update in realtime (future luxury)
 
-### Add 'Setup' button to top row / menu
-Should appear for everyone for now. 
-At some point in the future, will constrain visibility to only appear for users that have admin rights, once a method for defining those rights has been defined. 
-
 ### Initial background image
 
 * Maybe setup a background image or individual widgets located under the main menu buttons, explaining what they are for, etc. 
@@ -29,12 +36,6 @@ At some point in the future, will constrain visibility to only appear for users 
 
 
 ## Add a default page theme to the app, and have it customizeable from the Setup page
-
-## Add a module that can check if user is admin or not, perhaps a function that returns true if admin
-
-
-## Add make_admin.php and delete_user.php
-* Need checks that current user has admin rights / perms to do this
 
 ## Add / Continue developing Setup.php / Admin.php Page
 This page should guide a new user through first steps to deploy the app, as well as perhaps serve as a place to update any environment-wide variables that don't need to be seen / managed on the end-user screen. 
@@ -132,6 +133,11 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
 * Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
 * Added Setup for siteurlconfig, and redirect to force entry if empty.
+* Added Setup button to home page
+* Added Admin flag to users table, and config to mark this flag via Setup
+
+* Added module that can check for whether the current user is an Admin
+
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 

@@ -1,13 +1,11 @@
 <?php 
 				function selectquery($sql) {
 					debuglog($sql,"about to execute query");
-
-					//$rootdbpath = $_SERVER['DOCUMENT_ROOT'] . "/Dashboardify/Dashboardify.s3db";
-				
-					// Create and connect to SQLite database file.
-					//$db_file = new PDO('sqlite:' . $rootdbpath);
-					$db_file = new PDO('sqlite:Dashboardify.s3db');
-
+					$rootPath = $_SERVER['DOCUMENT_ROOT'];
+					$dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
+					$db_file = new PDO($dbpath);
+					//$db_file = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+					//$db_file = new PDO('sqlite:Dashboardify.s3db');
 					//debuglog($localdb,"DB file");
 					$stmt1 = $db_file->prepare($sql);
 					$stmt1->execute();
@@ -15,8 +13,18 @@
 					//debuglog($results,"Query results");
 					return $results;
 				}
+
+				function getCurrentUserID() {
+					$sessionid = $_COOKIE["SessionID"]; 
+					debuglog($sessionid, "SessionID"); //Get User for Session ID
+					$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; 
+					debuglog($userid, "User ID found for user");
+					return $userid;
+				}
 				function execquery($sql) {
-					$localdb = new PDO('sqlite:Dashboardify.s3db');
+					//$localdb = new PDO('sqlite:Dashboardify.s3db');
+					$rootPath = $_SERVER['DOCUMENT_ROOT'];
+					$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
 					$stmt1 = $localdb->prepare($sql);
 					$stmt1->execute();
 					

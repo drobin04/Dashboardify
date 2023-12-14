@@ -1,13 +1,14 @@
 <html>
     <head>
         <script type="module" src="js/md-block.js"></script>
-
+        <link type="text/css" rel="stylesheet" href="css/settings_page.css">
 
     </head>
 <?php
 
 ?>
     <body>
+        <div class="MainPanel">
         <md-block>
 # Setup / Admin page for Dashboardify
 
@@ -22,8 +23,6 @@ $filename = 'Dashboardify.s3db';
 if (file_exists($filename) && filesize($filename) > 0) {
   echo "Database file found!! ";  
 
-// For populating 'User's list below, we will collect list of users in this section
-$userslist = selectquery("Select RecID, Email, Admin FROM Users");
 
 
 
@@ -75,13 +74,16 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 <table>
 <tr><th>RecID</th><th>Username/Email</th><th>Admin</th><thActions</th></tr>
 <?php
+$userslist = selectquery("Select RecID, Email, Admin FROM Users");
+
 if (isset($userslist)) {
     foreach ($userslist as $user) {
-        if (!(Isset($user["Admin"])) Or ($user["Admin"] = "")) {
+        if (($user["Admin"] != "1") Or ($user["Admin"] = "")) {
             $user["Admin"] = "N";
         }
+        else { $user["Admin"] = "Y";}
         echo "<tr><td>" . $user["RecID"] . "</td><td>" . $user["Email"] . "</td><td>" . $user["Admin"] . "</td><td><a href='deleteuser.php?recID=" . $user["RecID"] 
-        . "'>Delete?</a> | " . "<a href='make_admin.php?recID=" . $user["RecID"] 
+        . "'>Delete?</a> | " . "<a href='config/make_admin.php?recID=" . $user["RecID"] 
         . "'>Make Admin?</a></tr><br />";
     }
 }
@@ -94,6 +96,7 @@ if (isset($userslist)) {
 
 
 </md-block>
+</div>
     </body>
 
 </html>
