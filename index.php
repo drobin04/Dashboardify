@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="config/globalcss.css">
 <script type="module" src="js/md-block.js"></script>
 <!--<script src="/js/textboxes.js"></script>-->
-<title>Dashboardify</title><link type="text/css" rel="stylesheet" href="index.css">
+<title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }
@@ -237,7 +237,7 @@
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script type="text/javascript" src="js/index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 		<script>
 function deleteElement(link) {
     // Replace 'your-url-here' with the actual URL
