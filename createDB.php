@@ -24,7 +24,8 @@ $widgetsSQL = "CREATE TABLE [Widgets] (
 
 $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
-	[Email]	TEXT NOT NULL
+	[Email]	TEXT NOT NULL,
+    [Admin] BOOLEAN  NULL
 )";
 
 $userCSSsql = "CREATE TABLE [UserCSS] (
