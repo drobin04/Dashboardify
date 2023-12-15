@@ -81,7 +81,7 @@
 
 					} else { // If dash not found, create one
 						$dashboardid = GUID(); 
-						$sql1 = "INSERT INTO Dashboards (DashboardID, UserID) VALUES ('" . $dashboardid . "', '" . $userid . "')";
+						$sql1 = "INSERT INTO Dashboards (DashboardID, UserID, DefaultDB, Name) VALUES ('" . $dashboardid . "', '" . $userid . "', 'Y', 'Main')";
 						debuglog($sql1,"SQL Dashboard Insert Query"); execquery($sql1);
 					} 
 				} catch (exception $ex) {echo $ex;debuglog($ex,"Exception found during dashboard checks");

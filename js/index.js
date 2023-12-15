@@ -31,7 +31,9 @@ function opencollapsediframe(recid) {
 			var e = document.getElementById("ddlSelectedDashboard");
 			var value = e.value;
 			var text = e.options[e.selectedIndex].text;
-			var newurl = window.location.href.split("?")[0] + "?SelectDashboardID=" + value;
+			// var newurl = window.location.href.split("?")[0] + "?SelectDashboardID=" + value; // Removed to address bug with dashboard select dropdown not working when on cachedpage.html vs index.php. 
+			var newurl = "index.php?SelectDashboardID=" + value; // Added this to address bug RE line above. .
+			
 			window.location.href = newurl;
 			//console.log(newurl);
 		}

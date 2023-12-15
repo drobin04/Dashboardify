@@ -82,9 +82,9 @@ if (isset($userslist)) {
             $user["Admin"] = "N";
         }
         else { $user["Admin"] = "Y";}
-        echo "<tr><td>" . $user["RecID"] . "</td><td>" . $user["Email"] . "</td><td>" . $user["Admin"] . "</td><td><a href='deleteuser.php?recID=" . $user["RecID"] 
-        . "'>Delete?</a> | " . "<a href='config/make_admin.php?recID=" . $user["RecID"] 
-        . "'>Make Admin?</a></tr><br />";
+        echo "<tr><td>" . $user["RecID"] . "</td><td>" . $user["Email"] . "</td><td>" . $user["Admin"] . "</td><td><a href='config/delete_user.php?recID=" . $user["RecID"] 
+        . "'>Delete?</a> " . "<a href='config/make_admin.php?recID=" . $user["RecID"] 
+        . "'>Make Admin?</a> <a href='config/remove_admin.php?recID=" . $user["RecID"] . "'>Remove Admin?</a></tr><br />";
 
 
     }

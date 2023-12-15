@@ -1,14 +1,13 @@
 # To-Do
 * Add widget type for querying API and displaying a table from results using client side JS
 	* Probably need a text box for filtering path of JSON results to the object to be displayed... 
-* Add ability to remove admin rights in setup page
-* Add delete_user.php
-* CHARTS AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
 * Update NewWidget dialog on index.php to make different fields visible / not visible based on which item in the dropdown was selected
 	* If not recognized in list of programmed widget types, make them all visible
-
-
-# TODO - CHARTS AND TABLES AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
+- Have an interface somewhere where you can mark your default dashboard or set the current one as default. 
+	* /userconfig/manage_dashboards.php
+	* Provides list of dashboards for current user
+	* Links next to each one that allow you to mark as default or delete.....
+		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier.  
 
 ## New-User Experience
 
@@ -49,8 +48,13 @@ This page should guide a new user through first steps to deploy the app, as well
 
 Things that may belong here: 
 
+* Configuring the various implemented authentication methods
+	* None currently in place
+	* Potential future ones might be:
+		* Password
+		* Email / SMS Authentication Code
+		* Key file based
 * Management interface for users? 
-	* Display a table format list of users in the DB, User ID, Email.
 * Defining session timeout options (Is timeout needed? If so, how long?)
     * Would need to add some code to support this, but is a logical feature request.
 		* Code for this should ideally be located in the logoutredirect.php page, OR could be implemented as a timeout on the session cookie!
@@ -69,20 +73,6 @@ Consider pulling the code to run for the widget type from a DB entry, so that fu
 
 # fix bugs
 
-- If no 'default' dashboard is found, load the first one. Ran into a bug when deploying updated code due to this and had to manually update DB.
-^ Test the above, as of 12/2023 not sure if still exists.
-
-
-- Have an interface somewhere where you can mark your default dashboard or set the current one as default. 
-
-
-
-## Bug - Can't change dashboard from indexattempt.html page. 
-
-After changing the dropdown, nothing seems to happen.
-
-Expected behavior: Reloads the page with the selected dashboard shown based on the dropdown item chosen. 
-
 # Future Ideas
 
 - Ability to drag and drop an existing widget to a new position. When 'dropping' the item, record the new position and we change the X/Y coords for the widget with a background request over javascript to a PHP page that acts as an API, while also changing it locally on the client so that we don't have to reload the page. 
@@ -94,7 +84,7 @@ for sqlite code - build api page to query for SQLite widget values.
 Check for widget details where a dashboard id / user id matches so you can't plug in random person's user ID. 
 Have javascript load the data from the API in all cases so that it works either on the php page OR on the html cached copy.
 
-
+## Charts
 
 # User-Defineable API's
 - Widget type for custom API
@@ -146,6 +136,9 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * 12/15/23 - Added shared function for populating HTML table from db results
 * 12/15/23 - Added widget type for SQLiteResultsList, which displays a table from a given query to a DB (Sqlite DB must be hosted with this app and accessible by this app)
 * 12/15/23 - Fixed bug with existing SQL Server widget and new SQLiteresultslist widget where the fields on the Edit Widget Dialog don't fully re-populate all of the fields with existing data. 
+* 12/16/23 - Add delete_user.php
+* 12/16/23 - Fixed bug on dashboard select dropdown, where you couldn't change the dashboard when viewing the cachedpage.html. Now works properly (Redirects to the dashboard on index.php, necessary for functionality / to load the data)
+* 12/16/23 - Added ability to remove admin rights in setup page
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 
