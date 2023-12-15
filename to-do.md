@@ -1,4 +1,8 @@
 # To-Do
+* Add password authentication method
+* Add authentication methods config section to setup page where the method to be used (None, password, email auth code, keyfile, LDAP, etc) can be selected.
+* Add configuration to setup page for a message (And CSS, maybe?) to display to let users know that they failed to authenticate.
+	* Future wish: Render a preview of this message into a DIV element on the screen to the side. 
 * Add widget type for querying API and displaying a table from results using client side JS
 	* Probably need a text box for filtering path of JSON results to the object to be displayed... 
 * Update NewWidget dialog on index.php to make different fields visible / not visible based on which item in the dropdown was selected
@@ -7,7 +11,12 @@
 	* /userconfig/manage_dashboards.php
 	* Provides list of dashboards for current user
 	* Links next to each one that allow you to mark as default or delete.....
-		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier.  
+		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier. 
+* Database SQL Update area for Setup.php
+	* Form area with textarea element
+	* Radio buttons for whether we want to execute as a select (with results) or just an executequery with no results
+	* For results, just use the shared_function to generate an HTML table of results from the dataset
+	* formaction can target current page with a querystring like 'SQLQuery' and 'OperationType'
 
 ## New-User Experience
 
