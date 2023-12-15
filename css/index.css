@@ -2,6 +2,10 @@ html, body{
     height: 100%;
 }
 
+.nodeco {
+    text-decoration: none;
+}
+
 #SQL {display: none;}
 
 

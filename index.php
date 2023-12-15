@@ -17,7 +17,8 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
-			<a href="cachedpage.html">Cached Page</a> <a href="index.php">Main Page / Reload Cache</a>
+			<button><a class='nodeco' href="cachedpage.html">Cached Page</a></button>
+			<button><a class='nodeco' href="index.php">Main Page / Reload Cache</a></button>
 			
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include("shared_functions.php");
@@ -27,7 +28,7 @@
 				$sessionid = $_COOKIE["SessionID"]; debuglog($sessionid, "SessionID"); //Get User for Session ID
 				$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; debuglog($userid, "User ID found for user");
 				if (isadmin($userid)) { // Display Setup button if user is an admin. 
-					echo "<button type='button' style='float:left !important;''><a href='setup.php'>Setup</a></button>";
+					echo "<button type='button' style='float:left !important;''><a class='nodeco' href='setup.php'>Setup</a></button>";
 				}
 				echo "<script>localStorage.setItem('userID', '$userid');</script>";
 				$dashboards = selectquery("Select * From Dashboards Where UserID = '" . $userid . "'"); // Query for dashboards for user. 
