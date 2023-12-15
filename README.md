@@ -28,7 +28,13 @@ If this is not done, you may get a blank screen when loading the app, as almost 
     extension=php_sqlsrv_56_ts.dll
     extension=php_pdo_sqlsrv_56_ts.dll  
 
-# Important Missing Features
+# We Need YOU
+
+## Work We Need Contributors For
+* In serious need of graphic designs for styles / UI across the board
+    * Super helpful if the person who is able to contribute this also has the ability to craft the CSS to create the style, but also appreciated if only can provide design ideas
+
+## Important Missing Features
 
 The following are important items that have not yet been implemented, either not properly or entirely missing
 

@@ -1,5 +1,5 @@
 if (window.location.href.indexOf("EditRecID") != -1) {
-	document.getElementById('light').style.display='block';
+	document.getElementById('NewWidgetDialog').style.display='block';
 }		
 
 function renderNewWidgetOptionsByDropdown() {
@@ -11,6 +11,9 @@ function renderNewWidgetOptionsByDropdown() {
 			document.getElementById("SQL").style.display = 'block';
 		  break;
 		
+		case "SQLiteResultsList":
+			document.getElementById("SQL").style.display = 'block';
+			break;
 		}
 
 

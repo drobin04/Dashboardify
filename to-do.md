@@ -2,7 +2,10 @@
 
 * Add ability to remove admin rights in setup page
 * Add delete_user.php
-* CHARTS AND TABLES AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
+* CHARTS AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
+* Update NewWidget dialog on index.php to make different fields visible / not visible based on which item in the dropdown was selected
+	* If not recognized in list of programmed widget types, make them all visible
+
 
 # TODO - CHARTS AND TABLES AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
 
@@ -134,13 +137,14 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Ability to place bookmarks in custom locations on the screen as placeable widgets
 	* Was relatively simple in concept; had to duplicate and modify some shared variables to support this one. One extra spaghetti noodle on the plate. 
 * Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
-* Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
-* Added Setup for siteurlconfig, and redirect to force entry if empty.
-* Added Setup button to home page
-* Added Admin flag to users table, and config to mark this flag via Setup
-
-* Added module that can check for whether the current user is an Admin
-
+* 12/14/23 - Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
+* 12/14/23 - Added Setup for siteurlconfig, and redirect to force entry if empty.
+* 12/14/23 - Added Setup button to home page
+* 12/15/23 - Added Admin flag to users table, and config to mark this flag via Setup
+* 12/15/23 - Added module that can check for whether the current user is an Admin
+* 12/15/23 - Added shared function for populating HTML table from db results
+* 12/15/23 - Added widget type for SQLiteResultsList, which displays a table from a given query to a DB (Sqlite DB must be hosted with this app and accessible by this app)
+* 12/15/23 - Fixed bug with existing SQL Server widget and new SQLiteresultslist widget where the fields on the Edit Widget Dialog don't fully re-populate all of the fields with existing data. 
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 

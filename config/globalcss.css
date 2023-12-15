@@ -1,5 +1,12 @@
-body {background-color: lightgrey !important;}
-
-.bookmark {background-color: orange !important;}
-
+body {background-color: lightgrey !important;}
+
+
+
+.bookmark {background-color: orange !important;}
+
+
+
 .borderless {background-color: transparent !important; border: 0px !important;}
+
+
+.TableResults, .TableResults tr, .TableResults th, .TableResults td {border: 1px black solid; text-align: center; background-color: white;}

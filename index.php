@@ -13,9 +13,9 @@
 	
         <div>
 			<!--Buttons at top left-->
-            <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
-            <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
-            <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('cssEditorBox').style.display='block';">Edit CSS</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('NewDashboardDialog').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
 			<button><a class='nodeco' href="cachedpage.html">Cached Page</a></button>
 			<button><a class='nodeco' href="index.php">Main Page / Reload Cache</a></button>
@@ -153,10 +153,31 @@
 						echo "</div>"; //this wraps combined variable, into a surrounding div.
 					}
 					If ($row["WidgetType"] == "Notes") {echo $combined . "<p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $row["Notes"] ."</md-block></p></div>";}
-					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}} echo "</table>";
+					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}
+					If ($row["WidgetType"] == "SQLiteResultsList") {
+						// Wrap in a try statement!! Throw the error into debug + the widget. 
+						try {
+						// Get variables
+						If ($row["sqlquery"] == "") {$row["sqlquery"] = "Select 'Query Not Present' as Error";}
+						$sqlitedbname = $row["sqldbname"];
+						$sqlitequery = $row["sqlquery"];
+						debuglog($sqlitequery,"about to execute query");
+						$dbpath = 'sqlite:' . $sqlitedbname; // setup proper sqlite DSN pathname from supplied input
+						$db_file = new PDO($dbpath);
+						$stmt9 = $db_file->prepare($sqlitequery);
+						$stmt9->execute();
+						$localresults = $stmt9->fetchAll(PDO::FETCH_ASSOC);
+						debuglog($localresults,"Query results");
+						echo $combined . generateTableFromObjects($localresults) ."</div>";
+						} catch (exception $e) {
+							
+						} finally {
+						}
+					} // End of SQLite DB 'If' block
+				} // End of Widget Loading for-each list
 			?>
 			<!-- New Widget box-->
-		<div id="light" class="white_content"><form id="form1" method="POST" action="NewWidget.php" >
+		<div id="NewWidgetDialog" class="white_content"><form id="form1" method="POST" action="NewWidget.php" >
 		<?php   //Check if this is an 'Edit' or 'New' widget submission , set up.  
 			$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
 			//If EditRecID is in the URL, load details from DB
@@ -175,11 +196,21 @@
 						$WidgetSizeY = $row["SizeY"];
 						$WidgetCSSClass = $row["WidgetCSSClass"];
 						$WidgetNotes = $row["Notes"];
+						// LOAD SQL FIELDS
+						$sqlwidgetquery = $row["sqlquery"];
+						$sqlwidgetdbname = $row["sqldbname"];
+						$sqlwidgetusername = $row["sqluser"];
+						$sqlwidgetpass = $row["sqlpass"];
+						$sqlwidgetserveraddress = $row["sqlserveraddress"];
 						}
 				}
-			} else {$WidgetTypeValue = "Bookmark";$WidgetURLValue = "";$WidgetDisplayText = "";$WidgetPositionX = "";$WidgetPositionY = "";$WidgetSizeX = "";$WidgetSizeY = "";$WidgetCSSClass = "";$WidgetNotes = "";$WidgetID = "";} // Prepare unused variables
+			} else {$WidgetTypeValue = "Bookmark";$WidgetURLValue = "";$WidgetDisplayText = "";$WidgetPositionX = "";
+				$WidgetPositionY = "";$WidgetSizeX = "";$WidgetSizeY = "";$WidgetCSSClass = "";$WidgetNotes = "";
+				$WidgetID = "";
+				$sqlwidgetquery = ""; $sqlwidgetdbname = ""; $sqlwidgetserveraddress = ""; $sqlwidgetusername = ""; $sqlwidgetpass = "";
+			} // Prepare unused variables
 		?>
-                    <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
+                    <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
                     <button id="btnSubmitNewWidget">Submit</button>
                     <br />
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
@@ -192,6 +223,7 @@
                             <option value="Notes">Notes</option>
                             <option value="HTMLEmbed">HTMLEmbed</option>
 							<option value="SQLServerScalarQuery">SQLServerScalarQuery</option>
+							<option value="SQLiteResultsList">SQLiteResultsList</option>
                         </select><br />
                         <span id="widgetURL"><label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br /></span>
                         <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br /><hr>
@@ -205,18 +237,18 @@
 						<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input><br />
 						Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input></span><br />
 						
-						<span id="SQL">SQL Server Address<input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php ?>"></input><br />
-						SQL DBName<input ID="SQLDBName" name="SQLDBName" value="<?php ?>"></input><br />
-						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php  ?>"></input><br />
-						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php  ?>"></input><br />
-						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php  ?>"></input><br /></span>
+						<span id="SQL">SQL Server Address<input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php echo $sqlwidgetserveraddress ?>"></input><br />
+						SQL DBName<input ID="SQLDBName" name="SQLDBName" value="<?php echo $sqlwidgetdbname ?>"></input><br />
+						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php echo $sqlwidgetusername ?>"></input><br />
+						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php echo $sqlwidgetpass ?>"></input><br />
+						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php echo $sqlwidgetquery ?>"></input><br /></span>
 
                     </div>
 		</div></form>
 
 			<!--Edit CSS Box--><form id="form1" method="POST" action="SaveStyling.php">
-			<div id="light2" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
-				<button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='none';">Close</button><br />
+			<div id="cssEditorBox" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
+				<button type="button" style="float: left !important;" onclick="document.getElementById('cssEditorBox').style.display='none';">Close</button><br />
 				<div id="columnd" class="column" style="width: 85% !important; height:100% !important; clear: both; margin: 0 auto;">
 					<header >Dashboard-Specific CSS<hr /></header>
 					<button ID="btnUpdateCSS" >Save CSS</button><br />
@@ -227,7 +259,7 @@
 			</div></form>
         </div>
 		<form id="form1" method="POST" action="NewDashboard.php">
-		<div id="light3" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
+		<div id="NewDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
 			
 				<header >New Dashboard<hr /></header>
 				<br />
