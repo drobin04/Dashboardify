@@ -1,6 +1,22 @@
 # Dashboardify
 Web-app for developing personal, customizeable dashboards with bookmarks, embedded frames, as well as database and API connectivity.
 
+# Features
+
+Multiple different types of embeddable widgets:
+* Bookmarks - simple links to websites
+* IFrames - Embed webpages directly on the screen
+    * Sub-Type for 'collapseable' IFrame that starts as a minimized bar and can then be opened after page load. Reduces page load / wait time. 
+* Direct HTML embed - Embed HTML content directly, including embeddable widgets from other sites
+* Notes - Note section that can be placed; Supports Markdown formatting
+* SQL Server Scalar Query - Allows you to retrieve a scalar query value from a MS SQL Server DB (Plans in the future to implement result lists and charts as well)
+
+
+## Cached Homepage for faster loading / reduced server bandwidth / CPU strain
+In addition to the base functionality on index.php, there is also an HTML page, 'cachedpage.html', which loads the content of the last loaded dashboard for the current user, from LocalStorage (Gets populated via javascript into localstorage on every index.php load). 
+
+This enables much faster loads of the page, as it's mostly static content that doesn't change frequently, and greatly reduces the number of times PHP needs to run on the server side for a page that may frequently be called as a new tab page / home page etc. 
+
 # Requirements / Setup
 
 - Need to set up PHP to allow sqlite(3) / PDO extensions.

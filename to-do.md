@@ -2,6 +2,9 @@
 
 * Add ability to remove admin rights in setup page
 * Add delete_user.php
+* CHARTS AND TABLES AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
+
+# TODO - CHARTS AND TABLES AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
 
 ## New-User Experience
 

@@ -131,7 +131,7 @@
 					   }
 						echo $combined . "<p>" . $row["BookmarkDisplayText"] . ": " . $result ."</p></div>";
 					}
-					If (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) {
+					If (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
 						echo $floatingbookmark 
 						." <div style='padding: 5px; width: 100%; class='bookmark'"
 						. $row["WidgetCSSClass"] 
@@ -140,13 +140,13 @@
 						. "'>" 
 						. $row["BookmarkDisplayText"] 
 						."</a></div></div>";};
+
+						//For bookmarks to be lumped together on the left -->
 					If ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
 					If ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
 					If ($row["WidgetType"] == "Collapseable IFrame") {
 						$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 					
-
-
 						$hidden = "<div id='' class='collapse' style='" . "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: 20px; max-width: " . $row["SizeX"] . "px;'" . "'>";
 						echo $hidden . "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" . $row["RecID"] . "&quot;)'>" . $row["BookmarkDisplayText"] . "</a>";
 						echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
@@ -159,14 +159,11 @@
 		<div id="light" class="white_content"><form id="form1" method="POST" action="NewWidget.php" >
 		<?php   //Check if this is an 'Edit' or 'New' widget submission , set up.  
 			$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
-			//$WidgetID = str_replace("EditRecID=","",$querystring); //Strip out extra junk
+			//If EditRecID is in the URL, load details from DB
 			If (Isset($_GET["EditRecID"])) {
 				$WidgetID = $_GET["EditRecID"];
-				$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
 				$select = "SELECT * FROM Widgets Where RecID = '" . $WidgetID . "'"; // Prepare SELECT statement.
-				$stmt = $db_file->prepare($select);
-				$stmt->execute(); // execute
-				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); // Get the results.
+				$results = selectquery($select);
 				foreach($results as $row) {
 					If ($row["RecID"] == $WidgetID) {
 						$WidgetTypeValue = $row["WidgetType"];
@@ -239,22 +236,4 @@
 		</div>
 		</form>
 		<script type="text/javascript" src="js/index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
-		<script>
-function deleteElement(link) {
-    // Replace 'your-url-here' with the actual URL
-    var url = 'your-url-here';
-
-    // Send a GET request to the specified URL
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', url, true);
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-            // Request was successful, hide the parent element
-            var elementToDelete = link.parentNode;
-            elementToDelete.style.display = 'none';
-        }
-    };
-    xhr.send();
-}
-</script>
 		</html>
