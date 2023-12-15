@@ -1,5 +1,6 @@
 # To-Do
-
+* Add widget type for querying API and displaying a table from results using client side JS
+	* Probably need a text box for filtering path of JSON results to the object to be displayed... 
 * Add ability to remove admin rights in setup page
 * Add delete_user.php
 * CHARTS AS RESULT SETS FROM SQLITE OR SQL SERVER DATABASES.
