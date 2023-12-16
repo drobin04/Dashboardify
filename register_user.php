@@ -199,9 +199,9 @@
 			<form class="login" method="POST" action="./verify-login.php">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
-					<input type="text" class="login__input" placeholder="Email / Username" name="email"></input>
-					<input type="password" class="login__input" placeholder="Password" name="password"></input>
-                    <input type="password" class="login__input" placeholder="Confirm Your Password" name="password_confirmation"></input>
+					<input type="text" class="login__input" required placeholder="Email / Username" name="email"></input>
+					<input type="password" class="login__input" required placeholder="Password" name="password"></input>
+                    <input type="password" class="login__input" required placeholder="Confirm Your Password" name="password_confirmation"></input>
 				</div>
 				
 				<button class="button login__submit">
@@ -209,7 +209,6 @@
 					<i class="button__icon fas fa-chevron-right"></i>
 				</button>				
 			</form>
-			<div style="text-align: right; color: white;"><a href="register_user.php" style="text-color: white;text-decoration: none;color: white !important;padding-right: 30px;">Register</a></div>
 			
 		</div>
 		<div class="screen__background">
