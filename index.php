@@ -81,8 +81,47 @@
 
 					} else { // If dash not found, create one
 						$dashboardid = GUID(); 
-						$sql1 = "INSERT INTO Dashboards (DashboardID, UserID, DefaultDB, Name) VALUES ('" . $dashboardid . "', '" . $userid . "', 'Y', 'Main')";
-						debuglog($sql1,"SQL Dashboard Insert Query"); execquery($sql1);
+						$defaultdashimage = "";
+						if (file_exists('config/defaultdashboardurl.txt')) {
+							$defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
+						}
+						$sql1 = "INSERT INTO Dashboards (DashboardID, UserID, DefaultDB, Name, BackgroundPhotoURL) VALUES ('" . $dashboardid . "', '" . $userid 
+						. "', 'Y', 'Main', '" . $defaultdashimage . "')";
+						debuglog($sql1,"SQL Dashboard Insert Query"); 
+						execquery($sql1); //Create Dashboard
+						
+						// First / Newly Created Dashboard; Populate Global/Default Widgets
+
+						// Query for Global widgets
+						$globalwidgets = selectquery("Select * From Widgets Where Global = '1'");
+						debuglog($globalwidgets, "Global Widgets List");
+						foreach($globalwidgets as $w) {
+							
+							//Prepare Variables
+							$sep = "','"; // Seperator
+							$sqlserveraddress = $w["sqlserveraddress"];
+							$sqldbname = $w["sqldbname"];
+							$sqlusername = $w["sqluser"];
+							$sqlpass = $w["sqlpass"];
+							$sqlquery = $w["sqlquery"];
+							$globaldefault = "0";
+							
+												
+							// Prepare INSERT statement.
+							$select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
+							,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery, Global) 
+							VALUES 
+							('" 
+							. $w["WidgetType"] . $sep . $w["BookmarkDisplayText"] . $sep . $w["PositionX"] 
+							. $sep . $w["PositionY"] . $sep . $w["SizeX"] . $sep . $w["SizeY"] . $sep . $w["WidgetURL"] 
+							. $sep . $w["WidgetCSSClass"] . $sep . str_replace("'", "''",$w["Notes"]) . $sep . $dashboardid . $sep 
+							.$sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
+							$sep . $globaldefault . "')";
+							debuglog($select, "Query for inserting global widget");
+							execquery($select);
+							header('Location: index.php');
+						}
+
 					} 
 				} catch (exception $ex) {echo $ex;debuglog($ex,"Exception found during dashboard checks");
 					debuglog($ex); echo $ex;
@@ -95,7 +134,7 @@
 				$stmt = $db_file->prepare($select); $stmt->execute();
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); debuglog($results, "Widget results");
 				include("siteurlconfig.php"); //Variable for site url
-				foreach($results as $row) { //Starting with Re-useable texts
+				foreach($results as $row) { //Load Widgets, Starting with Re-useable texts
 					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 					$imgstylecss = "<img style='height:24px; width:24px;' src='";
 					$PositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>";
@@ -202,12 +241,13 @@
 						$sqlwidgetusername = $row["sqluser"];
 						$sqlwidgetpass = $row["sqlpass"];
 						$sqlwidgetserveraddress = $row["sqlserveraddress"];
+						$globalwidget = $row["Global"];
 						}
 				}
 			} else {$WidgetTypeValue = "Bookmark";$WidgetURLValue = "";$WidgetDisplayText = "";$WidgetPositionX = "";
 				$WidgetPositionY = "";$WidgetSizeX = "";$WidgetSizeY = "";$WidgetCSSClass = "";$WidgetNotes = "";
 				$WidgetID = "";
-				$sqlwidgetquery = ""; $sqlwidgetdbname = ""; $sqlwidgetserveraddress = ""; $sqlwidgetusername = ""; $sqlwidgetpass = "";
+				$sqlwidgetquery = ""; $sqlwidgetdbname = ""; $sqlwidgetserveraddress = ""; $sqlwidgetusername = ""; $sqlwidgetpass = ""; $globalwidget = "0";
 			} // Prepare unused variables
 		?>
                     <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
@@ -226,8 +266,10 @@
 							<option value="SQLiteResultsList">SQLiteResultsList</option>
                         </select><br />
                         <span id="widgetURL"><label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br /></span>
-                        <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br /><hr>
-                        <button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button><br />
+                        <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br />
+                        <?php if (isadmin($userid)) { echo "<label>Global? 0 or 1.</label><input id='GlobalWidgetBool' name='GlobalDefault' value='" . $globalwidget . "'></input>"; } ?>
+						<hr><button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button>
+						<br />
                         <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input><br />
                         <label>PositionY: </label><input ID="txtpositiony" Text="0" name="PositionY" value="<?php echo $WidgetPositionY; ?>"></input><br />
                         <label>SizeX: </label><input ID="txtsizeX" Text="0" name="SizeX" value="<?php echo $WidgetSizeX; ?>"></input><br />
@@ -267,5 +309,5 @@
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="js/index.js"></script><br /><a href="actions/logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script type="text/javascript" src="js/index.js"></script><br /><div style='border: 1px black solid; display: inline; padding: 3px; background-color: lightgrey;'><a href="actions/logout.php">Log Out</a></div></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 		</html>

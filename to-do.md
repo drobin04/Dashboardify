@@ -1,5 +1,13 @@
 # To-Do
 * Add password authentication method
+* Add 'default' site-wide settings for new dashboards
+	* Background photo
+* Add 'Global' or 'Default' flag to widget table
+* Add logic on code that creates first dashboard, to find & loop through all default / global widgets, and for each one, insert a new copy with the new dash's recID. 
+* Interface on setup page to list default / global widgets
+* For now at least, if user is an admin, display a checkbox on the NewWidget dialog for global / default that will get sent. 
+* After submitting, on newwidget.php, check if user is actually an admin before accepting / processing / saving the flag for global / default. 
+  
 * Add authentication methods config section to setup page where the method to be used (None, password, email auth code, keyfile, LDAP, etc) can be selected.
 * Add configuration to setup page for a message (And CSS, maybe?) to display to let users know that they failed to authenticate.
 	* Future wish: Render a preview of this message into a DIV element on the screen to the side. 

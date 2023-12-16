@@ -40,6 +40,9 @@ if (file_exists('config/siteurlconfig.txt')) {
     $urlvalue = file_get_contents('config/siteurlconfig.txt');
 
 }
+if (file_exists('config/defaultdashboardurl.txt')) {
+    $defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
+}
 if (file_exists('config/globalcss.css')) {
     $css = file_get_contents('config/globalcss.css');
 }
@@ -117,6 +120,11 @@ if (isset($userslist)) {
 ?>
 </table>
 <br />
+
+<h2>New User Experience</h3>
+<p>Below are settings affecting new users on the system.</p>
+<label>Default Dashboard Background Image For First Dashboard: </label><input id='defaultdashimage' name='defaultdashimage' value='<?php echo $defaultdashimage ?>'></input>
+
 
 <form action="setup.php">
 <h2>Manual SQL Updates</h2>

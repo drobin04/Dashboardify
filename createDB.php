@@ -20,7 +20,9 @@ $widgetsSQL = "CREATE TABLE [Widgets] (
     [SizeY] iNTEGER  NULL,
     [WidgetURL] NVARCHAR(1000)  NULL,
     [WidgetCSSClass] NVARCHAR(150)  NULL
-    , Notes TEXT, sqlserveraddress TEXT(75), sqldbname TEXT(75), sqluser TEXT(75), sqlpass TEXT(75), sqlquery TEXT(2000))";
+    , Notes TEXT NULL, sqlserveraddress TEXT(75) NULL, sqldbname TEXT(75) NULL, sqluser TEXT(75) NULL, sqlpass TEXT(75) NULL, sqlquery TEXT(2000) NULL
+    , Global BOOLEAN NULL
+    )";
 
 $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
