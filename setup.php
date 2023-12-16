@@ -152,6 +152,7 @@ $authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "V
 
 
 <br /><br />
+<h3>Update Code</h3>
 <p>The following button will allow you to update your app's code from the main Dashboardify repo.
 Backup your files first!! 
 It's possible that changes may have occurred in newer versions of the repo, which expect database columns which might not exist yet on your version, and which would cause problems. 
