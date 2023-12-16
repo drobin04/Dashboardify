@@ -97,34 +97,13 @@ Have javascript load the data from the API in all cases so that it works either 
 - Renders a note on the screen , or perhaps a collapseable iframe, with the api details.
 - I imagine it'll hook requests and save them into a sqlite db, but could, in the end, just have a flat user-specified php script. Think more on this.
 
-# todo / Events API / db
+# / Events API / db
 
 - pre-built API that can receive webhooks and stores the content and headers into fields in a row in a sqlite db. This way someone can quickly ping it, then query the events db for results. 
 
 - Consider loading a small image from a site's root /favicon.ico above each bookmark for a more natural look, maybe this could be an optional feature.
 
-## 12/9/23 - Bug Fixed - when submitting first widget as a completely new user 
-Upon first submission, error occurs 
-"Notice: Undefined index: BackgroundPhotoURL in /home/www/douglasrobinson.me/Dashboardify/index.php on line 28
-
-Notice: Undefined index: CustomCSS in /home/www/douglasrobinson.me/Dashboardify/index.php on line 28" 
-
-Issue was due to the logic when loading a dashboard for a user with only one dashboard, there was no 'row' variable on line 28. 
-
-Updated code to the following: 
-
-foreach($dashboards as $row) {
-							debuglog($dashboards, "Dashboards Array - Single Result"); 
-							$dashboardid = $dashboards[0]["RecID"]; 
-							debuglog($dashboardid, "Selected Dashboard ID."); 
-							$dashboardphotourl = $row["BackgroundPhotoURL"]; 
-							$usercss = $row["CustomCSS"];
-						}
-
-The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $usercss assignments were failing because they were referencing an array that did not exist. 
-
-
-# Other Changes
+# Changes History
 * Updated logic for loading the new/edit widget dialog / form, to not loop through every widget in the DB when trying to find the widget being edited and THEN checking if RecID matches. Instead, now filters the query on where recid = value. 
 * Added markdown support to Notes widgets
 * Moved the initial 'form' element from the very beginning of the document, down to the 'light' box being used for the New Widget box. For some reason this was left wrapping nearly ALL of the content into the first form. Now it's in the right spot, which also makes it easier to recognize that that box is using a form element when reading the code. 
@@ -132,7 +111,7 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * Removed code related to an e-book viewing widget. Was not able to get this into a finished position, and it was introducing large scope creep, so have removed this code for now. It may be an idea for the future, but is impeding progress in other, more important areas for now. 
 * Ability to place bookmarks in custom locations on the screen as placeable widgets
 	* Was relatively simple in concept; had to duplicate and modify some shared variables to support this one. One extra spaghetti noodle on the plate. 
-* Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
+* 12/14/23 - Added a class tag to the paragraph element on notes, 'note', to support custom user styling. Also added a default padding-left style of 15px. 
 * 12/14/23 - Added logic to detect DB file not existing, direct user to Setup page, functions on Setup page to re-create/prepare and/or delete the database. This is done to support getting the project into a state suitable for github cloning / reproduction. 
 * 12/14/23 - Added Setup for siteurlconfig, and redirect to force entry if empty.
 * 12/14/23 - Added Setup button to home page
