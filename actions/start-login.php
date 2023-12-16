@@ -201,9 +201,10 @@ body {
 					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" placeholder="Email / Username" name="email"></input>
 					<?php
+					include('../shared_functions.php');
 					$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
-					if ($authmode = "Password") {
-					echo "<input type='password' class='login__input' placeholder='Password' name='password'></input>"
+					if ($authmode == "Password") {
+					echo "<input type='password' class='login__input' placeholder='Password' name='password'></input>";
 					}
 					?>
 				</div>

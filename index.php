@@ -1,4 +1,6 @@
-<?php include("checkifdbexists.php");?>
+<?php include("checkifdbexists.php");
+include("actions/logoutredirect.php");
+?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <link rel="stylesheet" href="config/globalcss.css">
@@ -8,7 +10,7 @@
     <style>
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }
-	</style><?php include("actions/logoutredirect.php");?></head>
+	</style></head>
 <body id='dashboardcontent'>
 	
         <div>
