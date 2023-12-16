@@ -1,6 +1,6 @@
 <?php
 include('check_admin.php');
-include('../shared_functions.php');
+include_once('../shared_functions.php');
 $rootPath = $_SERVER['DOCUMENT_ROOT'];
 $db_file2 = $rootPath . '/Dashboardify/Dashboardify.s3db';
 

@@ -1,5 +1,11 @@
 <?php
 
+if (file_exists('../actions/logoutredirect.php')) {
+	include_once('../actions/logoutredirect.php');
+	} elseif (file_exists('actions/shared_functions.php')) {
+		include_once('actions/shared_functions.php');
+	}
+
 function IsAdmin($userID) {
     
     $query = "Select Admin From Users Where RecID = '" . $userID . "'";

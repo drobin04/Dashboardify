@@ -8,7 +8,7 @@
     <style>
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }
-	</style><?php include("logoutredirect.php");?></head>
+	</style><?php include("actions/logoutredirect.php");?></head>
 <body id='dashboardcontent'>
 	
         <div>
@@ -21,7 +21,7 @@
 			<button><a class='nodeco' href="index.php">Main Page / Reload Cache</a></button>
 			
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
-				include("shared_functions.php");
+				include_once("shared_functions.php");
 				include("config/check_admin.php");
 				//debuglog("shared functions module loaded.");
 				$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
@@ -267,5 +267,5 @@
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="js/index.js"></script><br /><a href="logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script type="text/javascript" src="js/index.js"></script><br /><a href="actions/logout.php">Log Out</a></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 		</html>
