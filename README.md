@@ -34,7 +34,7 @@ A live version of this application will be hosted at https://dashboardify.app/ .
 * In serious need of graphic designs for styles / UI across the board
     * Super helpful if the person who is able to contribute this also has the ability to craft the CSS to create the style, but also appreciated if only can provide design ideas
 * For code contributions, see the notes I have listed on to-do items [on the to-do.md page](to-do.md)
-
+* Testing for gaping security issues and documenting changes needed to ensure users can't access things they shouldn't be able to (There will be many!). Especially around the setup.php page / admin panel. 
 
 ## Important Missing Features
 
