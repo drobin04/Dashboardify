@@ -15,11 +15,14 @@
 
 	if (isset($_COOKIE["SessionID"])) {
 		$sessionid = $_COOKIE["SessionID"]; 
-		$userid = selectquery("Select Count(UserID) As Matches From Sessions Where SessionID = '" . $sessionid . "'")[0]["Matches"];
-		debuglog($userid, "User ID found from DB - executing from logoutredirect.php");
+		$matchingsessioncount = selectquery("Select Count(Email) As Matches From Sessions S
+		Left Join Users U on s.UserID = U.RecID
+		Where S.SessionID = '" . $sessionid . "'")[0]["Matches"];
+		
+		debuglog($matchingsessioncount, "User ID found from DB - executing from logoutredirect.php");
 	}
 
-	if ($userid == 0) {
+	if ($matchingsessioncount == 0) {
 		setcookie("SessionID", "/", time() - 3600, "/Dashboardify");
 		unset($_COOKIE['SessionID']);
 		header("Location: ../Dashboardify/actions/start-login.php?msg=UserNotFound");

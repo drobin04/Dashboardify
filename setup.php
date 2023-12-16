@@ -22,7 +22,11 @@ This page is currently under construction. If you're seeing this and somehow usi
 ### [Click Here To Return To Dashboardify](index.php)
 
 <?php
-include('shared_functions.php');
+include_once('config/check_admin.php');
+include_once('shared_functions.php');
+
+if (!AmIAdmin()) { header('Location: index.php'); }
+
 $css = "";
 $urlvalue = "";
 

@@ -121,7 +121,8 @@ include("actions/logoutredirect.php");
 							$sep . $globaldefault . "')";
 							debuglog($select, "Query for inserting global widget");
 							execquery($select);
-							header('Location: index.php');
+							//header('Location: index.php');
+							echo "<script>location.reload();</script>";
 						}
 
 					} 
