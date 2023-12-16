@@ -12,11 +12,7 @@
 	* Provides list of dashboards for current user
 	* Links next to each one that allow you to mark as default or delete.....
 		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier. 
-* Database SQL Update area for Setup.php
-	* Form area with textarea element
-	* Radio buttons for whether we want to execute as a select (with results) or just an executequery with no results
-	* For results, just use the shared_function to generate an HTML table of results from the dataset
-	* formaction can target current page with a querystring like 'SQLQuery' and 'OperationType'
+
 
 ## New-User Experience
 
@@ -148,6 +144,15 @@ The 'foreach' wrapper was not there, therefore the $dashboardphotourl and $userc
 * 12/16/23 - Add delete_user.php
 * 12/16/23 - Fixed bug on dashboard select dropdown, where you couldn't change the dashboard when viewing the cachedpage.html. Now works properly (Redirects to the dashboard on index.php, necessary for functionality / to load the data)
 * 12/16/23 - Added ability to remove admin rights in setup page
+* 12/16/23 - Database SQL Update area for Setup.php
+	* Form area with textarea element
+	* Radio buttons for whether we want to execute as a select (with results) or just an executequery with no results
+	* For results, uses the shared_function to generate an HTML table of results from the dataset
+* 12/16/23 - Setup.php layout changes 
+	- Moved 'Database file found!!' under the 'Delete Database' heading, renamed to 'Create/Delete Database'.
+	- CSS Styles added to page to address some wonky display issues
+	- savecss.php adjusted to automate the redirection back to setup.php instead of requiring a link to be clicked.
+
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 

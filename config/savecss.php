@@ -18,6 +18,7 @@ If (isset($_GET['CSS'])) {
     fclose($file);
     echo "<h1>Site URL Config Stored!</h1> <br /><br />
     <a href='" . $siteurl . "/setup.php'>Click Here to return to Setup.</a>";
+    header('Location: ../setup.php');
 }
 ?>
 

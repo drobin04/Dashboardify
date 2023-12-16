@@ -2,6 +2,11 @@
     <head>
         <script type="module" src="js/md-block.js"></script>
         <link type="text/css" rel="stylesheet" href="css/settings_page.css">
+        <style>
+            #siteurlconfig {width: 300px;}
+            #SQLUpdate {width: 100%;}
+            .TableResults, .TableResults tr, .TableResults th, .TableResults td {border: 1px black solid; text-align: center;}
+        </style>
 
     </head>
 <?php
@@ -21,7 +26,7 @@ include('shared_functions.php');
 
 $filename = 'Dashboardify.s3db';
 if (file_exists($filename) && filesize($filename) > 0) {
-  echo "Database file found!! ";  
+  $dbfound = "<div style='border: 1px black solid; display: inline; padding: 3px;'>Database file found. No Need To Create.</div> ";  
 
 
 
@@ -38,6 +43,25 @@ if (file_exists('config/siteurlconfig.txt')) {
 if (file_exists('config/globalcss.css')) {
     $css = file_get_contents('config/globalcss.css');
 }
+
+if (isset($_GET["SQLUpdate"])) {
+    $sqlqueryresults = "";
+
+    $sql = $_GET["SQLUpdate"];
+    $operationtype = $_GET["SQLOperationType"];
+
+    if ($operationtype == "Exec") {
+        execquery($sql);
+        $sqlqueryresults = "Query Executed.";
+    } elseif ($operationtype == "Select") {
+        $results = selectquery($sql);
+        $sqlqueryresults = generateTableFromObjects($results);
+    }
+
+
+
+} else { $sqlqueryresults = "";}
+
 ?>
 
 
@@ -48,11 +72,13 @@ Please configure the box below with the site URL, in the format of ' https://exa
     <form action="config/storesiteurlconfig.php">
 <input id="siteurlconfig" name="siteurlconfig" value="<?php echo $urlvalue ?>" ></input><button>Submit</button>
 </form>
-<md-block>
-## Delete Database
-WARNING: There is no confirmation after clicking this link!!!
-[Delete Dashboardify DB](delete-dashboardify-db.php)
 
+<h2>Create/Delete Database</h2>
+<?php echo $dbfound ?> <br />
+
+<p>WARNING: There is no confirmation after clicking this link!!!
+<a href="delete-dashboardify-db.php">Delete Dashboardify DB</a></p>
+<md-block>
 
 
 ## Global Dashboard CSS - Default For All Users
@@ -65,14 +91,10 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 <button>Submit</button>
 </form>
 
-<md-block>
-
-
-## Users
-</md-block>
+<h2>Users</h2>
 
 <table>
-<tr><th>RecID</th><th>Username/Email</th><th>Admin</th><thActions</th></tr>
+<tr><th>RecID</th><th>Username/Email</th><th>Admin</th><th>Actions</th></tr>
 <?php
 $userslist = selectquery("Select RecID, Email, Admin FROM Users");
 
@@ -84,7 +106,7 @@ if (isset($userslist)) {
         else { $user["Admin"] = "Y";}
         echo "<tr><td>" . $user["RecID"] . "</td><td>" . $user["Email"] . "</td><td>" . $user["Admin"] . "</td><td><a href='config/delete_user.php?recID=" . $user["RecID"] 
         . "'>Delete?</a> " . "<a href='config/make_admin.php?recID=" . $user["RecID"] 
-        . "'>Make Admin?</a> <a href='config/remove_admin.php?recID=" . $user["RecID"] . "'>Remove Admin?</a></tr><br />";
+        . "'>Make Admin?</a> <a href='config/remove_admin.php?recID=" . $user["RecID"] . "'>Remove Admin?</a></tr>";
 
 
     }
@@ -94,12 +116,22 @@ if (isset($userslist)) {
 
 ?>
 </table>
-<md-block>
+<br />
 
+<form action="setup.php">
+<h2>Manual SQL Updates</h2>
 
+<input type="radio" id="exec" name="SQLOperationType" value="Exec">
+<label for="exec">Execute (No Results)</label><br>
+<input type="radio" id="select" name="SQLOperationType" value="Select">
+<label for="select">Select (With Results)</label><br>
+<br />
+<textarea id="SQLUpdate" name="SQLUpdate"></textarea><br />
+<button>Submit</button>
+</form>
 
+<?php echo $sqlqueryresults ?>
 
-</md-block>
 </div>
     </body>
 
