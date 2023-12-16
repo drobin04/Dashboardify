@@ -36,7 +36,7 @@ if (file_exists($filename) && filesize($filename) > 0) {
 } else {
     $dbfound = "The database file is either missing or has not been created yet. <br/>
     Would you like to try creating the database now? <br/>
-    [Yes - Create the Dashboardify database.](createDB.php)";
+    <a href='createDB.php'>Yes - Create the Dashboardify database.</a>";
     //$dbfound = "";
 }
 if (file_exists('config/siteurlconfig.txt')) {
@@ -45,7 +45,7 @@ if (file_exists('config/siteurlconfig.txt')) {
 }
 if (file_exists('config/defaultdashboardurl.txt')) {
     $defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
-}
+} else { $defaultdashimage = ""; }
 if (file_exists('config/globalcss.css')) {
     $css = file_get_contents('config/globalcss.css');
 }
