@@ -66,6 +66,7 @@ There is a known issue preventing it from running on version 8.2.
 
 I have not tested it on other versions, but know that if you're on a newer PHP version, *if you encounter a lot of 'header has already been sent' errors, this is why.* The resolution is to change the PHP version, or to rewrite a lot of the code to ensure ***no HTML / white space content is written to the page before headers / redirects***, which requires some restructuring of important code. 
 
+### Extensions
 
 If you have a different stack for your web server and PHP, you should know that this app uses PDO to access a SQLite database file. You may need to enable sqlite extensions. 
 If this is not done, you may get a blank screen when loading the app, as almost all important data is pulled from the included Dashboardify.S3DB file.
