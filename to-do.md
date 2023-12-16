@@ -13,6 +13,7 @@
 	* Links next to each one that allow you to mark as default or delete.....
 		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier. 
 * Need a less goofy way to show edit / delete icons for the widgets on the screen
+* Ability to embed a copy of a particular dashboard on an external page. URL gets called that generates the dashboard and widgets, minus the buttons at the top and the add/edit dialog boxes. Could be an interesting feature!
 
 
 ## New-User Experience
