@@ -23,6 +23,10 @@ Multiple different types of embeddable widgets:
 * SQL Server Scalar Query - Allows you to retrieve a scalar query value from a MS SQL Server DB (Plans in the future to implement result lists and charts as well)
 * SQLiteResultsList - Specify the (relative) location of the SQLite DB file to the website, provide the query to perform (including columns to return, etc). The results will automatically be formatted into a table. You can style the table using custom CSS by using the CSS selector 'TableResults' (Some global CSS rules applied by default)
 
+# Live Demo
+
+A live version of this application will be hosted at https://dashboardify.app/ . This readme will be updated when the site is fully configured. 
+
 # We Need YOU
 
 ## Work We Need Contributors For
