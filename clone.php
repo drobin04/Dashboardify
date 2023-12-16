@@ -53,6 +53,9 @@ function deleteDirectory($dir) {
     return rmdir($dir);
 }
 
+include('config/check_admin.php');
+
+if (AmIAdmin()) {
 // Replace 'your_repo_url' with the string variable containing the GitHub repo URL
 $repoUrl = 'https://github.com/drobin04/Dashboardify';
 downloadAndExtractGitHubRepo($repoUrl);
@@ -65,7 +68,7 @@ copyDirectory('Dashboardify-main', '.', $excludedFiles);  // Starting point for 
 deleteDirectory('Dashboardify-main');
 
 header('Location: setup.php');
-
+} else { echo "You don't have permissions to do this.";}
 
 
 ?>

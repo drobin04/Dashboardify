@@ -1,4 +1,5 @@
 # To-Do
+* Update setup page to move siteurlconfig to database settings table, to prevent annoying error when trying to update the file using querystring parameters
 * Setup option to remove dashboards where no valid existing user association can be found
 * Add password authentication method
 * Add 'default' site-wide settings for new dashboards

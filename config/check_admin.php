@@ -22,6 +22,20 @@ function IsAdmin($userID) {
     //return $results;
 }
 
+function AmIAdmin() {
+    $query = "Select Admin From Users Where RecID = '" . getCurrentUserID() . "'";
+    $results = queryDB($query);
+    debuglog_admin($results, "Admin_check_Results");
+    $countofadminusersSQL = "Select Count(*) As Count From Users Where Admin = 1";
+    $adminusercountresults = querydb($countofadminusersSQL)[0]["Count"];
+
+    If (($results[0]["Admin"] == "1") or $adminusercountresults == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function queryDB($sql) {
     //$db_file = new PDO('sqlite:../Dashboardify/Dashboardify.s3db');
     $rootPath = $_SERVER['DOCUMENT_ROOT'];
