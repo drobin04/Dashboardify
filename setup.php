@@ -23,6 +23,8 @@ This page is currently under construction. If you're seeing this and somehow usi
 
 <?php
 include('shared_functions.php');
+$css = "";
+$urlvalue = "";
 
 $filename = 'Dashboardify.s3db';
 if (file_exists($filename) && filesize($filename) > 0) {
@@ -35,6 +37,7 @@ if (file_exists($filename) && filesize($filename) > 0) {
     echo "The database file is either missing or has not been created yet. <br/>
     Would you like to try creating the database now? <br/>
     [Yes - Create the Dashboardify database.](createDB.php)";
+    $dbfound = "";
 }
 if (file_exists('config/siteurlconfig.txt')) {
     $urlvalue = file_get_contents('config/siteurlconfig.txt');
