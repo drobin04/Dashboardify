@@ -1,3 +1,4 @@
+![Demo Photo](https://i.imgur.com/v5QUd2X.jpeg)
 # About Dashboardify
 This is a PHP web application for developing personal, customizeable dashboards with bookmarks, embedded frames, notes, as well as database and API connectivity.
 
