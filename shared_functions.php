@@ -4,14 +4,21 @@ function selectquery($sql) {
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
 	$dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
 	$db_file = new PDO($dbpath);
-	//$db_file = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
-	//$db_file = new PDO('sqlite:Dashboardify.s3db');
-	//debuglog($localdb,"DB file");
 	$stmt1 = $db_file->prepare($sql);
 	$stmt1->execute();
 	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 	//debuglog($results,"Query results");
 	return $results;
+}
+function scalarquery($sql, $columnname) {
+	debuglog($sql,"about to execute scalar query");
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
+	$db_file = new PDO($dbpath);
+	$stmt1 = $db_file->prepare($sql);
+	$stmt1->execute();
+	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+	return $results[0][$columnname];
 }
 
 function getCurrentUserID() {

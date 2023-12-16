@@ -24,6 +24,11 @@ $widgetsSQL = "CREATE TABLE [Widgets] (
     , Global BOOLEAN NULL
     )";
 
+$settingsSQL = "CREATE TABLE [Settings] (
+    [Name] TEXT NOT NULL,
+    [Value] TEXT NOT NULL)";
+$populatefirstauthmodesetting = "INSERT INTO Settings (Name, Value) VALUES ('AuthMode','None')";
+
 $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
 	[Email]	TEXT NOT NULL,
@@ -59,8 +64,12 @@ execquery($userCSSsql);
 execquery($SessionsSQL);
 execquery($EventsSQL);
 execquery($DashboardsSQL);
+execquery($settingsSQL);
+execquery($populatefirstauthmodesetting);
+
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
+    header('Location: setup.php');
 ?>
 
 <md-block>

@@ -123,6 +123,16 @@ if (isset($userslist)) {
 
 <h2>New User Experience</h3>
 <p>Below are settings affecting new users on the system.</p>
+<label>Authentication Type: </label>
+<?php
+$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
+?>
+<select ID="ddlAuthType" name="AuthType">
+    <option value='<?php echo $authmode?>' selected='selected'><?php echo $authmode?></option><!--default value in line above-->
+    <option value="Password">Password</option>
+
+</select><br />
+
 <label>Default Dashboard Background Image For First Dashboard: </label><input id='defaultdashimage' name='defaultdashimage' value='<?php echo $defaultdashimage ?>'></input>
 
 
