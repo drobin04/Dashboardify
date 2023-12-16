@@ -75,6 +75,10 @@ For MS SQL Server connectivity and related widgets, the following extensions nee
     extension=php_sqlsrv_56_ts.dll
     extension=php_pdo_sqlsrv_56_ts.dll  
 
+For the clone.php functionality / Code Upgrade functionality to work, you will need to enable the ZipArchive extension & class in your php.ini file.
+Uncomment:
+    extension=zip
+
 ## First Time Use / Configuration
 
 1. Access the setup.php page, and click on the link to create and populate the database file for use. 
