@@ -1,10 +1,17 @@
 <?php 
-
+function doesDatabaseExist() {
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$dbpath = $rootPath . '/Dashboardify/Dashboardify.s3db';
+	return file_exists($dbpath);
+}
 function selectquery($sql) {
 	debuglog($sql,"about to execute query");
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
 	$dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
 	$db_file = new PDO($dbpath);
+	$dbpath = $rootPath . '/Dashboardify/Dashboardify.s3db';
+	$dsn = 'sqlite:' . $dbpath;
+	$db_file = new PDO($dsn);
 	$stmt1 = $db_file->prepare($sql);
 	$stmt1->execute();
 	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
@@ -28,6 +35,17 @@ function getCurrentUserID() {
 	$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; 
 	debuglog($userid, "User ID found for user");
 	return $userid;
+	if (isset($_COOKIE["SessionID"])) {
+		$sessionid = $_COOKIE["SessionID"]; 
+		debuglog($sessionid, "SessionID"); //Get User for Session ID
+		$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; 
+		debuglog($userid, "User ID found for user");
+		return $userid;
+	} else {
+		$userid = "0";
+		return $userid;
+	}
+	
 }
 function execquery($sql) {
 	//$localdb = new PDO('sqlite:Dashboardify.s3db');

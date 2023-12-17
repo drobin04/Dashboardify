@@ -27,7 +27,8 @@ $widgetsSQL = "CREATE TABLE [Widgets] (
 $settingsSQL = "CREATE TABLE [Settings] (
     [Name] TEXT NOT NULL,
     [Value] TEXT NOT NULL)";
-$populatefirstauthmodesetting = "INSERT INTO Settings (Name, Value) VALUES ('AuthMode','None')";
+$populatefirstauthmodesetting = "
+INSERT INTO Settings (Name, Value) VALUES ('AuthMode','None');";
 
 $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -66,10 +67,11 @@ execquery($EventsSQL);
 execquery($DashboardsSQL);
 execquery($settingsSQL);
 execquery($populatefirstauthmodesetting);
+execquery("INSERT INTO Settings (Name, Value) VALUES ('SiteUrlConfig', 'https://localhost/Dashboardify/');");
 
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
-    header('Location: setup.php');
+    header('Location: actions/start-login.php');
 ?>
 
 <md-block>

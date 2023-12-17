@@ -60,7 +60,7 @@ if (AmIAdmin()) {
 $repoUrl = 'https://github.com/drobin04/Dashboardify';
 downloadAndExtractGitHubRepo($repoUrl);
 $subdir = 'Dashboardify-main';  // Subdirectory name
-$excludedFiles = array('clone.php','defaultdashboardurl.txt', 'globalcss.css', 'siteurlconfig.txt');  // Array of file names to be excluded
+$excludedFiles = array('clone.php','defaultdashboardurl.txt', 'globalcss.css');  // Array of file names to be excluded
 
 copyDirectory('Dashboardify-main', '.', $excludedFiles);  // Starting point for copying
 

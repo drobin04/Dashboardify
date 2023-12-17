@@ -9,9 +9,6 @@
         </style>
 
     </head>
-<?php
-
-?>
     <body>
         <div class="MainPanel">
         <md-block>
@@ -24,29 +21,35 @@ This page is currently under construction. If you're seeing this and somehow usi
 <?php
 include_once('config/check_admin.php');
 include_once('shared_functions.php');
-
-if (!AmIAdmin()) { header('Location: index.php'); }
-
 $css = "";
 $urlvalue = "";
 
 $filename = 'Dashboardify.s3db';
-if (file_exists($filename) && filesize($filename) > 0) {
-  $dbfound = "<div style='border: 1px black solid; display: inline; padding: 3px;'>Database file found. No Need To Create.</div> ";  
+$Exists = False;
+If (doesDatabaseExist() && filesize($filename) > 0) {
+    $Exists = True;
+    if (!AmIAdmin()) { header('Location: index.php'); } // Redirect back to index if they don't have permissions to be here.
 
-
-
-
+    $dbfound = "<div style='border: 1px black solid; display: inline; padding: 3px;'>Database file found. No Need To Create.</div> ";  // DB Found! Yay.
+    
+    if (scalarquery("Select Count(*) as Matches From Settings Where Name = 'SiteUrlConfig'", "Matches") == 0) {
+        $urlvalue = "";
+    } else {
+        $urlvalue = scalarquery("Select Value From Settings Where Name = 'SiteUrlConfig'", "Value");
+    
+    }
 } else {
+    // Run this if db doesn't exist yet!!
     $dbfound = "The database file is either missing or has not been created yet. <br/>
     Would you like to try creating the database now? <br/>
     <a href='createDB.php'>Yes - Create the Dashboardify database.</a>";
-    //$dbfound = "";
-}
-if (file_exists('config/siteurlconfig.txt')) {
-    $urlvalue = file_get_contents('config/siteurlconfig.txt');
+
+    $urlvalue = ""; // Blank out SiteURLConfig as it's referenced from DB.
+
+
 
 }
+
 if (file_exists('config/defaultdashboardurl.txt')) {
     $defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
 } else { $defaultdashimage = ""; }
@@ -106,8 +109,9 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 <table>
 <tr><th>RecID</th><th>Username/Email</th><th>Admin</th><th>Actions</th></tr>
 <?php
+if ($Exists) {
 $userslist = selectquery("Select RecID, Email, Admin FROM Users");
-
+}
 if (isset($userslist)) {
     foreach ($userslist as $user) {
         if (($user["Admin"] != "1") Or ($user["Admin"] = "")) {
@@ -132,7 +136,9 @@ if (isset($userslist)) {
 <p>Below are settings affecting new users on the system.</p>
 <label>Authentication Type: </label>
 <?php
+if ($Exists) {
 $authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
+} else {$authmode = "None";}
 ?>
 <select ID="ddlAuthType" name="AuthType">
     <option value='<?php echo $authmode?>' selected='selected'><?php echo $authmode?></option><!--default value in line above-->

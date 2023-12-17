@@ -1,5 +1,5 @@
 <?php
-If (isset($_GET['siteurlconfig'])) { 
+If (isset($_GET['defaultdashimage'])) { 
     // Retrieve the value from the form submission
     $defaultdashimg = $_GET['defaultdashimage'];
 
