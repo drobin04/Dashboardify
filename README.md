@@ -78,6 +78,14 @@ For the clone.php functionality / Code Upgrade functionality to work, you will n
 Uncomment:
     extension=zip
 
+### Client-Side Setup
+
+It's recommended, but not required, that users use Firefox-based browsers (LibreWolf is a great open source browser), along with the [Custom New Tab Page Extension]().
+
+This extension allows you to override the New Tab Page on the browser to a user-specified custom URL, which you can point to Dashboardify.
+
+If you do so, consider pointing to the cachedpage.html file instead of index.php, as it will load faster and the entire page's contents can be loaded from browser cache, whereas when loading a PHP page, there is variable server-side content and it can't be entirely cached by your browser. Therefore, the cachedpage.html page will load much faster and spare resources on the server.
+
 ## First Time Use / Configuration
 
 1. Access the setup.php page, and click on the link to create and populate the database file for use. 
