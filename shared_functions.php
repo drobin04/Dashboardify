@@ -1,12 +1,5 @@
 <?php 
 
-// DEBUG LOGGING
-// SET THE BELOW TO TRUE IF YOU WANT DEBUGGING INFO TO APPEAR IN CONSOLE OF WEBPAGES
-// HOWEVER THIS BLOATS THE TRANSFERRED DATA ON PAGES AND IS PREFERRABLY LEFT OFF FOR BETTER PERFORMANCE WHILE LIVE. 
-
-$debug_logging_enabled = false;
-
-
 function selectquery($sql) {
 	debuglog($sql,"about to execute query");
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -86,6 +79,11 @@ function GUID()
 	return sprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(16384, 20479), mt_rand(32768, 49151), mt_rand(0, 65535), mt_rand(0, 65535), mt_rand(0, 65535));
 }
 function debuglog( $object=null, $label=null ){
+	// DEBUG LOGGING
+	// SET THE BELOW TO TRUE IF YOU WANT DEBUGGING INFO TO APPEAR IN CONSOLE OF WEBPAGES
+	// HOWEVER THIS BLOATS THE TRANSFERRED DATA ON PAGES AND IS PREFERRABLY LEFT OFF FOR BETTER PERFORMANCE WHILE LIVE. 
+	$debug_logging_enabled = false;
+	
 	$message = json_encode($object, JSON_PRETTY_PRINT);
 	$label = "Debug" . ($label ? " ($label): " : ': ');
 	if ($debug_logging_enabled) {
