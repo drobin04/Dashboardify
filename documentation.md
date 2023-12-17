@@ -30,3 +30,15 @@ Dashboards table has a foreign key linking Users table, User ID.
 When a user logs in, the interface queries for the current user ID from the session ID, then searches for Dashboards for the current user ID, and then selects the first one. 
 
 Later feature can be to add a way of tracking default dashboard for user (for now just load first one).
+
+## Debug Logging
+
+There is a feature available to troubleshoot what's going on as various steps are performed when loading most pages: Debug logging.
+
+This is accomplshed by using a function under the shared_functions.php file, 'debuglog()', which when called, will echo a <script> tag onto the current screen.
+
+The script will take any string or *object* and enumerate it into the browser's development console. 
+
+This means that if this feature is enabled, you will be able to track what's going on on each page, by opening the browser console. 
+
+To enable this feature, you need to change the shared_functions.php file. Find the commented section under the debuglog() function, and change $debug_logging_enabled to True.

@@ -86,6 +86,10 @@ Uncomment:
 4. Enter an email address you'd like to use for your username (Will later be replaced with a username / password registration page, currently no auth method enforced)
 5. Click 'New Widget' once loaded onto index.php, and begin adding widgets to the screen and using the app.
 
+# Documentation
+
+Documentation is a work in progress, but can be found [on the Documentation.md page](documentation.md)
+
 
 # Attribution notes
 
