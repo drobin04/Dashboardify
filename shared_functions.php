@@ -2,7 +2,13 @@
 function doesDatabaseExist() {
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
 	$dbpath = $rootPath . '/Dashboardify/Dashboardify.s3db';
-	return file_exists($dbpath);
+	if (file_exists($dbpath) && filesize($dbpath) > 0) {
+		return True;
+
+	} else {
+		return False;
+	}
+	
 }
 function selectquery($sql) {
 	debuglog($sql,"about to execute query");

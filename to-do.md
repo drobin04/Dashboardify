@@ -5,6 +5,10 @@
 * Add password authentication method
 * Add 'default' site-wide settings for new dashboards
 	* Background photo
+* Update usercss.php to pull css from dashboard insteal of globally for user. Or perhaps break it out to either / both distinct options.
+* Setup option to remove dashboards where no valid existing user association can be found
+* Add password authentication method
+
 * Interface on setup page to list default / global widgets
 * After submitting, on newwidget.php, check if user is actually an admin before accepting / processing / saving the flag for global / default. 
 
@@ -152,6 +156,14 @@ Have javascript load the data from the API in all cases so that it works either 
 * 12/16/23:
 	* Added logic on code that creates first dashboard, to find & loop through all default / global widgets, and for each one, insert a new copy with the new dash's recID. 
 	* If user is an admin, display a checkbox on the NewWidget dialog for global / default that will get sent. 
+	* default dashboard image setting added to setup.php page, influences default dashboard image for first-time users.
+	* Added logic on code that creates first dashboard, to find & loop through all default / global widgets, and for each one, insert a new copy with the new dash's recID. 
+* 12/17/23:
+	 * Added 'Global' or 'Default' flag to widget table
+	 * Updated setup page to move siteurlconfig to database settings table, to prevent annoying error when trying to update the file using querystring parameters
+	 
+
+
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 
