@@ -26,7 +26,8 @@ Multiple different types of embeddable widgets:
 
 # Live Demo
 
-A live version of this application will be hosted at https://dashboardify.app/ . This readme will be updated when the site is fully configured. 
+A live version of this application has been released at https://dashboardify.app/Dashboardify/ . 
+(Message from the developer here - Please do not do anything malicious to that site, I am certain there are live issues there, there's only one person developing on this project at the moment :) So if you discover any issues or security concerns, please feel free to report them!)
 
 # We Need YOU
 
