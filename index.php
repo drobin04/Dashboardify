@@ -8,6 +8,10 @@ include("actions/logoutredirect.php");
 <!--<script src="/js/textboxes.js"></script>-->
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
+		.menubar {
+			float: left !important;
+
+		}
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }
 	</style></head>
@@ -15,13 +19,13 @@ include("actions/logoutredirect.php");
 	
         <div>
 			<!--Buttons at top left-->
-            <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
-            <button type="button" style="float: left !important;" onclick="document.getElementById('cssEditorBox').style.display='block';">Edit CSS</button>
-            <button type="button" style="float: left !important;" onclick="document.getElementById('NewDashboardDialog').style.display='block';">New Dashboard</button>
-            <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
-			<button><a class='nodeco' href="cachedpage.html">Cached Page</a></button>
-			<button><a class='nodeco' href="index.php">Main Page / Reload Cache</a></button>
-			
+            <button type="button" class="menubar" onclick="document.getElementById('NewWidgetDialog').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
+            <button type="button" class="menubar" onclick="document.getElementById('cssEditorBox').style.display='block';">Edit CSS</button>
+            <button type="button" class="menubar" onclick="document.getElementById('NewDashboardDialog').style.display='block';">New Dashboard</button>
+            <button type="button" class="menubar" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
+			<button><a class='nodeco menubar' href="cachedpage.html">Cached Page</a></button>
+			<button><a class='nodeco menubar' href="index.php">Main Page / Reload Cache</a></button>
+			<button><a type="button" class="menubar" onclick="document.getElementById('EditDashboardDialog').style.display='block';">Edit Dashboard</button>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include_once("shared_functions.php");
 				include("config/check_admin.php");
@@ -34,8 +38,9 @@ include("actions/logoutredirect.php");
 				}
 				echo "<script>localStorage.setItem('userID', '$userid');</script>";
 				$dashboards = selectquery("Select * From Dashboards Where UserID = '" . $userid . "'"); // Query for dashboards for user. 
-				
+				$dashboardname = "";
 				$dashboardid = "";
+				$embeddable = "";
 				$dashboardphotourl = ""; // Used later at end of script to pre-populate value into input for CSS box.
 				Try { // Load Dashboard list
 					$count = count($dashboards);
@@ -47,6 +52,8 @@ include("actions/logoutredirect.php");
 							debuglog($dashboardid, "Selected Dashboard ID."); 
 							$dashboardphotourl = $row["BackgroundPhotoURL"]; 
 							$usercss = $row["CustomCSS"];
+							$dashboardname = $row["Name"];
+							$embeddable = $row["Embeddable"];
 						}
 					} elseif ((int)$count > 1) {
 						debuglog($dashboards, "Dashboards Array - Multiple Results"); 
@@ -59,6 +66,8 @@ include("actions/logoutredirect.php");
 							$recid = $row["DashboardID"];
 							if ($row["DefaultDB"] == "Y") {
 								$dashboardid = $recid;
+								$dashboardname = $row["Name"];
+								$embeddable = $row["Embeddable"];
 								$dashboardphotourl = $row["BackgroundPhotoURL"];
 								$usercss = $row["CustomCSS"];
 								debuglog($dashboardid, "Selected Dashboard ID.");
@@ -93,7 +102,8 @@ include("actions/logoutredirect.php");
 						. "', 'Y', 'Main', '" . $defaultdashimage . "')";
 						debuglog($sql1,"SQL Dashboard Insert Query"); 
 						execquery($sql1); //Create Dashboard
-						
+						$dashboardname = "Main";
+						$embeddable = "";
 						// First / Newly Created Dashboard; Populate Global/Default Widgets
 
 						// Query for Global widgets
@@ -311,6 +321,18 @@ include("actions/logoutredirect.php");
 				<header >New Dashboard<hr /></header>
 				<br />
 				<input ID="dashboardname" name="dashboardname"></input><br />
+				<button ID="btnSubmitDashboard">Save Dashboard</button>
+		</div>
+		</form>
+		<form id="EditDashboard" method="POST" action="actions/Edit_Dashboard.php?DashboardID=<?php echo $dashboardid; ?>">
+		<div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
+			
+				<header >Edit Current Dashboard<hr /></header>
+				<br />
+				<label>Dashboard Name:</label><br />
+				<input ID="dashboardname" name="dashboardname" value="<?php echo $dashboardname ?>"></input><br />
+				<input ID="Embeddable" type="checkbox" name="embeddable" <?php if($embeddable == "1") {echo "checked='true'";} ?> value="1"><label for="Embeddable">Embeddable? This will make this dashboard publicly accessible via the following URL:</label><br />
+				<p><?php echo $siteurl . "api/embed_dashboard.php?DashboardID=" . $dashboardid; ?></p> 
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>

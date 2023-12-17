@@ -57,7 +57,8 @@ $DashboardsSQL = "CREATE TABLE [Dashboards] (
     [BackgroundPhotoURL] NVARCHAR(400)  NULL,
     [UserID] INTEGER  NULL,
     [DashboardID] NVARCHAR(50)  NULL
-    , Name NVARCHAR(50) NULL)";
+    , Name NVARCHAR(50) NULL)
+    , Embeddable BOOLEAN NULL";
 
 execquery($widgetsSQL);
 execquery($usersSQL);

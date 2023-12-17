@@ -1,8 +1,5 @@
 # To-Do
-* Bug - dashboard image field seems to always populate its value from first dashboard (Or perhaps that's showing the configured default?), not from current. if viewing a secondary dashboard, the value in the field may not match what's configured. 
-	* But saving the settings does populate the field properly on the DB side. 
-* Add flag to Dashboard table (And step in createdb.php to get this field created) that will mark as Embeddable
-* Add security check on embed_database.php to filter only dashboards marked as embeddable - currently any dashboard can be referenced without logon by tagging embed_dashboard.php and the proper dashboard ID
+
 * Setup option to remove dashboards where no valid existing user association can be found
 * Add password authentication method
 * Add 'default' site-wide settings for new dashboards
@@ -163,8 +160,10 @@ Have javascript load the data from the API in all cases so that it works either 
 * 12/17/23:
 	 * Added 'Global' or 'Default' flag to widget table
 	 * Updated setup page to move siteurlconfig to database settings table, to prevent annoying error when trying to update the file using querystring parameters
-	 
-
+	 * Widget Ownership is now checked when editing / deleting widgets!
+	 * Added flag to Dashboard table (And step in createdb.php to get this field created) that will mark as Embeddable
+	 * Added security check on embed_database.php to filter only dashboards marked as embeddable - before, any dashboard can be referenced without logon by tagging embed_dashboard.php and the proper dashboard ID
+	 * Added 'Edit Dashboard' button with ability to edit dashboard Name, its Embeddable status, and which displays the URL to embed the current dashboard, if needed. 
 
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged

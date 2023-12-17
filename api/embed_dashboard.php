@@ -19,12 +19,20 @@
 					echo "<h1>No Dashboard ID Specified For Embed</h1>";
 				}
 				$dashboardphotourl = "";
-
+				$break_if_dashboard_isnot_embeddable = false;
 				Try { 
-					$row = selectquery("Select RecID, DefaultDB, CustomCSS, BackgroundPhotoURL, UserID, Name, DashboardID from Dashboards Where DashboardID = '" . $dashboardid . "'")[0];
+					$row = selectquery("Select RecID, DefaultDB, CustomCSS, BackgroundPhotoURL, UserID, Name, DashboardID from Dashboards Where DashboardID = '" . $dashboardid . "' And Embeddable = '1'");
 					debuglog($row, "Results from DB load from database");
-					$dashboardphotourl = $row["BackgroundPhotoURL"]; 
-					$dashboardcss = $row["CustomCSS"];
+					if (isset($row[0])) {
+						$row = $row[0];
+						$dashboardphotourl = $row["BackgroundPhotoURL"]; 
+						$dashboardcss = $row["CustomCSS"];
+					} else {
+						$break_if_dashboard_isnot_embeddable = true;
+						echo "<h1>No Dashboard Found. Verify you have the right ID and/or that this dashboard is embeddable.";
+						exit();
+
+					}
 					
 				} catch (exception $ex) {
 					echo $ex;
