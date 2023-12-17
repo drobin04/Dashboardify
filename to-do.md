@@ -3,7 +3,6 @@
 	* But saving the settings does populate the field properly on the DB side. 
 * Add flag to Dashboard table (And step in createdb.php to get this field created) that will mark as Embeddable
 * Add security check on embed_database.php to filter only dashboards marked as embeddable - currently any dashboard can be referenced without logon by tagging embed_dashboard.php and the proper dashboard ID
-* Update setup page to move siteurlconfig to database settings table, to prevent annoying error when trying to update the file using querystring parameters
 * Setup option to remove dashboards where no valid existing user association can be found
 * Add password authentication method
 * Add 'default' site-wide settings for new dashboards
