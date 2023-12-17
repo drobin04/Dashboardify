@@ -1,12 +1,11 @@
 # To-Do
+
 * Update setup page to move siteurlconfig to database settings table, to prevent annoying error when trying to update the file using querystring parameters
 * Setup option to remove dashboards where no valid existing user association can be found
 * Add password authentication method
 * Add 'default' site-wide settings for new dashboards
 	* Background photo
-* Add logic on code that creates first dashboard, to find & loop through all default / global widgets, and for each one, insert a new copy with the new dash's recID. 
 * Interface on setup page to list default / global widgets
-* For now at least, if user is an admin, display a checkbox on the NewWidget dialog for global / default that will get sent. 
 * After submitting, on newwidget.php, check if user is actually an admin before accepting / processing / saving the flag for global / default. 
 
 * Add authentication methods config section to setup page where the method to be used (None, password, email auth code, keyfile, LDAP, etc) can be selected.
@@ -23,7 +22,8 @@
 		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier. 
 * Need a less goofy way to show edit / delete icons for the widgets on the screen
 * Ability to embed a copy of a particular dashboard on an external page. URL gets called that generates the dashboard and widgets, minus the buttons at the top and the add/edit dialog boxes. Could be an interesting feature!
-
+* Module for SMTP / Email
+    * Will want ability to email users a recovery code if lost password, in the future. No code in project yet to support SMTP config. 
 
 ## New-User Experience
 
@@ -142,8 +142,16 @@ Have javascript load the data from the API in all cases so that it works either 
 	- Moved 'Database file found!!' under the 'Delete Database' heading, renamed to 'Create/Delete Database'.
 	- CSS Styles added to page to address some wonky display issues
 	- savecss.php adjusted to automate the redirection back to setup.php instead of requiring a link to be clicked.
-* 12/17/23 - Add 'Global' or 'Default' flag to widget table
-
+* 12/16/23 - Add 'Global' or 'Default' flag to widget table
+* 12/16/23 - Solved issue on index.php where a new user that's just logged in for the first time, does not get the default background image loaded until the next page refresh
+* 12/16/23 - Updated SiteUrlConfig setting to be stored in the sqlite DB, several bugfixes around referencing this & what if DB doesn't exist
+* 12/16/23 - SEVERAL bugfixes around checking for admin permissions, logging out users who no longer hold a valid session key or whos user account no longer exists, etc
+* 12/16/23 - Added useful 'scalarquery' function to shared_functions.php
+* 12/16/23 - https://dashboardify.app is live!
+* 12/16/23 - New user experience is functional on live site!
+* 12/16/23:
+	* Added logic on code that creates first dashboard, to find & loop through all default / global widgets, and for each one, insert a new copy with the new dash's recID. 
+	* If user is an admin, display a checkbox on the NewWidget dialog for global / default that will get sent. 
 
 ## 12/13 Bugfix Finished - New User Experience / First widget creation bugged
 Upon brand new DB creation, some weird GUID appears in the URL bar for 'SelectDashboardID', and when creating a first widget, it seemingly doesn't get saved to this dashboard. 

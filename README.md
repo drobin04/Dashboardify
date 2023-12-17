@@ -45,11 +45,8 @@ The following are important items that have not yet been implemented, either not
 * User Authentication / security
     * Currently just asks for a username / email address, no authentication / PW or otherwise occurs.
         * Could make a PW auth or an email code authenticator at some point in the future but would require future code to safely store a PW hash and/or storing SMTP config for sending mail. 
-    
-* Admin / User permissions gate on setup.php page
-    * Currently anyone could access setup.php and perform destructive changes on the DB file. 
-    * To solve this issue, need to setup a functional user management and permissions system so that we can delineate normal users from privileged users. 
-
+* Module for SMTP / Email
+    * Will want ability to email users a recovery code if lost password, in the future. No code in project yet to support SMTP config. 
 
 # Setup
 ## Server / Environment Requirements

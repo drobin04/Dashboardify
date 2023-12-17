@@ -30,11 +30,6 @@ function scalarquery($sql, $columnname) {
 }
 
 function getCurrentUserID() {
-	$sessionid = $_COOKIE["SessionID"]; 
-	debuglog($sessionid, "SessionID"); //Get User for Session ID
-	$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; 
-	debuglog($userid, "User ID found for user");
-	return $userid;
 	if (isset($_COOKIE["SessionID"])) {
 		$sessionid = $_COOKIE["SessionID"]; 
 		debuglog($sessionid, "SessionID"); //Get User for Session ID

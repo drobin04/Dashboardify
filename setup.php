@@ -21,6 +21,7 @@ This page is currently under construction. If you're seeing this and somehow usi
 <?php
 include_once('config/check_admin.php');
 include_once('shared_functions.php');
+include('actions/logoutredirect.php');
 $css = "";
 $urlvalue = "";
 

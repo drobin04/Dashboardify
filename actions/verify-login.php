@@ -1,7 +1,3 @@
-<html>
-<head></head>
-<body>
-
 <?php
     include_once('../shared_functions.php');
 
@@ -28,8 +24,6 @@
         $insert = "Insert Into Sessions (UserID, SessionID) VALUES ('". $id . "', '" . $sessid . "')";
         execquery($insert);
     }
-     
-    echo $_POST["email"] . ". <br />Trying to open sqlite db.<br />";
     debuglog($_POST, "Incoming POST arguments");
     debuglog($_POST["email"], "Email address to be used for search");
     $userid = GetUserIDFromEmail($email);
@@ -55,7 +49,3 @@
         header("Location: ../index.php");
 
 ?>
-
-</body>
-
-</html>

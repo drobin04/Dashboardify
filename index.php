@@ -87,6 +87,7 @@ include("actions/logoutredirect.php");
 						$defaultdashimage = "";
 						if (file_exists('config/defaultdashboardurl.txt')) {
 							$defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
+							$dashboardphotourl = $defaultdashimage;
 						}
 						$sql1 = "INSERT INTO Dashboards (DashboardID, UserID, DefaultDB, Name, BackgroundPhotoURL) VALUES ('" . $dashboardid . "', '" . $userid 
 						. "', 'Y', 'Main', '" . $defaultdashimage . "')";
@@ -137,7 +138,7 @@ include("actions/logoutredirect.php");
 				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'"; debuglog($select,"Query for widgets");
 				$stmt = $db_file->prepare($select); $stmt->execute();
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); debuglog($results, "Widget results");
-				include("siteurlconfig.php"); //Variable for site url
+				$siteurl = scalarquery("Select Value From Settings Where Name = 'SiteUrlConfig'", "Value");
 				foreach($results as $row) { //Load Widgets, Starting with Re-useable texts
 					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 					$imgstylecss = "<img style='height:24px; width:24px;' src='";
