@@ -1,4 +1,12 @@
 <?php 
+
+// DEBUG LOGGING
+// SET THE BELOW TO TRUE IF YOU WANT DEBUGGING INFO TO APPEAR IN CONSOLE OF WEBPAGES
+// HOWEVER THIS BLOATS THE TRANSFERRED DATA ON PAGES AND IS PREFERRABLY LEFT OFF FOR BETTER PERFORMANCE WHILE LIVE. 
+
+$debug_logging_enabled = false;
+
+
 function selectquery($sql) {
 	debuglog($sql,"about to execute query");
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -80,6 +88,8 @@ function GUID()
 function debuglog( $object=null, $label=null ){
 	$message = json_encode($object, JSON_PRETTY_PRINT);
 	$label = "Debug" . ($label ? " ($label): " : ': ');
-	echo "<script>console.log(\"$label\", $message);</script>";
+	if ($debug_logging_enabled) {
+		echo "<script>console.log(\"$label\", $message);</script>";
+	}
 }
 ?>

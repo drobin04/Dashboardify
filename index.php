@@ -73,8 +73,9 @@ include("actions/logoutredirect.php");
 								echo ">" . $row["Name"] . "</option>";
 
 							}
-
-							if ($row["DashboardID"] == $_GET["SelectDashboardID"]) { $match = 1; debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); }
+							if (isset($_GET["SelectDashboardID"])) {
+								if ($row["DashboardID"] == $_GET["SelectDashboardID"]) { $match = 1; debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); }
+							}
 						}
 						echo "</select><br />";
 
