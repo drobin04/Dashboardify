@@ -109,4 +109,17 @@ function debuglog( $object=null, $label=null ){
 		echo "<script>console.log(\"$label\", $message);</script>";
 	}
 }
+function DoIOwnThisWidget($widgetrecid) {
+	$userid = getCurrentUserID();
+	$q = "select count(w.recid) as matches from widgets w
+	left join Dashboards D on w.DashboardRecID = D.DashboardID
+	left join Users U on U.RecID = D.UserID
+	where userid = '" . $userid . "'
+	and w.RecID = '" . $widgetrecid . "'";
+	if (scalarquery($q, "matches") != 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
 ?>
