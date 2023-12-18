@@ -2,6 +2,7 @@
 
 [Migrating to-do section to Issues page]
 
+* bug - setup - auth mode dropdown currently repeats a value. Need to make it to where the static values get added maybe only if they're not the one already selected by the db setting?
 * Update usercss.php to pull css from dashboard instead of globally for user. Or perhaps break it out to either / both distinct options.
 
 * Module for SMTP / Email

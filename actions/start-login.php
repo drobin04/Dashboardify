@@ -196,7 +196,7 @@ body {
    
 	<div class="screen">
 		<div class="screen__content">
-			<form class="login" method="POST" action="verify-login.php">
+			<form id="loginForm" class="login" method="POST" action="verify-login.php">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" placeholder="Email / Username" name="email"></input>
@@ -204,7 +204,7 @@ body {
 					include('../shared_functions.php');
 					$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
 					if ($authmode == "Password") {
-					echo "<input type='password' class='login__input' placeholder='Password' name='password'></input>";
+					echo "<input id='password' type='password' class='login__input' placeholder='Password' name='password'></input>";
 					}
 					?>
 				</div>
@@ -214,9 +214,24 @@ body {
 					<i class="button__icon fas fa-chevron-right"></i>
 				</button>				
 			</form>
-			<div style="text-align: right; color: white;"><a href="register_user.php" style="text-color: white;text-decoration: none;color: white !important;padding-right: 30px;">Register</a></div>
+			<div style="text-align: right; color: white;"><a href="../register_user.php" style="text-color: white;text-decoration: none;color: white !important;padding-right: 30px;">Register</a></div>
 			
 		</div>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+		<script>
+  document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    var passwordInput = document.getElementById("password");
+    var hashedPassword = CryptoJS.SHA256(passwordInput.value).toString();
+
+    // Replace the password input value with the hashed password
+    passwordInput.value = hashedPassword;
+	
+    // Submit the form
+    this.submit();
+  });
+</script>
 		<div class="screen__background">
 			<span class="screen__background__shape screen__background__shape4"></span>
 			<span class="screen__background__shape screen__background__shape3"></span>		

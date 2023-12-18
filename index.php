@@ -26,6 +26,7 @@ include("actions/logoutredirect.php");
 			<button><a class='nodeco menubar' href="cachedpage.html">Cached Page</a></button>
 			<button><a class='nodeco menubar' href="index.php">Main Page / Reload Cache</a></button>
 			<button><a type="button" class="menubar" onclick="document.getElementById('EditDashboardDialog').style.display='block';">Edit Dashboard</button>
+			<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include_once("shared_functions.php");
 				include("config/check_admin.php");
@@ -388,5 +389,5 @@ include("actions/logoutredirect.php");
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="js/index.js"></script><br /><div style='border: 1px black solid; display: inline; padding: 3px; background-color: lightgrey;'><a href="actions/logout.php">Log Out</a></div></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script type="text/javascript" src="js/index.js"></script><br /><div style='border: 1px black solid; display: inline; padding: 3px; background-color: lightgrey;'></div></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 		</html>

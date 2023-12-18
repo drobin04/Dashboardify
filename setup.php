@@ -45,9 +45,9 @@ if (isset($_GET["action"])) {
         $select = "INSERT INTO CustomWidgetProviders (WidgetProviderName
         ,CSS_Styling, HTML_Content
         ,PHP_To_Run) VALUES (?, ?, ?, ?)";
-        //$db_file = getPDO_DBFile();
-        $rootPath = $_SERVER['DOCUMENT_ROOT'];
-    	$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+        $localdb = getPDO_DBFile();
+        //$rootPath = $_SERVER['DOCUMENT_ROOT'];
+    	//$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
         $stmt = $localdb->prepare($select);
         $stmt->bindParam(1,$widgetprovidername,PDO::PARAM_STR);
         $stmt->bindParam(2,$widgetprovidercss,PDO::PARAM_STR);
@@ -59,6 +59,39 @@ if (isset($_GET["action"])) {
         echo "Widget Provider Registered Successfully.";
     }
 
+    if ($action == "UpdateNewUserSettings") {
+
+        $a_AuthType = $_POST["AuthType"];
+
+        $select = "Update Settings
+        
+        Set Value = ?
+        
+        Where Name = 'AuthMode'";
+
+        $localdb = getPDO_DBFile();
+        //$rootPath = $_SERVER['DOCUMENT_ROOT'];
+    	//$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+        $stmt = $localdb->prepare($select);
+        $stmt->bindParam(1,$a_AuthType,PDO::PARAM_STR);
+        debuglog($stmt, "AuthMode query");
+        
+        $stmt->execute();
+
+                
+        $defaultdashimg = $_POST["defaultdashimage"];
+
+        // Open the file in write mode
+        $file = fopen('defaultdashboardurl.txt', 'w');
+
+        // Write the value to the file
+        fwrite($file, $defaultdashimg);
+
+        // Close the file
+        fclose($file);
+        //header('Location: ../setup.php');
+        //echo "Settings Registered Successfully.";
+    }
 
 }
 
@@ -123,7 +156,7 @@ if (isset($_GET["SQLUpdate"])) {
 There are some items that will need to reference the base URL for this webpage. 
 Please configure the box below with the site URL, in the format of ' https://example.com/this_site_directory/'
 </md-block>
-    <form action="config/storesiteurlconfig.php">
+    <form method="POST" action="config/storesiteurlconfig.php">
 <input id="siteurlconfig" name="siteurlconfig" value="<?php echo $urlvalue ?>" ></input><button>Submit</button>
 </form>
 
@@ -175,7 +208,7 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 </div>
 <br />
 <div id="newuserexperience">
-    <form id="NewUserSettings" action="setup.php?action=UpdateNewUserSettings">
+    <form id="NewUserSettings" method="POST" action="/setup.php?action=UpdateNewUserSettings">
     <h2>New User Experience</h3>
     <p>Below are settings affecting new users on the system.</p>
     <label>Authentication Type: </label>
@@ -187,11 +220,15 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
     <select ID="ddlAuthType" name="AuthType">
         <option value='<?php echo $authmode?>' selected='selected'><?php echo $authmode?></option><!--default value in line above-->
         <option value="Password">Password</option>
-
+        <option value="None">None</option>
     </select><br />
 
     <label>Default Dashboard Background Image For First Dashboard: </label>
     <input id='defaultdashimage' name='defaultdashimage' value='<?php echo $defaultdashimage ?>'></input>
+
+    <br /><br />
+    <button>Submit</button>
+
 </form>
 </div>
 

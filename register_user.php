@@ -196,11 +196,11 @@
    
 	<div class="screen">
 		<div class="screen__content">
-			<form class="login" method="POST" action="./verify-login.php">
+			<form id="loginForm" class="login" method="POST" action="actions/verify-login.php?action=register">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" required placeholder="Email / Username" name="email"></input>
-					<input type="password" class="login__input" required placeholder="Password" name="password"></input>
+					<input type="password" id="password" class="login__input" required placeholder="Password" name="password"></input>
                     <input type="password" class="login__input" required placeholder="Confirm Your Password" name="password_confirmation"></input>
 				</div>
 				
@@ -209,7 +209,25 @@
 					<i class="button__icon fas fa-chevron-right"></i>
 				</button>				
 			</form>
-			
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+		<script>
+  document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission
+
+    var passwordInput = document.getElementById("password");
+    var hashedPassword = CryptoJS.SHA256(passwordInput.value).toString();
+
+    // Replace the password input value with the hashed password
+    passwordInput.value = hashedPassword;
+	
+    // Submit the form
+    this.submit();
+  });
+</script>
+
+
+
+
 		</div>
 		<div class="screen__background">
 			<span class="screen__background__shape screen__background__shape4"></span>

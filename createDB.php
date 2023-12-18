@@ -33,7 +33,8 @@ INSERT INTO Settings (Name, Value) VALUES ('AuthMode','None');";
 $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
 	[Email]	TEXT NOT NULL,
-    [Admin] BOOLEAN  NULL
+    [Admin] BOOLEAN  NULL,
+    password TEXT NULL
 )";
 
 $userCSSsql = "CREATE TABLE [UserCSS] (

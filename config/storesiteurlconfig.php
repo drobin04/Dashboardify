@@ -1,9 +1,9 @@
 <?php
-If (isset($_GET['siteurlconfig'])) { 
+If (isset($_POST['siteurlconfig'])) { 
     include_once('../shared_functions.php');
 
     // Retrieve the value from the form submission
-    $siteurlconfig = $_GET['siteurlconfig'];
+    $siteurlconfig = $_POST['siteurlconfig'];
     execquery("
     DELETE FROM Settings Where Name = 'SiteUrlConfig'");
     execquery("
