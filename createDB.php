@@ -67,17 +67,6 @@ $CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
     HTML_Content TEXT  NULL,
     PHP_To_Run TEXT  NULL)";
 
-$TrackingDB = "CREATE TABLE UsageHistory (
-    UserID TEXT,
-    URL TEXT NULL,
-    POSTParams TEXT NULL,
-    GETParams TEXT NULL,
-    DateTimeOccurred DATE NULL
-    )
-    
-    
-    "
-
 execquery($widgetsSQL);
 execquery($usersSQL);
 execquery($userCSSsql);
