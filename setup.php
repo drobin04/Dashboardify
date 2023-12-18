@@ -1,6 +1,5 @@
 <html>
     <head>
-        <script type="module" src="js/md-block.js"></script>
         <link type="text/css" rel="stylesheet" href="css/settings_page.css">
         <style>
             #siteurlconfig {width: 300px;}
@@ -13,12 +12,9 @@
     </head>
     <body>
         <div class="MainPanel">
-        <md-block>
-# Setup / Admin page for Dashboardify
+<h1> Setup / Admin page for Dashboardify</h1>
 
-This page is currently under construction. If you're seeing this and somehow using this app - Please contact Doug Robinson.
-
-### [Click Here To Return To Dashboardify](index.php)
+<a href="index.php">Click Here To Return To Dashboardify</a>
 
 <?php
 include_once('config/check_admin.php');
@@ -150,12 +146,10 @@ if (isset($_GET["SQLUpdate"])) {
 } else { $sqlqueryresults = "";}
 
 ?>
-
-
-## Site URL config (required)
-There are some items that will need to reference the base URL for this webpage. 
-Please configure the box below with the site URL, in the format of ' https://example.com/this_site_directory/'
-</md-block>
+<h2> Site URL config (required)</h2>
+<p>There are some items that will need to reference the base URL for this webpage. 
+<br/>Please configure the box below with the site URL, in the format of ' https://example.com/this_site_directory/'
+</p>
     <form method="POST" action="config/storesiteurlconfig.php">
 <input id="siteurlconfig" name="siteurlconfig" value="<?php echo $urlvalue ?>" ></input><button>Submit</button>
 </form>
@@ -165,14 +159,11 @@ Please configure the box below with the site URL, in the format of ' https://exa
 
 <p>WARNING: There is no confirmation after clicking this link!!!
 <a href="delete-dashboardify-db.php">Delete Dashboardify DB</a></p>
-<md-block>
+<h2> Global Dashboard CSS - Default For All Users</h2>
 
+<p>This is the default CSS that will be loaded for everyone's dashboards, underneath any user-supplied custom CSS for their dashboards. 
+</p>
 
-## Global Dashboard CSS - Default For All Users
-
-This is the default CSS that will be loaded for everyone's dashboards, underneath any user-supplied custom CSS for their dashboards. 
-
-</md-block>
 <form action="config/savecss.php">
     <textarea cols="50" rows="5" name="CSS"><?php echo $css ?></textarea><br />
     <button>Submit</button>
