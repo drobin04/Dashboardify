@@ -23,6 +23,8 @@ Multiple different types of embeddable widgets:
 * Notes - Note section that can be placed; Supports Markdown formatting
 * SQL Server Scalar Query - Allows you to retrieve a scalar query value from a MS SQL Server DB (Plans in the future to implement result lists and charts as well)
 * SQLiteResultsList - Specify the (relative) location of the SQLite DB file to the website, provide the query to perform (including columns to return, etc). The results will automatically be formatted into a table. You can style the table using custom CSS by using the CSS selector 'TableResults' (Some global CSS rules applied by default)
+* Ability to add new Widget Types with custom HTML, CSS, Javascript and PHP via the Setup.php panel.
+
 
 ## End-User and Admin-customizable CSS 
 
@@ -37,20 +39,32 @@ A live version of this application has been released at https://dashboardify.app
 # We Need YOU
 
 ## Work We Need Contributors For
-* In serious need of graphic designs for styles / UI across the board
+* In serious need of graphic designs for styles / UI
     * Super helpful if the person who is able to contribute this also has the ability to craft the CSS to create the style, but also appreciated if only can provide design ideas
-* For code contributions, see the notes I have listed on to-do items [on the to-do.md page](to-do.md)
+* For code contributions, see the notes I have listed on to-do items [on the to-do.md page](to-do.md) or on the issues page.
 * Testing for gaping security issues and documenting changes needed to ensure users can't access things they shouldn't be able to (There will be many!). Especially around the setup.php page / admin panel. 
 
-## Important Missing Features
+## Can I Donate?
 
-The following are important items that have not yet been implemented, either not properly or entirely missing
+Not in any official capacity (yet!)
 
-* User Authentication / security
-    * Currently just asks for a username / email address, no authentication / PW or otherwise occurs.
-        * Could make a PW auth or an email code authenticator at some point in the future but would require future code to safely store a PW hash and/or storing SMTP config for sending mail. 
-* Module for SMTP / Email
-    * Will want ability to email users a recovery code if lost password, in the future. No code in project yet to support SMTP config. 
+If you would like to fund development work on this project, currently, the best way would be to reach out to the main developer, Douglas Robinson, at dougrobinson3491@gmail.com .
+
+Any funds received would most likely be spent hiring freelance developers @ freelancer.com to perform tasks needed for this project that I don't currently have the skillset or availability for. 
+
+Or, alternatively - You could do that too! Reach out if you need any technical documents written up detailing requirements for future features. 
+
+# Future Vision
+
+## Revenue to support Open Source Projects & Developers
+When this project is 'complete', I would like it to have the option of displaying ads on the side of the screen (perhaps as a widget type, user can decide where they get positioned and/or how many and/or if any at all), with the purpose of the ads being to drive revenue to **support open source projects**.
+
+I think a happy end result is that eventually the elevator pitch for using this app is that it provides value to the end user ***and supports open source projects and developers***, ensuring they're able to continue doing their work and contributing to the world, at no cost to the end user. 
+
+A future extrapolation of that may be that users could define which projects they want to support, perhaps there's a rotation of ads directly for the github repo's of important projects directly, driving awareness, etc, or could even just mark other providers that they want to load ads from for other causes or decide, in a way, they want this ad functionality on their page but want it going somewhere else. 
+
+This is an opportunity for people to do something good, albeit small, every time they open their browser or a new tab. For free.
+
 
 # Setup
 ## Server / Environment Requirements
