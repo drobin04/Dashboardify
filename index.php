@@ -1,5 +1,15 @@
 <?php include("checkifdbexists.php");
 include("actions/logoutredirect.php");
+
+// Widget Types To Include on New Widget dialog. Moved here for convenience in hiding one or multiple. 
+$New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
+<option value='Collapseable IFrame'>Collapseable IFrame</option>
+<option value='Notes'>Notes</option>
+<option value='HTMLEmbed'>HTMLEmbed</option>
+<option value='SQLServerScalarQuery'>SQLServerScalarQuery</option>
+<option value='SQLiteResultsList'>SQLiteResultsList</option>"
+
+
 ?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -317,13 +327,9 @@ include("actions/logoutredirect.php");
                         
                         <label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType" onclick="renderNewWidgetOptionsByDropdown()">
 							<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option><!--<option value="Bookmark">Bookmark</option> Removed because duplicated by default value in line above-->
-                            <option value="IFrame">IFrame</option>
-                            <option value="Collapseable IFrame">Collapseable IFrame</option>
-                            <option value="Notes">Notes</option>
-                            <option value="HTMLEmbed">HTMLEmbed</option>
-							<option value="SQLServerScalarQuery">SQLServerScalarQuery</option>
-							<option value="SQLiteResultsList">SQLiteResultsList</option>
+                            
 							<?php
+								echo $New_Widget_Dropdown_Options;
 								// Populate additional options for Custom Widget Providers
 								if (scalarquery("Select Count(*) As Matches From CustomWidgetProviders", "Matches") != 0) {
 									$wis = selectquery("Select WidgetProviderName From CustomWidgetProviders");
