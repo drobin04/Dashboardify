@@ -61,10 +61,9 @@ When this project is 'complete', I would like it to have the option of displayin
 
 I think a happy end result is that eventually the elevator pitch for using this app is that it provides value to the end user ***and supports open source projects and developers***, ensuring they're able to continue doing their work and contributing to the world, at no cost to the end user. 
 
-A future extrapolation of that may be that users could define which projects they want to support, perhaps there's a rotation of ads directly for the github repo's of important projects directly, driving awareness, etc, or could even just mark other providers that they want to load ads from for other causes or decide, in a way, they want this ad functionality on their page but want it going somewhere else. 
+A future extrapolation of that may be that users could define which projects they want to support, perhaps there's a rotation of ads directly for the github repo's of important projects directly, driving awareness, etc, or could even just mark other providers that they want to load ads from for other causes or decide, in a way, they want this ad functionality on their page but want it going somewhere else. An example would be if very large content creators on youtube could direct an audience to set up this application and then tag them on it to drive ad revenue towards their favorite channel, every time they open a new tab. 
 
 This is an opportunity for people to do something good, albeit small, every time they open their browser or a new tab. For free.
-
 
 # Setup
 ## Server / Environment Requirements
