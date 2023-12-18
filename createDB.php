@@ -57,8 +57,14 @@ $DashboardsSQL = "CREATE TABLE [Dashboards] (
     [BackgroundPhotoURL] NVARCHAR(400)  NULL,
     [UserID] INTEGER  NULL,
     [DashboardID] NVARCHAR(50)  NULL
-    , Name NVARCHAR(50) NULL)
-    , Embeddable BOOLEAN NULL";
+    , Name NVARCHAR(50) NULL
+    , Embeddable BOOLEAN NULL)";
+
+$CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
+    WidgetProviderName TEXT,
+    CSS_Styling TEXT  NULL,
+    HTML_Content TEXT  NULL,
+    PHP_To_Run TEXT  NULL)";
 
 execquery($widgetsSQL);
 execquery($usersSQL);
@@ -69,7 +75,7 @@ execquery($DashboardsSQL);
 execquery($settingsSQL);
 execquery($populatefirstauthmodesetting);
 execquery("INSERT INTO Settings (Name, Value) VALUES ('SiteUrlConfig', 'https://localhost/Dashboardify/');");
-
+execquery($CustomwidgetProvidersSQL);
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
     header('Location: actions/start-login.php');

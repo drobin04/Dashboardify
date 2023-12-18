@@ -1,47 +1,11 @@
 # To-Do
 
-* Setup option to remove dashboards where no valid existing user association can be found
-* Add password authentication method
-* Add 'default' site-wide settings for new dashboards
-	* Background photo
-* Update usercss.php to pull css from dashboard insteal of globally for user. Or perhaps break it out to either / both distinct options.
-* Setup option to remove dashboards where no valid existing user association can be found
-* Add password authentication method
+[Migrating to-do section to Issues page]
 
-* Interface on setup page to list default / global widgets
-* After submitting, on newwidget.php, check if user is actually an admin before accepting / processing / saving the flag for global / default. 
+* Update usercss.php to pull css from dashboard instead of globally for user. Or perhaps break it out to either / both distinct options.
 
-* Add authentication methods config section to setup page where the method to be used (None, password, email auth code, keyfile, LDAP, etc) can be selected.
-* Add configuration to setup page for a message (And CSS, maybe?) to display to let users know that they failed to authenticate.
-	* Future wish: Render a preview of this message into a DIV element on the screen to the side. 
-* Add widget type for querying API and displaying a table from results using client side JS
-	* Probably need a text box for filtering path of JSON results to the object to be displayed... 
-* Update NewWidget dialog on index.php to make different fields visible / not visible based on which item in the dropdown was selected
-	* If not recognized in list of programmed widget types, make them all visible
-- Have an interface somewhere where you can mark your default dashboard or set the current one as default. 
-	* /userconfig/manage_dashboards.php
-	* Provides list of dashboards for current user
-	* Links next to each one that allow you to mark as default or delete.....
-		* OR, should these just appear as menu bar buttons at the top of index.php? Would be easier. 
-* Need a less goofy way to show edit / delete icons for the widgets on the screen
-* Ability to embed a copy of a particular dashboard on an external page. URL gets called that generates the dashboard and widgets, minus the buttons at the top and the add/edit dialog boxes. Could be an interesting feature!
 * Module for SMTP / Email
     * Will want ability to email users a recovery code if lost password, in the future. No code in project yet to support SMTP config. 
-
-## New-User Experience
-
-### Setup widgets that appear on the page by default for new users. 
-^ This can be turned off or the individual widgets to be created for new users / SQL statements can be altered in the Setup page... Maybe a feature to copy existing widget ID's under each new user, or a direct SQL insert (less preferred).
-
-Could use javascript on the client side to handle sending each NewWidget request on a new user event, then reloading the dashboard after each request was submitted. 
-
-* these could be defined on the setup page
-* copy the new widget dialog from index.php
-* add a flag to the copied dialog when on setup.php that marks it as a global widget
-* add column to widgets table to make this a global widget
-* add code to the index.php page so that when a new dashboard is created, it creates new widgets for the new DB automatically. 
-* At this point is where we should figure out how to trigger the URL for a new widget in the background or something, so that we don't have to reload the page several times. Dunno. 
-
 
 ### User settings page
 
@@ -51,13 +15,6 @@ Could use javascript on the client side to handle sending each NewWidget request
 * Some GUI selectors or buttons to fill in user CSS for bookmark CSS or background color
 * label somewhere telling someone they can write in something like 'lightgrey' for the background color, or pick from a dropdown?
 	* ideally a color splotch appears that can update in realtime (future luxury)
-
-### Initial background image
-
-* Maybe setup a background image or individual widgets located under the main menu buttons, explaining what they are for, etc. 
-* User can use the 'Edit Widgets' button to delete these. 
-* Maybe a checkbox or button somewhere that acknowledges all new-user-experience items and makes them all go away at once
-	* This could be a boolean flag on their user in the DB, maybe? 
 
 
 ## Add a default page theme to the app, and have it customizeable from the Setup page
@@ -79,23 +36,9 @@ Things that may belong here:
 		* Code for this should ideally be located in the logoutredirect.php page, OR could be implemented as a timeout on the session cookie!
 
 
-
-## Update readme.md with proper setup documentation, and/or set up a separate document for it.
-
-Need to get this app into proper position for someone else to be able to install it properly. There's no reason this should sit unusable in a file drawer somewhere.
-
-## Compartmentalize the 'Widget Type' dropdown code to support easier mods / plugins
-
-Breakout the code that populates and handles the 'Widget Type' dropdown code so that it can be easily modified to add new types. 
-
-Consider pulling the code to run for the widget type from a DB entry, so that future mods / updates can just populate their code into the core DB and don't need to rely on actual code / file updates on the server / could be implemented more easily such as via an interface. 
-
 # fix bugs
 
 # Future Ideas
-
-- Ability to drag and drop an existing widget to a new position. When 'dropping' the item, record the new position and we change the X/Y coords for the widget with a background request over javascript to a PHP page that acts as an API, while also changing it locally on the client so that we don't have to reload the page. 
-- Ability to query widget results from a local DB file, show a result list. 
 - For scalar values, widget becomes a link that can take you to another page that displays the results in a table format. 
 - API functionality for capturing requests into a custom sqlite db, then ability to display results on dashboard. 
 

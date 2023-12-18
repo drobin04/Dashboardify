@@ -185,7 +185,7 @@ include("actions/logoutredirect.php");
 					   }
 						echo $combined . "<p>" . $row["BookmarkDisplayText"] . ": " . $result ."</p></div>";
 					}
-					If (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
+					elseIf (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
 						echo $floatingbookmark 
 						." <div style='padding: 5px; width: 100%; class='bookmark'"
 						. $row["WidgetCSSClass"] 
@@ -193,12 +193,10 @@ include("actions/logoutredirect.php");
 						. $row["WidgetURL"] 
 						. "'>" 
 						. $row["BookmarkDisplayText"] 
-						."</a></div></div>";};
-
-						//For bookmarks to be lumped together on the left -->
-					If ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";};
-					If ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
-					If ($row["WidgetType"] == "Collapseable IFrame") {
+						."</a></div></div>";}
+					elseIf ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";}
+					elseIf ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
+					elseIf ($row["WidgetType"] == "Collapseable IFrame") {
 						$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 					
 						$hidden = "<div id='' class='collapse' style='" . "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: 20px; max-width: " . $row["SizeX"] . "px;'" . "'>";
@@ -206,9 +204,9 @@ include("actions/logoutredirect.php");
 						echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
 						echo "</div>"; //this wraps combined variable, into a surrounding div.
 					}
-					If ($row["WidgetType"] == "Notes") {echo $combined . "<p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $row["Notes"] ."</md-block></p></div>";}
-					If ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}
-					If ($row["WidgetType"] == "SQLiteResultsList") {
+					elseIf ($row["WidgetType"] == "Notes") {echo $combined . "<p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $row["Notes"] ."</md-block></p></div>";}
+					elseIf ($row["WidgetType"] == "HTMLEmbed") {echo $combined . $row["Notes"] ."</div>";}
+					elseIf ($row["WidgetType"] == "SQLiteResultsList") {
 						// Wrap in a try statement!! Throw the error into debug + the widget. 
 						try {
 						// Get variables
@@ -228,7 +226,52 @@ include("actions/logoutredirect.php");
 						} finally {
 						}
 					} // End of SQLite DB 'If' block
-				} // End of Widget Loading for-each list
+					elseIf ($row["WidgetType"] == "Javascript API Request") {
+						
+					
+						// End of Widget Loading for-each list
+					} else { // Look for and handle custom widget providers defined in DB!
+								// WidgetProviderName
+								// CSS_Styling
+								// HTML_Content
+								// PHP_To_Run
+								// CREATE TABLE CustomWidgetProviders (
+								// WidgetProviderName TEXT,
+								// CSS_Styling TEXT  NULL,
+								// HTML_Content TEXT  NULL,
+								// PHP_To_Run TEXT  NULL,
+							// OK... PHP eval handler test... lets go...
+							// At this point we have a 'widget' defined that didn't match any other pre-defined widget
+							// 	Types... So we'll see if there's a matching widget handler with this name in the DB.
+							
+							
+							// THE FOLLOWING CODE USES EVAL() WHICH IS DANGEROUS.
+							// ONLY ALLOW RUNNING THE PHP PART OF THIS IF USER IS ADMIN?
+							$w_provider = $row["WidgetType"];
+							$prov = selectquery("Select WidgetProviderName, CSS_Styling, HTML_Content, PHP_To_Run From 
+							CustomWidgetProviders Where WidgetProviderName = '" . $w_provider . "'");
+							if (isset($prov)) {
+								debuglog($prov, "Custom Widget Provider");
+								$p = $prov[0];
+								$widget_css = $p["CSS_Styling"];
+								$w_HTML_Content = $p["HTML_Content"];
+								$w_PHP_To_Run = $p["PHP_To_Run"];
+								
+								
+								// Draw the widget first i guess?
+								echo $combined;
+								if (getAuthMode() == "None") {
+									// Bad. 
+								}
+								if (AmIAdmin()) {
+								eval($w_PHP_To_Run);
+								} // ONLY RUN EVAL IF I AM ADMIN.
+								echo $w_HTML_Content ."</div>";
+
+//https://enplnnfh4ifmp.x.pipedream.net/
+							}
+				}
+			}
 			?>
 			<!-- New Widget box-->
 		<div id="NewWidgetDialog" class="white_content"><form id="form1" method="POST" action="NewWidget.php" >
@@ -279,6 +322,15 @@ include("actions/logoutredirect.php");
                             <option value="HTMLEmbed">HTMLEmbed</option>
 							<option value="SQLServerScalarQuery">SQLServerScalarQuery</option>
 							<option value="SQLiteResultsList">SQLiteResultsList</option>
+							<?php
+								// Populate additional options for Custom Widget Providers
+								if (scalarquery("Select Count(*) As Matches From CustomWidgetProviders", "Matches") != 0) {
+									$wis = selectquery("Select WidgetProviderName From CustomWidgetProviders");
+									foreach ($wis as $widgetprovider) {
+										echo "<option value='" . $widgetprovider["WidgetProviderName"] ."'>" . $widgetprovider["WidgetProviderName"] . "</option>";
+									}
+								}
+							?>
                         </select><br />
                         <span id="widgetURL"><label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br /></span>
                         <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br />

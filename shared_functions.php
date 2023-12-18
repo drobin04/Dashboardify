@@ -35,6 +35,12 @@ function scalarquery($sql, $columnname) {
 	return $results[0][$columnname];
 }
 
+function getPDO_DBFile() {
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+	return $localdb;
+}
+
 function getCurrentUserID() {
 	if (isset($_COOKIE["SessionID"])) {
 		$sessionid = $_COOKIE["SessionID"]; 
@@ -101,7 +107,7 @@ function debuglog( $object=null, $label=null ){
 	// DEBUG LOGGING
 	// SET THE BELOW TO TRUE IF YOU WANT DEBUGGING INFO TO APPEAR IN CONSOLE OF WEBPAGES
 	// HOWEVER THIS BLOATS THE TRANSFERRED DATA ON PAGES AND IS PREFERRABLY LEFT OFF FOR BETTER PERFORMANCE WHILE LIVE. 
-	$debug_logging_enabled = false;
+	$debug_logging_enabled = true;
 	
 	$message = json_encode($object, JSON_PRETTY_PRINT);
 	$label = "Debug" . ($label ? " ($label): " : ': ');
@@ -109,6 +115,12 @@ function debuglog( $object=null, $label=null ){
 		echo "<script>console.log(\"$label\", $message);</script>";
 	}
 }
+
+function getAuthMode() {
+	$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
+	return $authmode;
+}
+
 function DoIOwnThisWidget($widgetrecid) {
 	$userid = getCurrentUserID();
 	$q = "select count(w.recid) as matches from widgets w

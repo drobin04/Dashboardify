@@ -1,6 +1,6 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<link rel="stylesheet" href="config/globalcss.css">
+<link rel="stylesheet" href="../config/globalcss.css">
 <script type="module" src="../js/md-block.js"></script>
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
 		<!--Have a php include here that loads dashboard-specific css! -->
