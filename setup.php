@@ -175,6 +175,7 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 </div>
 <br />
 <div id="newuserexperience">
+    <form id="NewUserSettings" action="setup.php?action=UpdateNewUserSettings">
     <h2>New User Experience</h3>
     <p>Below are settings affecting new users on the system.</p>
     <label>Authentication Type: </label>
@@ -189,7 +190,9 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 
     </select><br />
 
-    <label>Default Dashboard Background Image For First Dashboard: </label><input id='defaultdashimage' name='defaultdashimage' value='<?php echo $defaultdashimage ?>'></input>
+    <label>Default Dashboard Background Image For First Dashboard: </label>
+    <input id='defaultdashimage' name='defaultdashimage' value='<?php echo $defaultdashimage ?>'></input>
+</form>
 </div>
 
 <div id="SQLUpdates">
