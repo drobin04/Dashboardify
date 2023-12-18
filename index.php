@@ -335,7 +335,12 @@ include("actions/logoutredirect.php");
                         </select><br />
                         <span id="widgetURL"><label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br /></span>
                         <label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br />
-                        <?php if (isadmin($userid)) { echo "<label>Global? 0 or 1.</label><input id='GlobalWidgetBool' name='GlobalDefault' value='" . $globalwidget . "'></input>"; } ?>
+                        <?php if (isadmin($userid)) { 
+							$global_checked = "";
+							if ($globalwidget == "1") {
+								$global_checked = "checked";
+							}
+							echo "<input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Global?</label></input>"; } ?>
 						<hr><button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button>
 						<br />
                         <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input><br />
@@ -389,5 +394,5 @@ include("actions/logoutredirect.php");
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="js/index.js"></script><br /><div style='border: 1px black solid; display: inline; padding: 3px; background-color: lightgrey;'></div></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script type="text/javascript" src="js/index.js"></script><br /></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 		</html>
