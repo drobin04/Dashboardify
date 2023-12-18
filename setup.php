@@ -208,7 +208,7 @@ This is the default CSS that will be loaded for everyone's dashboards, underneat
 </div>
 <br />
 <div id="newuserexperience">
-    <form id="NewUserSettings" method="POST" action="/setup.php?action=UpdateNewUserSettings">
+    <form id="NewUserSettings" method="POST" action="setup.php?action=UpdateNewUserSettings">
     <h2>New User Experience</h3>
     <p>Below are settings affecting new users on the system.</p>
     <label>Authentication Type: </label>

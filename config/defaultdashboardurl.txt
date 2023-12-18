@@ -1,1 +1,1 @@
-config/mainbackground.AVIF
+https://raw.githubusercontent.com/drobin04/Dashboardify/main/config/mainbackground.AVIF
