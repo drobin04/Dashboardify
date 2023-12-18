@@ -11,8 +11,21 @@
 </head>
 <body>
 <?php
-//include_once('actions/logoutredirect.php');
-//include_once('config/check_admin.php');
+include_once('config/check_admin.php');
+include_once('shared_functions.php');
+include('actions/logoutredirect.php');
+
+if (!isset($_COOKIE["SessionID"])) {
+    echo "you don't have permission to do this, you're not logged in.";
+    exit();
+}
+
+if (!IsAdmin(getCurrentUserID())) { header('Location: index.php'); 
+exit();
+} // Redirect back to index if they don't have permissions to be here.
+
+
+
 
 setcookie("SessionID", "/", time() - 3600, "/");
 unset($_COOKIE['SessionID']);
