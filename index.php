@@ -29,13 +29,13 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 	
         <div>
 			<!--Buttons at top left-->
-            <button type="button" class="menubar" onclick="document.getElementById('NewWidgetDialog').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
-            <button type="button" class="menubar" onclick="document.getElementById('cssEditorBox').style.display='block';">Edit CSS</button>
-            <button type="button" class="menubar" onclick="document.getElementById('NewDashboardDialog').style.display='block';">New Dashboard</button>
-            <button type="button" class="menubar" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
+            <button type="button" class="menubar" onclick='toggleDisplay("NewWidgetDialog");'>New Widget</button>
+            <button type="button" class="menubar" onclick='toggleDisplay("cssEditorBox");'>Edit CSS</button>
+            <button type="button" class="menubar" onclick='toggleDisplay("NewDashboardDialog");'>New Dashboard</button>
+            <button type="button" class="menubar" onclick="var all = toggleDisplayByClass('editbuttons');">Edit Widgets</button>
 			<button><a class='nodeco menubar' href="cachedpage.html">Cached Page</a></button>
 			<button><a class='nodeco menubar' href="index.php">Main Page / Reload Cache</a></button>
-			<button><a type="button" class="menubar" onclick="document.getElementById('EditDashboardDialog').style.display='block';">Edit Dashboard</button>
+			<button><a type="button" class="menubar" onclick="toggleDisplay('EditDashboardDialog');">Edit Dashboard</button>
 			<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include_once("shared_functions.php");
