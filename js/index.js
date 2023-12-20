@@ -16,6 +16,53 @@ $( function() {
 	function toggleEditMode() {
 	  // Toggle the "draggable" property of elements with the class "widget"
 	  $(".widget").each(function() {
+
+// Get the element you want to monitor for resize
+const widget = $(this);
+
+// Add a resize event listener to the widget
+$(this).on('resize', () => {
+  // Get the width and height of the resized widget
+  const width = widget.offsetWidth;
+  const height = widget.offsetHeight;
+
+  // Get the ID of the element being resized
+  const id = widget.id;
+
+  // Construct the URL with the parameters
+  const url = new URL('https://enspnistvlrb.x.pipedream.net');
+  const params = new URLSearchParams();
+  params.append('action', 'resize');
+  params.append('width', width);
+  params.append('height', height);
+  params.append('id', id);
+  url.search = params.toString();
+
+  // Send a request to the API with the data in the URL
+  fetch(url, {
+    method: 'POST'
+  })
+  .then(response => {
+    // Handle the API response here
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		var draggable = $(this).data("ui-draggable");
 		if (draggable) {
 		  $(this).draggable("option", "disabled", !draggable.options.disabled);
@@ -54,6 +101,78 @@ $( function() {
   
 	}
   });
+
+
+
+  $(document).ready(function() {
+	// Add event handler to the button with id "resizewidgets"
+	$("#resizewidgets").click(function() {
+	  console.log("resize mode active");
+	  toggleresize();
+	});
+  
+	// Function to toggle edit mode
+	function toggleresize() {
+	  $(".resize").each(function() {
+
+		// Add the desired styles to the widget
+		$(this).css({
+			'resize': 'both',
+			'overflow': 'auto'
+		});
+
+		// Get the element you want to monitor for resize
+		var widget = $(this)[0];
+  
+		// Create a new MutationObserver
+		var observer = new MutationObserver(function(mutationsList) {
+		  for (var mutation of mutationsList) {
+			if (
+			  mutation.type === "attributes" &&
+			  (mutation.attributeName === "style" || mutation.attributeName === "class")
+			) {
+			  // Clear any previously set timeout
+			  clearTimeout(widget.resizeTimeout);
+  
+			  // Set a new timeout to send the API request after 500ms of inactivity
+			  widget.resizeTimeout = setTimeout(function() {
+				// Get the width and height of the resized widget
+				const width = widget.offsetWidth;
+				const height = widget.offsetHeight;
+  
+				// Get the ID of the element being resized
+				const id = widget.id;
+  
+				// Construct the URL with the parameters
+				const url = new URL(window.location.origin + "/Dashboardify/actions/move_resize_widget.php");
+				const params = new URLSearchParams();
+				params.append("action", "resize");
+				params.append("width", width);
+				params.append("height", height);
+				params.append("id", id);
+				url.search = params.toString();
+  
+				// Send a request to the API with the data in the URL
+				fetch(url, {
+				  method: "POST"
+				})
+				  .then(response => {
+					// Handle the API response here
+				  })
+				  .catch(error => {
+					console.error("Error:", error);
+				  });
+			  }, 500); // Adjust the delay as needed
+			}
+		  }
+		});
+  
+		// Start observing the widget for attribute changes
+		observer.observe(widget, { attributes: true });
+	  });
+	}
+  });
+
 
 if (window.location.href.indexOf("EditRecID") != -1) {
 	document.getElementById('NewWidgetDialog').style.display='block';
