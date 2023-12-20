@@ -416,8 +416,26 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		</script>
 		<script>
 $(document).ready(function() {
-  // Initialize the draggable property of elements with the class "widget"
-  $(".widget").draggable({
+  
+
+  // Add event handler to the button with id "editmode"
+  $("#editmode").click(function() {
+    // Call the toggleEditMode function
+    toggleEditMode();
+  });
+
+  // Function to toggle edit mode
+  function toggleEditMode() {
+    // Toggle the "draggable" property of elements with the class "widget"
+    $(".widget").each(function() {
+      var draggable = $(this).data("ui-draggable");
+      if (draggable) {
+        $(this).draggable("option", "disabled", !draggable.options.disabled);
+      }
+    });
+
+// Initialize the draggable property of elements with the class "widget"
+$(".widget").draggable({
     stop: function(event, ui) {
       // Get the current position of the widget element
       var x = ui.position.left;
@@ -445,21 +463,7 @@ $(document).ready(function() {
     }
   });
 
-  // Add event handler to the button with id "editmode"
-  $("#editmode").click(function() {
-    // Call the toggleEditMode function
-    toggleEditMode();
-  });
 
-  // Function to toggle edit mode
-  function toggleEditMode() {
-    // Toggle the "draggable" property of elements with the class "widget"
-    $(".widget").each(function() {
-      var draggable = $(this).data("ui-draggable");
-      if (draggable) {
-        $(this).draggable("option", "disabled", !draggable.options.disabled);
-      }
-    });
   }
 });
 
