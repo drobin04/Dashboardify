@@ -6,6 +6,7 @@
 		<!--Have a php include here that loads dashboard-specific css! -->
 <style>
 	md-block:not([rendered]) { display: none }
+	html {overflow: hidden;}
 	</style></head>
 <body id='dashboardcontent'>
 	
