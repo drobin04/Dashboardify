@@ -1,9 +1,9 @@
 <html>
-<head>    <?php include("logoutredirect.php");?> </head>
+<head>    <?php include_once("actions/logoutredirect.php");?> </head>
 <body>
 
 <?php
-    include("shared_functions.php");
+    include_once("shared_functions.php");
 
     debuglog($_POST);
     $CSS = $_POST["txtCSS"];

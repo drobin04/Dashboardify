@@ -97,7 +97,13 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 
 							}
 							if (isset($_GET["SelectDashboardID"])) {
-								if ($row["DashboardID"] == $_GET["SelectDashboardID"]) { $match = 1; debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); }
+								if ($row["DashboardID"] == $_GET["SelectDashboardID"]) { 
+									$match = 1; 
+									debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); 
+									$dashboardphotourl = $row["BackgroundPhotoURL"];
+									$usercss = $row["CustomCSS"];
+								
+								}
 							}
 						}
 						echo "</select><br />";
