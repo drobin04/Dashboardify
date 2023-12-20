@@ -403,69 +403,23 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="js/index.js"></script><br /></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
-
+		<script type="text/javascript" src="js/index.js"></script><br />
+	
+	
+	
 		<script>
-			  $( function() {
-    $( ".white_content" ).draggable();
-  } );
+			  
 
   
 
 
 		</script>
 		<script>
-$(document).ready(function() {
-  
 
-  // Add event handler to the button with id "editmode"
-  $("#editmode").click(function() {
-    // Call the toggleEditMode function
-    toggleEditMode();
-  });
-
-  // Function to toggle edit mode
-  function toggleEditMode() {
-    // Toggle the "draggable" property of elements with the class "widget"
-    $(".widget").each(function() {
-      var draggable = $(this).data("ui-draggable");
-      if (draggable) {
-        $(this).draggable("option", "disabled", !draggable.options.disabled);
-      }
-    });
-
-// Initialize the draggable property of elements with the class "widget"
-$(".widget").draggable({
-    stop: function(event, ui) {
-      // Get the current position of the widget element
-      var x = ui.position.left;
-      var y = ui.position.top;
-
-      // Get the ID of the moved element
-      var widgetId = $(this).attr("id");
-
-      // Send API request with X, Y, and ID as query string parameters
-      var apiUrl = "actions/move_resize_widget.php?action=movewidget";
-      var urlWithParams = apiUrl + "&x=" + x + "&y=" + y + "&RecID=" + widgetId;
-
-      $.ajax({
-        url: urlWithParams,
-        method: "GET",
-        success: function(response) {
-          // Handle the API response if needed
-          console.log("API request successful");
-        },
-        error: function(xhr, status, error) {
-          // Handle any errors that occur during the API request
-          console.error("API request failed:", error);
-        }
-      });
-    }
-  });
-
-
-  }
-});
 
 </script>
+	
+	</body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+
+		
 		</html>
