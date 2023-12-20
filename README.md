@@ -25,6 +25,7 @@ Multiple different types of embeddable widgets:
 * SQLiteResultsList - Specify the (relative) location of the SQLite DB file to the website, provide the query to perform (including columns to return, etc). The results will automatically be formatted into a table. You can style the table using custom CSS by using the CSS selector 'TableResults' (Some global CSS rules applied by default)
 * Ability to add new Widget Types with custom HTML, CSS, Javascript and PHP via the Setup.php panel.
 
+Also, now, you can reposition widgets on the screen by physically dragging them around into new positions! (To use, click 'Edit Mode' button at top of the screen to enable moving).
 
 ## End-User and Admin-customizable CSS 
 
