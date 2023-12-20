@@ -107,7 +107,7 @@ function debuglog( $object=null, $label=null ){
 	// DEBUG LOGGING
 	// SET THE BELOW TO TRUE IF YOU WANT DEBUGGING INFO TO APPEAR IN CONSOLE OF WEBPAGES
 	// HOWEVER THIS BLOATS THE TRANSFERRED DATA ON PAGES AND IS PREFERRABLY LEFT OFF FOR BETTER PERFORMANCE WHILE LIVE. 
-	$debug_logging_enabled = true;
+	$debug_logging_enabled = false;
 	
 	$message = json_encode($object, JSON_PRETTY_PRINT);
 	$label = "Debug" . ($label ? " ($label): " : ': ');

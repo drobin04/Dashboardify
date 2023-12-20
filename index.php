@@ -13,6 +13,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 ?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="config/globalcss.css">
 <script type="module" src="js/md-block.js"></script>
 <!--<script src="/js/textboxes.js"></script>-->
@@ -37,6 +39,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			<button><a class='nodeco menubar' href="index.php">Main Page / Reload Cache</a></button>
 			<button><a type="button" class="menubar" onclick="toggleDisplay('EditDashboardDialog');">Edit Dashboard</button>
 			<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
+			<button><a id="editmode" class="menubar nodeco">Edit Mode</button>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include_once("shared_functions.php");
 				include("config/check_admin.php");
@@ -163,10 +166,10 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 				foreach($results as $row) { //Load Widgets, Starting with Re-useable texts
 					$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 					$imgstylecss = "<img style='height:24px; width:24px;' src='";
-					$PositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>";
-					$combined = "<div style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
-					$floatingbookmarkPositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px;' class='" . $row["WidgetCSSClass"] . "'>";
-					$floatingbookmark = "<div id='" . $row["RecID"] . "' class='bookmark' style='position: absolute; width:100px; background-color: lightgrey;  border: 1px solid black; " 
+					$PositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='widget " . $row["WidgetCSSClass"] . "'>";
+					$combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+					$floatingbookmarkPositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px;' class='widget " . $row["WidgetCSSClass"] . "'>";
+					$floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' style='position: absolute; width:100px; background-color: lightgrey;  border: 1px solid black; " 
 					. $floatingbookmarkPositionAndCSSClass . $editbuttonscss 
 					. $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" 
 					. $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss 
@@ -198,17 +201,17 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 					}
 					elseIf (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
 						echo $floatingbookmark 
-						." <div style='padding: 5px; width: 100%; class='bookmark'"
+						." <div style='padding: 5px; width: 100%; class='widget bookmark "
 						. $row["WidgetCSSClass"] 
 						. "'><a target='_blank' href='" 
 						. $row["WidgetURL"] 
 						. "'>" 
 						. $row["BookmarkDisplayText"] 
 						."</a></div></div>";}
-					elseIf ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";}
+					elseIf ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='widget bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";}
 					elseIf ($row["WidgetType"] == "IFrame") {echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";}
 					elseIf ($row["WidgetType"] == "Collapseable IFrame") {
-						$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='" . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+						$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; max-width: " . $row["SizeX"] . "px;' class='widget " . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 					
 						$hidden = "<div id='' class='collapse' style='" . "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: 20px; max-width: " . $row["SizeX"] . "px;'" . "'>";
 						echo $hidden . "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" . $row["RecID"] . "&quot;)'>" . $row["BookmarkDisplayText"] . "</a>";
@@ -401,12 +404,64 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		</div>
 		</form>
 		<script type="text/javascript" src="js/index.js"></script><br /></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
-		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
 		<script>
 			  $( function() {
-    $( "#NewWidgetDialog" ).draggable();
+    $( ".white_content" ).draggable();
   } );
 
+  
+
+
 		</script>
+		<script>
+$(document).ready(function() {
+  // Initialize the draggable property of elements with the class "widget"
+  $(".widget").draggable({
+    stop: function(event, ui) {
+      // Get the current position of the widget element
+      var x = ui.position.left;
+      var y = ui.position.top;
+
+      // Get the ID of the moved element
+      var widgetId = $(this).attr("id");
+
+      // Send API request with X, Y, and ID as query string parameters
+      var apiUrl = "actions/move_resize_widget.php?action=movewidget";
+      var urlWithParams = apiUrl + "&x=" + x + "&y=" + y + "&RecID=" + widgetId;
+
+      $.ajax({
+        url: urlWithParams,
+        method: "GET",
+        success: function(response) {
+          // Handle the API response if needed
+          console.log("API request successful");
+        },
+        error: function(xhr, status, error) {
+          // Handle any errors that occur during the API request
+          console.error("API request failed:", error);
+        }
+      });
+    }
+  });
+
+  // Add event handler to the button with id "editmode"
+  $("#editmode").click(function() {
+    // Call the toggleEditMode function
+    toggleEditMode();
+  });
+
+  // Function to toggle edit mode
+  function toggleEditMode() {
+    // Toggle the "draggable" property of elements with the class "widget"
+    $(".widget").each(function() {
+      var draggable = $(this).data("ui-draggable");
+      if (draggable) {
+        $(this).draggable("option", "disabled", !draggable.options.disabled);
+      }
+    });
+  }
+});
+
+</script>
 		</html>

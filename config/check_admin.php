@@ -66,9 +66,12 @@ function queryDB($sql) {
 }
 
 function debuglog_admin( $object=null, $label=null ){
-    $message = json_encode($object, JSON_PRETTY_PRINT);
-    $label = "Debug" . ($label ? " ($label): " : ': ');
-    echo "<script>console.log(\"$label\", $message);</script>";
+    $debug_needed = false;
+    if ($debug_needed) {
+        $message = json_encode($object, JSON_PRETTY_PRINT);
+        $label = "Debug" . ($label ? " ($label): " : ': ');
+        echo "<script>console.log(\"$label\", $message);</script>";
+    }
 }
 
 
