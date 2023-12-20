@@ -1,4 +1,4 @@
-![Demo Photo](https://i.imgur.com/UIqZHrA.jpeg)
+![Demo Photo]([https://i.imgur.com/UIqZHrA.jpeg](https://i.imgur.com/bG2qEP7.jpeg))
 # About Dashboardify
 This is a PHP web application for developing personal, customizeable dashboards with bookmarks, embedded frames, notes, as well as database and API connectivity.
 
