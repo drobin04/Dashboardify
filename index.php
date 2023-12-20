@@ -380,7 +380,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			</div></form>
         </div>
 		<form id="form1" method="POST" action="actions/NewDashboard.php">
-		<div id="NewDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
+		<div id="NewDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:200px !important; height:150px;">
 			
 				<header >New Dashboard<hr /></header>
 				<br />
@@ -389,7 +389,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		</div>
 		</form>
 		<form id="EditDashboard" method="POST" action="actions/Edit_Dashboard.php?DashboardID=<?php echo $dashboardid; ?>">
-		<div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
+		<div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:450px; height: 300px;">
 			
 				<header >Edit Current Dashboard<hr /></header>
 				<br />
@@ -401,4 +401,12 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		</div>
 		</form>
 		<script type="text/javascript" src="js/index.js"></script><br /></body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+		<script>
+			  $( function() {
+    $( "#NewWidgetDialog" ).draggable();
+  } );
+
+		</script>
 		</html>
