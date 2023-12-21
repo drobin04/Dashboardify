@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Dashboardify - Customizeable Dashboards",
+    "version": "1.0",
+    "permissions": [
+      "storage",
+      "scripting",
+      "tabs"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "chrome_url_overrides": {
+      "newtab": "newtab.html"
+    },
+    "background": {
+      "service_worker": "background.js"
+    },
+    "homepage_url": "https://dashboardify.app/Dashboardify/"
+  }
+  
