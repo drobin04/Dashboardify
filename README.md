@@ -102,14 +102,25 @@ You can set https://dashboardify.com/Dashboardify/ as your Home page in your bro
 
 ### Chrome 
 
+#### Using the Dashboardify Browser Extension
+
+We've built a browser extension that will set your home page and new-tab page to the Dashboardify URL! 
+
+However, It's not yet on the Chrome Web Store (The review process takes quite a while).
+
+To install it manually, download the 'browser_extension' folder, zip up its contents (with no directory above them) navigate to chrome://extensions, turn on developer mode, and then select 'Load Packed'.
+
+#### Using the 3rd Party Custom New Tab Page Extension from the chrome web store 
+
 [Chrome New Tab Page Extension](https://chromewebstore.google.com/detail/custom-new-tab-url/mmjbdbjnoablegbkcklggeknkfcjkjia?pli=1)
 
-This extension allows you to override the New Tab Page on the browser to a user-specified custom URL, which you can point to Dashboardify.
+This is a 3rd party extension that allows you to override the New Tab Page on the browser to a user-specified custom URL, which you can point to Dashboardify.
 
 If you do so, consider pointing to the cachedpage.html file instead of index.php, as it will load faster and the entire page's contents can be loaded from browser cache, whereas when loading a PHP page, there is variable server-side content and it can't be entirely cached by your browser. Therefore, the cachedpage.html page will load much faster and spare resources on the server.
 
 ### Firefox
 
+#### Using the 3rd Party Custom New Tab Page Extension
  [Firefox New Tab Page Extension](https://addons.mozilla.org/en-US/firefox/addon/custom-new-tab-page/).
 
 This extension allows you to override the New Tab Page on the browser to a user-specified custom URL, which you can point to Dashboardify.
