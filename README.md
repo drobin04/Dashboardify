@@ -77,11 +77,7 @@ After installing XAMPP, you need to configure the Dashboardify directory. This m
 
 ### PHP Version
 
-This app is tested and demo'd on PHP version 7.3.
-
-There is a known issue preventing it from running on version 8.2.
-
-I have not tested it on other versions, but know that if you're on a newer PHP version, *if you encounter a lot of 'header has already been sent' errors, this is why.* The resolution is to change the PHP version, or to rewrite a lot of the code to ensure ***no HTML / white space content is written to the page before headers / redirects***, which requires some restructuring of important code. 
+This app is tested and demo'd on PHP version 8.3, and earlier versions of it were also running successfully on v7.3. 
 
 ### Extensions
 
