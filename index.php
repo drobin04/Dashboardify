@@ -47,7 +47,11 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 				
 				// Load and Prep Dashboard
 				include('actions/index/load_and_prep_dashboard.php');
-
+				// Lots of code here.
+				//
+				//
+				//
+				//
 				// Load Widgets For Selected Dashboard
 				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'"; debuglog($select,"Query for widgets");
 				$stmt = $db_file->prepare($select); $stmt->execute();
@@ -56,6 +60,9 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 				foreach($results as $row) { //Load Widgets, Starting with Re-useable texts
 					// import Widget_Handling.php
 					include('actions/index/Widget_Handling.php');
+					// Lots of code here.
+					//
+					//
 				}
 			
 			?>

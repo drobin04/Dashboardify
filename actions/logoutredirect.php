@@ -16,7 +16,7 @@
 	
 
 
-	if (isset($_COOKIE["SessionID"])) {
+	if (isset($_COOKIE["SessionID"]) && doesDatabaseExist()) {
 		$sessionid = $_COOKIE["SessionID"]; 
 		$matchingsessioncount = selectquery("Select Count(Email) As Matches From Sessions S
 		Left Join Users U on s.UserID = U.RecID
