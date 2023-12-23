@@ -1,9 +1,14 @@
 # To-Do
 
+* Security Changes
+* Make it to where widgets can be 'Stored' , re-usable widgets that can be shared between users
+* SQLite widgets ***MUST BE CREATED BY ADMIN, AND CAN ONLY BE ADDED BY NON USERS THRU FUTURE SHARED WIDGET INTERFACE
+	This is important because there are security implications if standard user could ever run a sql query to select things like user ID's or other data.  
+
+
 [Migrating to-do section to Issues page]
 
 * bug - setup - auth mode dropdown currently repeats a value. Need to make it to where the static values get added maybe only if they're not the one already selected by the db setting?
-* Update usercss.php to pull css from dashboard instead of globally for user. Or perhaps break it out to either / both distinct options.
 
 * Module for SMTP / Email
     * Will want ability to email users a recovery code if lost password, in the future. No code in project yet to support SMTP config. 

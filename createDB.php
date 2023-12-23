@@ -67,6 +67,11 @@ $CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
     HTML_Content TEXT  NULL,
     PHP_To_Run TEXT  NULL)";
 
+// Table For Tracking Failed Login Attempts
+$FailedLogins = "CREATE TABLE LoginAttempts (
+    Email TEXT, DateTime Date, IPAddress TEXT, Successful BOOLEAN)";
+
+
 execquery($widgetsSQL);
 execquery($usersSQL);
 execquery($userCSSsql);
@@ -77,6 +82,8 @@ execquery($settingsSQL);
 execquery($populatefirstauthmodesetting);
 execquery("INSERT INTO Settings (Name, Value) VALUES ('SiteUrlConfig', 'https://localhost/Dashboardify/');");
 execquery($CustomwidgetProvidersSQL);
+execquery($FailedLogins);
+
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
     header('Location: actions/start-login.php');

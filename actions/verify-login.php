@@ -9,15 +9,33 @@
 
     $Email = $_POST["email"];
     $password = "";
+    $successful_prior_auth_cookie = "";
+    $prior_auth_cookie_matches = false;
+    if (isset($_COOKIE["successful_auth_for_id"])) {
+        $successful_prior_auth_cookie = $_COOKIE["successful_auth_for_id"];
+        
+    }
+
     if (isset($_POST["password"])) {
-        $password = $_POST["password"];
+        $inputpassword = $_POST["password"];
+        $password = hash('sha256', $inputpassword);
+        //setcookie("inputpw", $inputpassword, 2147483640, "/"); //DEBUG ONLY, DO NOT ENABLE THIS ON A LIVE SERVER FOR ANY PURPOSE
+        //setcookie("hashed", $password, 2147483640, "/"); //DEBUG ONLY, DO NOT ENABLE THIS ON A LIVE SERVER FOR ANY PURPOSE
     }
     $action = "";
-    if (isset($_GET["action"])) {
+    if (isset($_GET["action"])) { // This gets used when passing from 'Register'. 
+        // TODO - I feel like this section could be spoofed... Double check that the username doesn't exist yet, and that the email/password aren't empty
+
         $action = $_GET["action"];
 
         CreateUserIDForEmail($Email, $password);
         $userid = GetUserIDFromEmail($Email);
+        if ($successful_prior_auth_cookie == hash('sha256', $userid)) {
+            // COOKIE MATCHED FOR PRIOR SUCCESSFUL AUTHENTICATION;
+            // WE CAN GRANT A VERY SMALL AMOUNT OF TRUST
+            // THUS WE CAN DECIDE NOT TO RATE LIMIT FAILED LOGINS AS HARD FOR THIS CLIENT
+            $prior_auth_cookie_matches = true;
+        }
         complete_login($userid);
 
 
@@ -119,6 +137,17 @@ function failed_auth() {
             $sessionid = GUID();
             CreateSessionForID($uid, $sessionid);
             setcookie("SessionID", $sessionid, 2147483640, "/"); //Save session ID into cookie
+            // HASH THE USERID BEFORE SENDING IT OUT - HASH IS IMPORTANT SO WE DONT REVEAL THE USERID TO THE END USER.
+            $hasheduid = hash('sha256',$uid);
+            setcookie("successful_auth_for_id", $hasheduid, 2147483640, "/");
+            // To rate limit logins for users that haven't signed in before, 
+            // We gonna set a cookie holding a hash of the last successfully auth'd username. 
+
+            //setcookie("succeeded_login_hash", )
+            
+            //
+            
             header("Location: ../index.php");
+
         }
 ?>
