@@ -11,6 +11,6 @@ If (isset($_GET['defaultdashimage'])) {
 
     // Close the file
     fclose($file);
-    header('Location: ../setup.php');
+    redirect('../setup.php');
 }
 ?>

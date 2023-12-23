@@ -29,10 +29,10 @@
             echo "DELETED WIDGET WITH ID '" . $_POST["ID"] . "', Inserting new copy now...";
         } else {
             $break_if_tried_editing_widget_without_permission = true;
-            header("Location: index.php");
+            redirect("index.php");
         }
 		
-		header("Location: index.php");
+		redirect("index.php");
 	}
     if (!$break_if_tried_editing_widget_without_permission) {
         //Insert new Widget
@@ -71,9 +71,9 @@
         //$stmt->bindParam(':notes', $_POST["Notes"]); // Failed, don't understand why.
         execquery($select);
             //echo "Finished; click <a href='index.php'>Here</a> to return to main dashboard.";
-	    header("Location: index.php" . "?SelectDashboardID=" . $dashboardid);
+	    redirect("index.php" . "?SelectDashboardID=" . $dashboardid);
     } else {
-        header("Location: index.php");
+        redirect("index.php");
     }
 
 ?>

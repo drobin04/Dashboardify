@@ -85,7 +85,7 @@ if (isset($_GET["action"])) {
 
         // Close the file
         fclose($file);
-        //header('Location: ../setup.php');
+        //redirect('../setup.php');
         //echo "Settings Registered Successfully.";
     }
 
@@ -98,7 +98,7 @@ $filename = 'Dashboardify.s3db';
 $Exists = False;
 If (doesDatabaseExist() && filesize($filename) > 0) {
     $Exists = True;
-    if (!AmIAdmin()) { header('Location: index.php'); } // Redirect back to index if they don't have permissions to be here.
+    if (!AmIAdmin()) { redirect('index.php'); } // Redirect back to index if they don't have permissions to be here.
 
     $dbfound = "<div style='border: 1px black solid; display: inline; padding: 3px;'>Database file found. No Need To Create.</div> ";  // DB Found! Yay.
     

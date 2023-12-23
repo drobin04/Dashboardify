@@ -8,6 +8,6 @@ If (isset($_POST['siteurlconfig'])) {
     DELETE FROM Settings Where Name = 'SiteUrlConfig'");
     execquery("
     INSERT INTO Settings (Name, Value) VALUES ('SiteUrlConfig', '" . $siteurlconfig . "')");
-    header('Location: ../setup.php');
+    redirect('../setup.php');
 }
 ?>

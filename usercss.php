@@ -1,7 +1,9 @@
 <?php //Grab custom CSS from Database - This part is important for background colors for example
+	include_once("../shared_functions.php");
+	if (doesDatabaseExist()) {
+
 	
-	// Create and connect to SQLite database file.
-	$db_file = new PDO('sqlite:Dashboardify.s3db');
+	$db_file = getPDO_DBFile();
 	// Prepare SELECT statement.
 
 	// Get UserID
@@ -25,4 +27,7 @@
 		echo $row["CSS"];
 		$usercss = $usercss . $row["CSS"];
 	}
+} else {
+	// Not necessary to do anything at this point for User CSS file; the redirect will happen on main index.php page. 
+}
 ?>

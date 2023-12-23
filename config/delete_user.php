@@ -12,7 +12,7 @@ $IncomingUserID = $_GET["recID"];
 
 $query = "Delete From Users Where RecID = '" . $IncomingUserID . "'";
 execquery($query);
-header('Location: ../setup.php');
+redirect('../setup.php');
 echo "query: " . $query;
 } else {
     echo "You don't have rights to do this. <a href='../setup.php'>Return to Setup.</a>";

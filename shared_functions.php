@@ -134,4 +134,13 @@ function DoIOwnThisWidget($widgetrecid) {
 		return false;
 	}
 }
+
+function redirect($url) {
+    $currentUrl = $_SERVER['REQUEST_URI'];
+    $baseUrl = rtrim(dirname($currentUrl), '/');
+    $absoluteUrl = $baseUrl . '/' . ltrim($url, '/');
+	//echo '<script>alert("redirecting!");</script>';
+    echo "<script>location.href = '". $absoluteUrl ."';</script>";
+}
+
 ?>

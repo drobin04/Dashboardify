@@ -76,7 +76,13 @@
 exit();
     
 function failed_auth() {
-    header('Location: start-login.php?msg=Failed_Auth_On_Verification');
+    redirect('start-login.php?msg=Failed_Auth_On_Verification');
+    // Log failed login attempt in DB
+
+    // Check if we've exceeded number of login attempts needed for lockout
+
+    // if so, mark account for lockout for x minutes (We should make this configurable in settings!)
+
 }
 
 
@@ -147,7 +153,7 @@ function failed_auth() {
             
             //
             
-            header("Location: ../index.php");
+            redirect("../index.php");
 
         }
 ?>

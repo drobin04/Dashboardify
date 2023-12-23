@@ -12,7 +12,7 @@ $IncomingUserID = $_GET["recID"];
 
 $query = "Update Users Set Admin = 0 Where RecID = " . $IncomingUserID . "";
 execquery($query);
-header('Location: ../setup.php');
+redirect('../setup.php');
 echo "query: " . $query;
 } else {
     echo "You don't have rights to do this. <a href='../setup.php'>Return to Setup.</a>";

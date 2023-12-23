@@ -110,7 +110,7 @@ Try { // Load Dashboard list
             $sep . $globaldefault . "')";
             debuglog($select, "Query for inserting global widget");
             execquery($select);
-            //header('Location: index.php');
+            // Reload dashboard
             echo "<script>location.reload();</script>";
         }
 

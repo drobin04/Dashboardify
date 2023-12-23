@@ -28,7 +28,7 @@ $settingsSQL = "CREATE TABLE [Settings] (
     [Name] TEXT NOT NULL,
     [Value] TEXT NOT NULL)";
 $populatefirstauthmodesetting = "
-INSERT INTO Settings (Name, Value) VALUES ('AuthMode','None');";
+INSERT INTO Settings (Name, Value) VALUES ('AuthMode','Password');";
 
 $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -86,7 +86,7 @@ execquery($FailedLogins);
 
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
-    header('Location: actions/start-login.php');
+    redirect('register_user.php');
 ?>
 
 <md-block>

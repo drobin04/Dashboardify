@@ -12,7 +12,7 @@
 <?php
 setcookie("SessionID", "/", time() - 3600, "/");
 setcookie("SessionID", "", time() - 3600); // Expire cookie by setting it to an hour ago.
-header("Location: start-login.php");
+redirect("start-login.php");
 ?>
 
 </div>

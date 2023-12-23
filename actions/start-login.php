@@ -202,6 +202,7 @@ body {
 					<input type="text" class="login__input" placeholder="Email / Username" name="email"></input>
 					<?php
 					include('../shared_functions.php');
+					if (doesDatabaseExist()){
 					$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
 					if ($authmode == "Password") {
 					echo "<input id='password' type='password' class='login__input' placeholder='Password' name='password'></input>";
@@ -219,8 +220,10 @@ body {
 				// Submit the form
 				this.submit();
 			  });
-			</script>";
-					}
+			</script>";}
+					} else {
+						redirect('../setup.php');
+					} // End of if-db-exists block
 					?>
 				</div>
 				

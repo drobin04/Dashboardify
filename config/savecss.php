@@ -13,7 +13,7 @@ If (isset($_GET['CSS'])) {
 
     // Close the file
     fclose($file);
-    header('Location: ../setup.php');
+    redirect('../setup.php');
 }
 ?>
 

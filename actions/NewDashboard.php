@@ -20,7 +20,7 @@
     $dashboardid = GUID();
 	$select = "INSERT INTO Dashboards (Name, DashboardID,UserID) VALUES ('" . $dashboardname . "', '" . $dashboardid . "','" . $userid . "')";
 	execquery($select);
-	header("Location: ../index.php");
+	redirect("../index.php");
 ?>
 
 </body>

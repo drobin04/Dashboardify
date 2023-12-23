@@ -67,7 +67,7 @@ copyDirectory('Dashboardify-main', '.', $excludedFiles);  // Starting point for 
 // Call the function to delete the directory and its contents
 deleteDirectory('Dashboardify-main');
 
-header('Location: setup.php');
+redirect('setup.php');
 } else { echo "You don't have permissions to do this.";}
 
 

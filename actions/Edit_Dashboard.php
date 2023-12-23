@@ -15,7 +15,7 @@
 
 	$select = "Update Dashboards Set Name = '" . $dashboardname . "', Embeddable = '" . $embeddable . "' Where DashboardID = '" . $dashboardid . "'";
 	execquery($select);
-	header("Location: ../index.php");
+	redirect("../index.php");
 ?>
 
 </body>

@@ -1,4 +1,4 @@
-<?php include("checkifdbexists.php");
+<?php
 include("actions/logoutredirect.php");
 
 // Widget Types To Include on New Widget dialog. Moved here for convenience in hiding one or multiple. 
@@ -43,6 +43,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			<button><a id="resizewidgets" class ="menubar nodeco">Resize Widgets</button>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include_once("shared_functions.php");
+				doesDatabaseExist() ? null : redirect('setup.php'); // Redirect IF DB DOESNT EXIST
 				include("config/check_admin.php");
 				
 				// Load and Prep Dashboard
