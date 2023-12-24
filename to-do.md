@@ -1,5 +1,10 @@
 # To-Do
-
+* Email Config on setup page 
+	* Need to get to point where you can actually setup an OAuth login, for example for gmail.
+	* Email confirmation code for new users
+	* Setting added controlling whether email confirmation code is required
+	* field added to users table for whether confirmation code has been entered
+	* check on verify-login to check if confirmation code has been activated yet, and if not, fail auth / do not proceed to complete login.
 * Security Changes
 * Make it to where widgets can be 'Stored' , re-usable widgets that can be shared between users
 * SQLite widgets ***MUST BE CREATED BY ADMIN, AND CAN ONLY BE ADDED BY NON USERS THRU FUTURE SHARED WIDGET INTERFACE

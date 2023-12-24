@@ -10,3 +10,4 @@ testing
 test.txt
 test.php
 *.php~
+*.*~

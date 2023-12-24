@@ -1,3 +1,8 @@
+<?php
+include_once('config/check_admin.php');
+include_once('shared_functions.php');
+include('actions/logoutredirect.php');
+?>
 <html>
     <head>
         <link type="text/css" rel="stylesheet" href="css/settings_page.css">
@@ -17,9 +22,6 @@
 <a href="index.php">Click Here To Return To Dashboardify</a>
 
 <?php
-include_once('config/check_admin.php');
-include_once('shared_functions.php');
-include('actions/logoutredirect.php');
 $css = "";
 $urlvalue = "";
 $widgetproviderlist = "";
@@ -37,7 +39,6 @@ if (isset($_GET["action"])) {
         $widgetproviderhtml = $d["WidgetProviderHTML"];
         $widgetproviderphp = $d["WidgetProviderPHP"];
         
-
         $select = "INSERT INTO CustomWidgetProviders (WidgetProviderName
         ,CSS_Styling, HTML_Content
         ,PHP_To_Run) VALUES (?, ?, ?, ?)";
@@ -90,9 +91,6 @@ if (isset($_GET["action"])) {
     }
 
 }
-
-
-
 
 $filename = 'Dashboardify.s3db';
 $Exists = False;
@@ -262,6 +260,16 @@ Also i want to find a way to embed the Widget data , raw, somewhere into the con
     <h3>
 
 </div>
+
+<!--Email Config-->
+<div>
+<h3>Email Config</h3>
+<p>This section configures the mail account used, and if it should be used to lock new user accounts until they submit an email confirmation code.
+The purpose of this is to prevent bots from creating accounts and attempting to spam various functions on the site. </p>
+</div>
+
+
+<div style="display: none;">
 <br /><br />
 <h3>Update Code</h3>
 <p>The following button will allow you to update your app's code from the main Dashboardify repo.
@@ -271,8 +279,8 @@ It's possible that changes may have occurred in newer versions of the repo, whic
 Future update planned to support checking DB for missing pieces.</p>
 <br />
 <a href="clone.php">Update Site From Dashboardify Repo</a>
-
-</div>
+</div><!--End of Update Code section-->
+</div><!-- End of Main Panel -->
     </body>
 
 </html>
