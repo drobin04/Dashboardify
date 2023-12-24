@@ -70,6 +70,20 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			<!-- New Widget box-->
 		<div id="NewWidgetDialog" class="white_content"><form id="form1" method="POST" action="NewWidget.php" >
 		<?php   //Check if this is an 'Edit' or 'New' widget submission , set up.  
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			// NEW WIDGET FORM
+			
 			$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
 			//If EditRecID is in the URL, load details from DB
 			If (Isset($_GET["EditRecID"])) {
@@ -129,7 +143,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 							if ($globalwidget == "1") {
 								$global_checked = "checked";
 							}
-							echo "<input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Global?</label></input>"; } ?>
+							echo "<input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>"; } ?>
+							echo "<input type='checkbox'id='StoredWidgetBool' "  . "" . " name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>"; } ?>
 						<hr><button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button>
 						<br />
                         <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input><br />
