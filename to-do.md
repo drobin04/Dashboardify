@@ -1,5 +1,15 @@
 # To-Do
 * Email Config on setup page 
+Now have Functioning code for mailing a Confirmation Code. 
+Future work needs to be done to alter the workflow for registration, 
+to trigger the confirmation code (if configured in setup), and direct user to a new page that accepts it as input, and then unlocks the account. 
+Update users table with a flag for confirmedviaemail, boolean.
+Add page for entering confirmation code
+Setup workflow for sending it out. 
+Future work should be done to rate limit the sending of this. 
+
+
+
 	* Need to get to point where you can actually setup an OAuth login, for example for gmail.
 	* Email confirmation code for new users
 	* Setting added controlling whether email confirmation code is required
