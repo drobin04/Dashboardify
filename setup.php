@@ -263,9 +263,18 @@ Also i want to find a way to embed the Widget data , raw, somewhere into the con
 
 <!--Email Config-->
 <div>
+<form id="mail" method="POST" action="config/storemailcreds.php">
 <h3>Email Config</h3>
 <p>This section configures the mail account used, and if it should be used to lock new user accounts until they submit an email confirmation code.
 The purpose of this is to prevent bots from creating accounts and attempting to spam various functions on the site. </p>
+<label>Username</label>
+<input id ="username" name="username"></input>
+<br />
+<br />
+<label>Password</label>
+<input id="pw" type="password" name="password"></input><br />
+<button>Submit</button>
+</form>
 </div>
 
 

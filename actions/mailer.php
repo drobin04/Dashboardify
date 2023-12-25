@@ -9,29 +9,39 @@ require '../vendor/autoload.php';
 $mail = new PHPMailer(true);
 
 try {
+	include('../config/mail_functions.php');
+	
+	// Retrieve email settings
+	$emailSettings = retrievemailsettings();
+	if ($emailSettings) {
+		$username = $emailSettings['username'];
+		$password = $emailSettings['password'];
+	} else {
+		echo "Email settings not found.\n";
+	}
+	
+	
+	
     //Server settings
     $mail->isSMTP();
-    $mail->Host = '';
+    $mail->Host = 'smtp.yandex.com';
     $mail->SMTPAuth = true;
-    $mail->Username = ''; // Your email address
-    $mail->Password = ''; // Your password
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 587;
+    $mail->Username = $username; // Your email address
+    $mail->Password = $password; // Your password
+    $mail->SMTPSecure = 'ssl';
+    $mail->Port = 465;
 
     
 // Set OAuth 2.0 credentials
-$mail->AuthType = 'XOAUTH2';
-$mail->oauthUserEmail = 'your-email@gmail.com'; // Your email address
-$mail->oauthClientId = 'your-client-id'; // Your OAuth client ID
-$mail->oauthClientSecret = 'your-client-secret'; // Your OAuth client secret
-$mail->oauthRefreshToken = 'your-refresh-token'; // Your OAuth refresh token
-    
-    
-    
-    
+//$mail->AuthType = 'XOAUTH2';
+//$mail->oauthUserEmail = 'your-email@gmail.com'; // Your email address
+//$mail->oauthClientId = 'your-client-id'; // Your OAuth client ID
+//$mail->oauthClientSecret = 'your-client-secret'; // Your OAuth client secret
+//$mail->oauthRefreshToken = 'your-refresh-token'; // Your OAuth refresh token
+        
     //Recipient
-    $mail->setFrom('', 'Dashboardify App');
-    $mail->addAddress('', '');
+    $mail->setFrom($username, 'Dashboardify App');
+    $mail->addAddress('sendingaddressHere', 'Addressee here');
 
     //Content
     $mail->isHTML(true);
