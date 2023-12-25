@@ -29,66 +29,77 @@ $widgetproviderlist = "";
 if (isset($_GET["action"])) {
 
     $action = $_GET["action"];
+    
+    switch ($action) {
+	    case "SubmitWidgetProvider":	
+	    	$d = $_POST;
 
-    if ($action == "SubmitWidgetProvider") {
-        $d = $_POST;
+			// Get data from submit widgetprovider
+			$widgetprovidername = $d["WidgetProviderName"];
+			$widgetprovidercss = $d["WidgetProviderCSS"];
+			$widgetproviderhtml = $d["WidgetProviderHTML"];
+			$widgetproviderphp = $d["WidgetProviderPHP"];
+			
+			$select = "INSERT INTO CustomWidgetProviders (WidgetProviderName
+			,CSS_Styling, HTML_Content
+			,PHP_To_Run) VALUES (?, ?, ?, ?)";
+			$localdb = getPDO_DBFile();
+			//$rootPath = $_SERVER['DOCUMENT_ROOT'];
+			//$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+			$stmt = $localdb->prepare($select);
+			$stmt->bindParam(1,$widgetprovidername,PDO::PARAM_STR);
+			$stmt->bindParam(2,$widgetprovidercss,PDO::PARAM_STR);
+			$stmt->bindParam(3,$widgetproviderhtml,PDO::PARAM_STR);
+			$stmt->bindParam(4,$widgetproviderphp,PDO::PARAM_STR);
+			debuglog($stmt);
+			
+			$stmt->execute();
+			echo "Widget Provider Registered Successfully.";
+			break;
+    	case "UpdateNewUserSettings":
+    		$a_AuthType = $_POST["AuthType"];
 
-        // Get data from submit widgetprovider
-        $widgetprovidername = $d["WidgetProviderName"];
-        $widgetprovidercss = $d["WidgetProviderCSS"];
-        $widgetproviderhtml = $d["WidgetProviderHTML"];
-        $widgetproviderphp = $d["WidgetProviderPHP"];
-        
-        $select = "INSERT INTO CustomWidgetProviders (WidgetProviderName
-        ,CSS_Styling, HTML_Content
-        ,PHP_To_Run) VALUES (?, ?, ?, ?)";
-        $localdb = getPDO_DBFile();
-        //$rootPath = $_SERVER['DOCUMENT_ROOT'];
-    	//$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
-        $stmt = $localdb->prepare($select);
-        $stmt->bindParam(1,$widgetprovidername,PDO::PARAM_STR);
-        $stmt->bindParam(2,$widgetprovidercss,PDO::PARAM_STR);
-        $stmt->bindParam(3,$widgetproviderhtml,PDO::PARAM_STR);
-        $stmt->bindParam(4,$widgetproviderphp,PDO::PARAM_STR);
-        debuglog($stmt);
-        
-        $stmt->execute();
-        echo "Widget Provider Registered Successfully.";
+			$select = "Update Settings
+			
+			Set Value = ?
+			
+			Where Name = 'AuthMode'";
+	
+			$localdb = getPDO_DBFile();
+			//$rootPath = $_SERVER['DOCUMENT_ROOT'];
+			//$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+			$stmt = $localdb->prepare($select);
+			$stmt->bindParam(1,$a_AuthType,PDO::PARAM_STR);
+			debuglog($stmt, "AuthMode query");
+			
+			$stmt->execute();
+	
+					
+			$defaultdashimg = $_POST["defaultdashimage"];
+	
+			// Open the file in write mode
+			$file = fopen('defaultdashboardurl.txt', 'w');
+	
+			// Write the value to the file
+			fwrite($file, $defaultdashimg);
+	
+			// Close the file
+			fclose($file);
+			//redirect('../setup.php');
+			//echo "Settings Registered Successfully.";
+			
+		case "testEmail":
+			// include mailfunctions / mailer
+			// I think the mailer.php will load the settings and send the mail on its own,
+			// i just need to feed it currentuser email and a random confirmation code
+			include('mailer.php');
+			$email = getCurrentUserEmail();
+			$confirmationcode = '000000';
+			mailAuthenticationCode($email, $confirmationcode);
+			
     }
 
-    if ($action == "UpdateNewUserSettings") {
 
-        $a_AuthType = $_POST["AuthType"];
-
-        $select = "Update Settings
-        
-        Set Value = ?
-        
-        Where Name = 'AuthMode'";
-
-        $localdb = getPDO_DBFile();
-        //$rootPath = $_SERVER['DOCUMENT_ROOT'];
-    	//$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
-        $stmt = $localdb->prepare($select);
-        $stmt->bindParam(1,$a_AuthType,PDO::PARAM_STR);
-        debuglog($stmt, "AuthMode query");
-        
-        $stmt->execute();
-
-                
-        $defaultdashimg = $_POST["defaultdashimage"];
-
-        // Open the file in write mode
-        $file = fopen('defaultdashboardurl.txt', 'w');
-
-        // Write the value to the file
-        fwrite($file, $defaultdashimg);
-
-        // Close the file
-        fclose($file);
-        //redirect('../setup.php');
-        //echo "Settings Registered Successfully.";
-    }
 
 }
 
@@ -273,10 +284,19 @@ The purpose of this is to prevent bots from creating accounts and attempting to 
 <br />
 <label>Password</label>
 <input id="pw" type="password" name="password"></input><br />
+<label>SMTP Security Method</label>
+<input id="smtpSecureMethod" name="smtpSecure"></input><br />
+<label>Port</label>
+<input id="port" name="smtpPort"></input><br />
+
 <button>Submit</button>
 </form>
+<br /><br />
+<form id="testemail" method="POST" action="setup.php?action=testEmail">
+<button>Test Email (Send to myself) [WIP - Not implemented yet]</button>
+</form>
 </div>
-
+<!--END OF EMAIL CONFIG-->
 
 <div style="display: none;">
 <br /><br />

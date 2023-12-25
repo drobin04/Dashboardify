@@ -54,6 +54,21 @@ function getCurrentUserID() {
 	}
 	
 }
+
+function getCurrentUserEmail() { // GET EMAIL ADDRESS / USERNAME FOR USER
+	if (isset($_COOKIE["SessionID"])) {
+		$sessionid = $_COOKIE["SessionID"]; 
+		debuglog($sessionid, "SessionID"); //Get User for Session ID
+		$userid = selectquery("Select Email From Sessions S Left Join Users U on U.RecID = S.UserID Where S.SessionID = '" . $sessionid . "'")[0]["Email"]; 
+		debuglog($userid, "Email found for user");
+		return $userid;
+	} else {
+		$userid = "0";
+		return $userid;
+	}
+	
+}
+
 function execquery($sql) {
 	//$localdb = new PDO('sqlite:Dashboardify.s3db');
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
