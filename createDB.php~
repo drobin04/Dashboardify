@@ -23,6 +23,22 @@ $widgetsSQL = "CREATE TABLE [Widgets] (
     , Notes TEXT NULL, sqlserveraddress TEXT(75) NULL, sqldbname TEXT(75) NULL, sqluser TEXT(75) NULL, sqlpass TEXT(75) NULL, sqlquery TEXT(2000) NULL
     , Global BOOLEAN NULL
     )";
+    
+$StoredWidgets = "CREATE TABLE StoredWidgets (
+	RecID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+	[DashboardRecID] TEXT  NULL,
+	[WidgetType] NVARCHAR(50)  NULL,
+	[BookmarkDisplayText] NVARCHAR(100)  NULL,
+	[PositionX] INTEGER  NULL,
+	[PositionY] IntEGER  NULL,
+	[SizeX] InTEGER  NULL,
+	[SizeY] iNTEGER  NULL,
+	[WidgetURL] NVARCHAR(1000)  NULL,
+	[WidgetCSSClass] NVARCHAR(150)  NULL
+	, Notes TEXT NULL, sqlserveraddress TEXT(75) NULL, sqldbname TEXT(75) NULL, sqluser TEXT(75) NULL, sqlpass TEXT(75) NULL, sqlquery TEXT(2000) NULL
+	, Global BOOLEAN NULL
+	)
+";
 
 $settingsSQL = "CREATE TABLE [Settings] (
     [Name] TEXT NOT NULL,
@@ -70,6 +86,8 @@ $CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
 // Table For Tracking Failed Login Attempts
 $FailedLogins = "CREATE TABLE LoginAttempts (
     Email TEXT, DateTime Date, IPAddress TEXT, Successful BOOLEAN)";
+    
+
 
 
 execquery($widgetsSQL);

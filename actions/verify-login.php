@@ -27,18 +27,26 @@
         // TODO - I feel like this section could be spoofed... Double check that the username doesn't exist yet, and that the email/password aren't empty
 
         $action = $_GET["action"];
-
-        CreateUserIDForEmail($Email, $password);
-        $userid = GetUserIDFromEmail($Email);
-        if ($successful_prior_auth_cookie == hash('sha256', $userid)) {
-            // COOKIE MATCHED FOR PRIOR SUCCESSFUL AUTHENTICATION;
-            // WE CAN GRANT A VERY SMALL AMOUNT OF TRUST
-            // THUS WE CAN DECIDE NOT TO RATE LIMIT FAILED LOGINS AS HARD FOR THIS CLIENT
-            $prior_auth_cookie_matches = true;
-        }
-        complete_login($userid);
-
-
+        
+        switch ($action) {
+        	
+        case "register":
+        	
+			CreateUserIDForEmail($Email, $password);
+			$userid = GetUserIDFromEmail($Email);
+			if ($successful_prior_auth_cookie == hash('sha256', $userid)) {
+				// COOKIE MATCHED FOR PRIOR SUCCESSFUL AUTHENTICATION;
+				// WE CAN GRANT A VERY SMALL AMOUNT OF TRUST
+				// THUS WE CAN DECIDE NOT TO RATE LIMIT FAILED LOGINS AS HARD FOR THIS CLIENT
+				$prior_auth_cookie_matches = true;
+			}
+			complete_login($userid);
+			break;
+		case "confirmation":
+			
+			break;
+		}
+	
     } else { // Try to log in for existing user
         if (scalarquery("Select Count(*) as matches from users where Email = '" . $Email . "'", "matches") == 1) {
             // If we find a match for username in system
