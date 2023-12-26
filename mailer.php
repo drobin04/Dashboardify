@@ -17,7 +17,7 @@ function mailAuthenticationCode($userEmail, $confirmationCode) {
 		include('config/mail_functions.php');
 		
 		// Retrieve email settings
-		$emailSettings = retrievemailsettings('config/emailconfig.ini');
+		$emailSettings = retrievemailsettings(__DIR__ . '/config/emailconfig.ini');
 		if ($emailSettings) {
 			$username = $emailSettings['username'];
 			$password = $emailSettings['password'];

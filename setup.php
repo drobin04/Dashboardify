@@ -29,7 +29,7 @@ $widgetproviderlist = "";
 if (isset($_GET["action"])) {
 
     $action = $_GET["action"];
-    
+    //echo "Action to run: " . $action ;
     switch ($action) {
 	    case "SubmitWidgetProvider":	
 	    	$d = $_POST;
@@ -58,6 +58,16 @@ if (isset($_GET["action"])) {
 			break;
     	case "UpdateNewUserSettings":
     		$a_AuthType = $_POST["AuthType"];
+    		
+    		$settings_require_confirmation_code = '0';
+    		if (isset($_POST["requireconfirmationcode"])) {$settings_require_confirmation_code = '1';};
+    		if ($settings_require_confirmation_code == 1) {
+    			execquery("Delete From Settings Where Name = 'RequireConfirmationCode'");
+    			execquery("INSERT INTO Settings (Name,Value) VALUES ('RequireConfirmationCode', '1')");
+    		} else {
+    			execquery("Delete From Settings Where Name = 'RequireConfirmationCode'");
+    			execquery("INSERT INTO Settings (Name,Value) VALUES ('RequireConfirmationCode', '0')");    			
+    		}
 
 			$select = "Update Settings
 			
@@ -87,7 +97,7 @@ if (isset($_GET["action"])) {
 			fclose($file);
 			//redirect('../setup.php');
 			//echo "Settings Registered Successfully.";
-			
+			break;
 		case "testEmail":
 			// include mailfunctions / mailer
 			// I think the mailer.php will load the settings and send the mail on its own,
@@ -95,8 +105,9 @@ if (isset($_GET["action"])) {
 			include('mailer.php');
 			$email = getCurrentUserEmail();
 			$confirmationcode = '000000';
+			echo "Ran test email.";
 			mailAuthenticationCode($email, $confirmationcode);
-			
+			break;
     }
 
 
@@ -154,6 +165,13 @@ if (isset($_GET["SQLUpdate"])) {
 
 } else { $sqlqueryresults = "";}
 
+//Loading page... set remaining variables for form
+
+$form_require_confirmation_code_state = "";
+if (scalarquery("Select Value From Settings Where Name = 'RequireConfirmationCode'", "Value") == "1") {
+	$form_require_confirmation_code_state = "checked";
+}
+
 ?>
 <h2> Site URL config (required)</h2>
 <p>There are some items that will need to reference the base URL for this webpage. 
@@ -207,6 +225,9 @@ if (isset($_GET["SQLUpdate"])) {
     </table>
 </div>
 <br />
+
+
+<!-- New User Setup Experience -->
 <div id="newuserexperience">
     <form id="NewUserSettings" method="POST" action="setup.php?action=UpdateNewUserSettings">
     <h2>New User Experience</h3>
@@ -225,7 +246,9 @@ if (isset($_GET["SQLUpdate"])) {
 
     <label>Default Dashboard Background Image For First Dashboard: </label>
     <input id='defaultdashimage' name='defaultdashimage' value='<?php echo $defaultdashimage ?>'></input>
-
+    <br />
+    <br />
+    <input type='checkbox' <?php echo $form_require_confirmation_code_state ?> name='requireconfirmationcode' id='requireconfirmationcode'></input><label for='requireconfirmationcode'>Should new users be required to confirm their email addresses when registering?</label>
     <br /><br />
     <button>Submit</button>
 
@@ -293,7 +316,7 @@ The purpose of this is to prevent bots from creating accounts and attempting to 
 </form>
 <br /><br />
 <form id="testemail" method="POST" action="setup.php?action=testEmail">
-<button>Test Email (Send to myself) [WIP - Not implemented yet]</button>
+<button>Test Email (Send to myself)</button>
 </form>
 </div>
 <!--END OF EMAIL CONFIG-->

@@ -7,10 +7,15 @@
     $authmode = getAuthMode(); //record auth mode
     $userfound = false; // prep variable
 
-    $Email = $_POST["email"];
     $password = "";
     $successful_prior_auth_cookie = "";
     $prior_auth_cookie_matches = false;
+    $Email = "";
+    
+    if (isset($_POST["email"])) {
+    $Email = $_POST["email"];
+    }
+    
     if (isset($_COOKIE["successful_auth_for_id"])) {
         $successful_prior_auth_cookie = $_COOKIE["successful_auth_for_id"];
         
@@ -40,9 +45,62 @@
 				// THUS WE CAN DECIDE NOT TO RATE LIMIT FAILED LOGINS AS HARD FOR THIS CLIENT
 				$prior_auth_cookie_matches = true;
 			}
-			complete_login($userid);
+			// TODO - GIVE THEM A COOKIE BEFORE FORWARDING THEM TO CONFIRM EMAIL PAGE
+			// TODO - CHECK A SETTING (TO BE BUILT FIRST) THAT WILL DETERMINE WHETHER EMAIL CONFIRMATION IS ENFORCED
+			
+			
+			//Generate code for confirmation
+			$code = mt_rand(100000, 999999);
+			
+			
+			// Store confirmation code for user
+			execquery("Update Users
+			Set ConfirmationCode = '" . $code . "' 
+			Where Email = '" . $Email . "'");
+			
+			// Mail confirmationcode to user!
+			include("../mailer.php");
+			mailAuthenticationCode($Email,$code);
+			
+			
+			//Complete login
+			//complete_login($userid);
+			// Commented out above line, that is the one we want to do if we don't enforce email confirmation codes for new users.
+			// For now, will enforce, using line below
+			registration_login_and_forward_for_email_confirmation($userid);
+			
 			break;
-		case "confirmation":
+		case "confirm_email_via_code":
+			$confirmationcode = $_POST["confirmationcode"];
+			// get user ID from current session,
+			// assumption being someone logged in on this page once before, a session ID may have been captured,
+			// and they were directed to the confirmation code screen before being forwarded here.
+			// Need to validate that the confirmation code matches
+			// if it matches, mark their user account as confirmation code being validated, remove the existing confirmation code value to '',
+			// and then proceed to login / index.php
+			$userid = getCurrentUserID();
+			$confCodeForThisUser = scalarquery("Select ConfirmationCode From Users Where RecID = '" . $userid . "'", "ConfirmationCode");
+			
+			if ($confirmationcode == $confCodeForThisUser) {
+				//Update user account
+				// Mark emailconf confirmed
+				// remove confirmationcode value
+				execquery("Update Users 
+					Set EmailConfirmed = 1, ConfirmationCode = '' 
+					where RecID = '" . $userid . "'");
+				
+				redirect("start-login.php?msg=Confirmation_Code_Confirmed_Log_in_Now");
+				
+				
+			} else {
+				echo "Confirmation code didn't match. You entered: " . $confirmationcode . "Real code was: " . $confCodeForThisUser . ". Recid: " . $userid ;
+				redirect("confirm-email.php");
+			
+			}
+			
+			
+			
+			
 			
 			break;
 		}
@@ -164,4 +222,13 @@ function failed_auth() {
             redirect("../index.php");
 
         }
+   function registration_login_and_forward_for_email_confirmation($uid) {
+            $sessionid = GUID();
+            CreateSessionForID($uid, $sessionid);
+            setcookie("SessionID", $sessionid, 2147483640, "/"); //Save session ID into cookie
+            // HASH THE USERID BEFORE SENDING IT OUT - HASH IS IMPORTANT SO WE DONT REVEAL THE USERID TO THE END USER.
+                        
+            redirect("confirm-email.php");
+
+   }
 ?>
