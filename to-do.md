@@ -1,4 +1,9 @@
 # To-Do
+
+* Ability to change existing user's password
+* Ability to reset a lost password - Send a random password via email that they can log in with so they can then change their PW.
+
+
 * Email Config on setup page 
 Now have Functioning code for mailing a Confirmation Code. 
 Future work needs to be done to alter the workflow for registration, 
