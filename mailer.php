@@ -49,7 +49,7 @@ function mailAuthenticationCode($userEmail, $confirmationCode) {
 		//Recipient
 		$mail->setFrom($username, '');
 		$mail->addAddress($userEmail, '');
-		echo " Email: " . $username . " , PW: " . $password . " , SMTPSecure: " . $smtpSecure . " , Port: " . $smtpPort;
+		//echo " Email: " . $username . " , PW: " . $password . " , SMTPSecure: " . $smtpSecure . " , Port: " . $smtpPort; // DONT EVER UNCOMMENT THIS ON A LIVE SYSTEM
 		//Content
 		$mail->isHTML(true);
 		$mail->Subject = 'New User Confirmation Code for Dashboardify.App: ' . $confirmationCode;

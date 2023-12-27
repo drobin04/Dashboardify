@@ -1,4 +1,7 @@
 <?php
+//to-do - Fix bug where it seems like people entering user/pw for account doesn't exist are getting logged in. It's acting as if 'none' auth is still allowed,
+// even when it's not.
+
     include_once('../shared_functions.php');
     $sessionid = "";
     $userid = "";
@@ -45,10 +48,16 @@
 				// THUS WE CAN DECIDE NOT TO RATE LIMIT FAILED LOGINS AS HARD FOR THIS CLIENT
 				$prior_auth_cookie_matches = true;
 			}
-			// TODO - GIVE THEM A COOKIE BEFORE FORWARDING THEM TO CONFIRM EMAIL PAGE
-			// TODO - CHECK A SETTING (TO BE BUILT FIRST) THAT WILL DETERMINE WHETHER EMAIL CONFIRMATION IS ENFORCED
 			
+			// Check if system setting for RequireConfirmationCode is set, and if so, if it's set to 1 indicating that users should b required
+			// if set, do redirect. 
+			// if not set or is set to 0, just complete login from this point. 
 			
+			$setting_for_requiredconfirmationcode = scalarquery("select Value from Settings Where Name = 'RequireConfirmationCode'", "Value");
+			
+			if ($setting_for_requiredconfirmationcode == "1") {
+			// Confirmation code is required then				
+				
 			//Generate code for confirmation
 			$code = mt_rand(100000, 999999);
 			
@@ -63,12 +72,14 @@
 			mailAuthenticationCode($Email,$code);
 			
 			
-			//Complete login
-			//complete_login($userid);
-			// Commented out above line, that is the one we want to do if we don't enforce email confirmation codes for new users.
-			// For now, will enforce, using line below
-			registration_login_and_forward_for_email_confirmation($userid);
 			
+			//enforce confirmation code requirement, redirect to conf code page
+			registration_login_and_forward_for_email_confirmation($userid);
+			} else {
+			//Confirmation code is not required, so,
+			//Complete login
+			complete_login($userid);
+			}
 			break;
 		case "confirm_email_via_code":
 			$confirmationcode = $_POST["confirmationcode"];
@@ -98,15 +109,11 @@
 			
 			}
 			
-			
-			
-			
-			
 			break;
 		}
 	
-    } else { // Try to log in for existing user
-        if (scalarquery("Select Count(*) as matches from users where Email = '" . $Email . "'", "matches") == 1) {
+    } else { // Action not sent via URL, this is a normal authentication, so Try to log in for existing user
+        if (scalarquery("Select Count(*) as matches from users where Email = '" . $Email . "'", "matches") == 1) { // existing user found
             // If we find a match for username in system
             $userid = GetUserIDFromEmail($Email); // get the user ID.
             debuglog("Results of GetUserIDFromEmail: " . $userid);
@@ -130,13 +137,18 @@
     
     
             // }
-        } else {
+        } else { // User not found. 
+        		// IF 'None' authentication is enabled, then create user account, this is intended for a dev use case (Deprecated, may remove later).
+        		// Otherwise, fail auth attempt. 
                 // Create User record, re-run statement
+                if ($authmode == "None") {
                 debuglog("User ID Not Found, Creating one.");
                 CreateUserIDForEmail($Email, $password);
                 $userid = GetUserIDFromEmail($Email);
                 complete_login($userid);
-            
+                } else {
+                	failed_auth();
+                }
         }
     }
 exit();
