@@ -40,7 +40,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			<button><a type="button" class="menubar" onclick="toggleDisplay('EditDashboardDialog');">Edit Dashboard</button>
 			<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
 			<button><a id="editmode" class="menubar nodeco">Move Widgets</button>
-			<button><a id="resizewidgets" class ="menubar nodeco">Resize Widgets</button>
+			<button><a id="resizewidgets" class="menubar nodeco">Resize Widgets</a></button>
+			<button><a id="changepassword" class="menubar nodeco" href="actions/change_password.php">Change Password</a></button>
 			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
 				include_once("shared_functions.php");
 				doesDatabaseExist() ? null : redirect('setup.php'); // Redirect IF DB DOESNT EXIST
