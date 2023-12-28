@@ -10,6 +10,10 @@ function doesDatabaseExist() {
 	}
 	
 }
+function getUserIDFromEmail($email) {
+	return scalarquery("Select RecID From Users Where Email = '" . $email . "'", "RecID");
+		
+}
 function selectquery($sql) {
 	debuglog($sql,"about to execute query");
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];

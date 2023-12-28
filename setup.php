@@ -297,27 +297,32 @@ Also i want to find a way to embed the Widget data , raw, somewhere into the con
 
 <!--Email Config-->
 <div>
-<form id="mail" method="POST" action="config/storemailcreds.php">
-<h3>Email Config</h3>
-<p>This section configures the mail account used, and if it should be used to lock new user accounts until they submit an email confirmation code.
-The purpose of this is to prevent bots from creating accounts and attempting to spam various functions on the site. </p>
-<label>Username</label>
-<input id ="username" name="username"></input>
-<br />
-<br />
-<label>Password</label>
-<input id="pw" type="password" name="password"></input><br />
-<label>SMTP Security Method</label>
-<input id="smtpSecureMethod" name="smtpSecure"></input><br />
-<label>Port</label>
-<input id="port" name="smtpPort"></input><br />
+	<form id="mail" method="POST" action="config/storemailcreds.php">
+		<div style="width: 50%; display: block;">
+			<h3>Email Config</h3>
+			<p>This section configures the mail account used, and if it should be used to lock new user accounts until they submit an email confirmation code.
+			The purpose of this is to prevent bots from creating accounts and attempting to spam various functions on the site. </p>
+		</div>
+		<div style="width: 100%; display: block; float: left;">
+		<label>Username</label><br />
+		<input id ="username" name="username"></input>
+		<br />
+		<div>
+			<label>Password</label><br />
+			<input id="pw" type="password" name="password"></input><br />
+			<label>SMTP Security Method</label><br />
+			<input id="smtpSecureMethod" name="smtpSecure"></input><br />
+			<label>Port</label><br />
+			<input id="port" name="smtpPort"></input><br />
+		</div>
+		
+		<button>Submit</button>
+		</form>
+		<br /><br />
+		<form id="testemail" method="POST" action="setup.php?action=testEmail">
+		<button>Test Email (Send to myself)</button>
+	</form>
 
-<button>Submit</button>
-</form>
-<br /><br />
-<form id="testemail" method="POST" action="setup.php?action=testEmail">
-<button>Test Email (Send to myself)</button>
-</form>
 </div>
 <!--END OF EMAIL CONFIG-->
 

@@ -196,39 +196,14 @@ body {
    
 	<div class="screen">
 		<div class="screen__content">
-			<form id="loginForm" class="login" method="POST" action="verify-login.php">
+			<form id="loginForm" class="login" method="POST" action="resetpw_confirm_code.php">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" placeholder="Email / Username" name="email"></input>
-					<?php
-					include('../shared_functions.php');
-					if (doesDatabaseExist()){
-					$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
-					if ($authmode == "Password") {
-					echo "<input id='password' type='password' class='login__input' placeholder='Password' name='password'></input>";
-					echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'></script>
-					<script>
-			  document.getElementById('loginForm').addEventListener('submit', function(event) {
-				event.preventDefault(); // Prevent form submission
-			
-				var passwordInput = document.getElementById('password');
-				var hashedPassword = CryptoJS.SHA256(passwordInput.value).toString();
-			
-				// Replace the password input value with the hashed password
-				passwordInput.value = hashedPassword;
-				
-				// Submit the form
-				this.submit();
-			  });
-			</script>";}
-					} else {
-						redirect('../setup.php');
-					} // End of if-db-exists block
-					?>
 				</div>
 				
 				<button class="button login__submit">
-					<span class="button__text">Log In Now</span>
+					<span class="button__text">Send Confirmation Code</span>
 					<i class="button__icon fas fa-chevron-right"></i>
 				</button>				
 			</form>

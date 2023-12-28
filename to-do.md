@@ -1,19 +1,13 @@
 # To-Do
 
-* Ability to change existing user's password
+* Ability to reset a lost password
+* Need a way to store config for how a user will authenticate / what their backup auth options are to support their password reset method
+* Because if we just have a button that resets a password to a temp one and emails it to someone, a spammer could just bot the button to infinite usernames
+
 * Ability to reset a lost password - Send a random password via email that they can log in with so they can then change their PW.
 
 
 * Email Config on setup page 
-Now have Functioning code for mailing a Confirmation Code. 
-Future work needs to be done to alter the workflow for registration, 
-to trigger the confirmation code (if configured in setup), and direct user to a new page that accepts it as input, and then unlocks the account. 
-Update users table with a flag for confirmedviaemail, boolean.
-Add page for entering confirmation code
-Setup workflow for sending it out. 
-Future work should be done to rate limit the sending of this. 
-
-
 
 	* Need to get to point where you can actually setup an OAuth login, for example for gmail.
 	* Email confirmation code for new users

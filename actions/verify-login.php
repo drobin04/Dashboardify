@@ -81,6 +81,32 @@
 			complete_login($userid);
 			}
 			break;
+			
+		case "reset_pw.php";
+			// Get confirmation code
+			$conf_code_for_reset_pw = "";
+			
+			if (isset($_POST["confirmationcode"])) {
+				$conf_code_for_reset_pw = $_POST["confirmationcode"];
+				$user_id_for_reset_pw = $_GET["userid"];
+				
+				$properconfcodeforuser = scalarquery("Select ConfirmationCode From Users Where RecID = '" . $user_id_for_reset_pw . "'", "ConfirmationCode");
+				if ($properconfcodeforuser == $conf_code_for_reset_pw) {
+				// Save into DB
+					execquery("update Users Set ConfirmationCode = '', Password = '" . $password . "' where RecID = '" . $user_id_for_reset_pw . "'");
+					redirect("start-login.php");
+				} else {
+					//failed. 
+				 redirect("start-login.php?msg=Failed_Confirmation_code");
+				 
+				}
+				
+				
+				
+			}
+			
+		
+			break;
 		case "confirm_email_via_code":
 			$confirmationcode = $_POST["confirmationcode"];
 			// get user ID from current session,
@@ -108,6 +134,10 @@
 				redirect("confirm-email.php");
 			
 			}
+			
+			break;
+		case "reset_password":
+			$email = $_POST["username"];
 			
 			break;
 		}
@@ -163,20 +193,6 @@ function failed_auth() {
 
 }
 
-
-
-
-
-
-    function GetUserIDFromEmail($eml) {
-        $select = "SELECT RecID FROM Users Where Email = '" . $eml . "'";
-        debuglog($select,"SQL Query Searching For User By Email");
-        $results = selectquery($select);
-        debuglog($results,"Results from SQL Query search");
-        $user = $results[0]["RecID"];
-        debuglog($user,"User info selected");
-        return $user;
-    }
     
     function CreateUserIDForEmail($eml, $pwd) {
         $select = "Insert Into Users (Email, password) VALUES (?,?)";

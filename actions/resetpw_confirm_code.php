@@ -1,8 +1,54 @@
+<?php
+// Accept username from POST
+//include
+include_once('../shared_functions.php');
+$username = "";
+
+if (isset($_POST["email"])) {
+	//todo - come back and so some sort of verification to prevent abuse and spamming of this function....
+	
+	$username = $_POST["email"];
+	$userid = getUserIDFromEmail($username);
+	//Generate code for confirmation
+	$code = mt_rand(100000, 999999);
+	
+	
+	// Store confirmation code for user
+	execquery("Update Users
+	Set ConfirmationCode = '" . $code . "' 
+	Where Email = '" . $username . "'");
+	
+	// Mail Confirmation Code for user on page load. 
+	// Mail confirmationcode to user!
+	include("../mailer.php");
+	mailAuthenticationCode_resetpw($username,$code);
+	
+	
+	
+	
+} else {
+	// Return to login, something went wrong?
+	redirect('start-login.php');
+	
+}
+
+
+
+// Present form for user to enter the code.
+
+// Form should submit to verify-login with a custom action for 
+// resetpw_confirm_code , which will check if the code matches,
+// if the code does match, it should give the user a session cookie, and redirect them
+// to the change password screen. 
+
+
+?>
+
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head >
-    <title>Dashboardify</title>
+    <title>Dashboardify - Reset Password</title>
 	
     <style>
         html, body {
@@ -196,15 +242,15 @@ body {
    
 	<div class="screen">
 		<div class="screen__content">
-			<form id="loginForm" class="login" method="POST" action="verify-login.php">
+			<form id="loginForm" class="login" method="POST" action="verify-login.php?action=reset_pw.php&userid=<?php echo $userid ?>">
 				<div class="login__field">
 					<i class="login__icon fas fa-user"></i>
-					<input type="text" class="login__input" placeholder="Email / Username" name="email"></input>
+					<input type="text" class="login__input" placeholder="Confirmation Code" name="confirmationcode"></input>
 					<?php
-					include('../shared_functions.php');
+					
 					if (doesDatabaseExist()){
 					$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
-					if ($authmode == "Password") {
+					
 					echo "<input id='password' type='password' class='login__input' placeholder='Password' name='password'></input>";
 					echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'></script>
 					<script>
@@ -220,7 +266,7 @@ body {
 				// Submit the form
 				this.submit();
 			  });
-			</script>";}
+			</script>";
 					} else {
 						redirect('../setup.php');
 					} // End of if-db-exists block
@@ -228,11 +274,10 @@ body {
 				</div>
 				
 				<button class="button login__submit">
-					<span class="button__text">Log In Now</span>
+					<span class="button__text">Submit Confirmation Code</span>
 					<i class="button__icon fas fa-chevron-right"></i>
 				</button>				
 			</form>
-			<div style="text-align: right; color: white;"><a href="reset_password.php" style="text-color: white;text-decoration: none;color: white !important;padding-right: 30px;">Reset Password</a></div>
 			<div style="text-align: right; color: white;"><a href="../register_user.php" style="text-color: white;text-decoration: none;color: white !important;padding-right: 30px;">Register</a></div>
 			
 		</div>
