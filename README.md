@@ -84,6 +84,10 @@ This app is tested and demo'd on PHP version 8.3, and earlier versions of it wer
 If you have a different stack for your web server and PHP, you should know that this app uses PDO to access a SQLite database file. You may need to enable sqlite extensions. 
 If this is not done, you may get a blank screen when loading the app, as almost all important data is pulled from the included Dashboardify.S3DB file.
 
+To install the sqlite extension (assuming you're on an ubuntu based server), run ' sudo apt install php-sqlite3 '.
+
+In order to display charts, you'll need to install PHP GD, and can run ' sudo apt install php-gd '.
+
 For MS SQL Server connectivity and related widgets, the following extensions need to be enabled (uncommented) in php.ini, and the 2 included dll files in the /ext folder are needed, which contain microsoft's sql server driver for PHP.
     extension=php_sqlsrv_56_ts.dll
     extension=php_pdo_sqlsrv_56_ts.dll  
