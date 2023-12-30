@@ -35,9 +35,21 @@ $StoredWidgets = "CREATE TABLE StoredWidgets (
 	[SizeY] iNTEGER  NULL,
 	[WidgetURL] NVARCHAR(1000)  NULL,
 	[WidgetCSSClass] NVARCHAR(150)  NULL
-	, Notes TEXT NULL, sqlserveraddress TEXT(75) NULL, sqldbname TEXT(75) NULL, sqluser TEXT(75) NULL, sqlpass TEXT(75) NULL, sqlquery TEXT(2000) NULL
+	, Notes TEXT NULL, 
+	sqlserveraddress TEXT(75) NULL, 
+	sqldbname TEXT(75) NULL, 
+	sqluser TEXT(75) NULL, sqlpass TEXT(75) NULL, 
+	sqlquery TEXT(2000) NULL
 	, Global BOOLEAN NULL
 	)
+";
+$login_attempts = "
+CREATE TABLE login_attempts (
+dt DATE,
+Email TEXT NULL,
+Successful BOOLEAN NULL,
+IPAddress TEXT NULL
+)
 ";
 
 $settingsSQL = "CREATE TABLE [Settings] (
@@ -85,12 +97,6 @@ $CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
     HTML_Content TEXT  NULL,
     PHP_To_Run TEXT  NULL)";
 
-// Table For Tracking Failed Login Attempts
-$FailedLogins = "CREATE TABLE LoginAttempts (
-    Email TEXT, DateTime Date, IPAddress TEXT, Successful BOOLEAN)";
-    
-
-
 
 execquery($widgetsSQL);
 execquery($usersSQL);
@@ -103,6 +109,7 @@ execquery($populatefirstauthmodesetting);
 execquery("INSERT INTO Settings (Name, Value) VALUES ('SiteUrlConfig', 'https://localhost/Dashboardify/');");
 execquery($CustomwidgetProvidersSQL);
 execquery($FailedLogins);
+execquery($login_attempts);
 
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";

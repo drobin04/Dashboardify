@@ -1,5 +1,5 @@
 <html>
-<head>    <?php include_once("logoutredirect.php");?> </head>
+<head>    <?php include_once("actions/logoutredirect.php");?> </head>
 <body>
 
 <?php
@@ -47,6 +47,15 @@
         $sqlquery = str_replace("'","''",$_POST["sqlquery"]);
         
         $globaldefault = "";
+        
+        // Break if user is trying to save a DBQuery value without having access. 
+        if (isset($_POST["sqlqeury"])) {
+        	include_once('config/check_admin.php');
+        	if (!AmIAdmin()) {
+        		echo "Failed to save widget. You are trying to save a widget with a SQL query, though you are not marked as an admin. To remove this constraint, edit NewWidget.php.";
+        		exit();	
+        	}
+        }
 
         if (isset($_POST["GlobalDefault"])) {
             $globaldefault = $_POST["GlobalDefault"];

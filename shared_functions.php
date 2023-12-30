@@ -10,6 +10,26 @@ function doesDatabaseExist() {
 	}
 	
 }
+
+function doIOwnThisWidget_archive_Delete_This($widgetID) {
+	// get current user RecID
+	$userid = getCurrentUserID();
+	
+	$count = scalarquery("Select count(*) as Count From Widgets W 
+		Left Join Dashboards D On W.DashboardRecID = D.DashboardID 
+		Left Join Users U On U.RecID = D.UserID
+		Where W.RecID = '" . $widgetID . "' 
+		and U.RecID = '" . $userid . "'");
+		
+		if ($count != "0") {
+		//match found	
+			return true;
+		} else {
+			return false;
+		}
+	
+}
+
 function getUserIDFromEmail($email) {
 	return scalarquery("Select RecID From Users Where Email = '" . $email . "'", "RecID");
 		

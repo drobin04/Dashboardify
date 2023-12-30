@@ -50,7 +50,9 @@ $usersSQL = "CREATE TABLE [Users] (
 	[RecID]	INTEGER PRIMARY KEY AUTOINCREMENT,
 	[Email]	TEXT NOT NULL,
     [Admin] BOOLEAN  NULL,
-    password TEXT NULL
+    password TEXT NULL,
+    EmailConfirmed BOOLEAN NULL,
+    ConfirmationCode TEXT NULL
 )";
 
 $userCSSsql = "CREATE TABLE [UserCSS] (

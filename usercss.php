@@ -1,5 +1,5 @@
 <?php //Grab custom CSS from Database - This part is important for background colors for example
-	include_once("../shared_functions.php");
+	include_once("shared_functions.php");
 	if (doesDatabaseExist()) {
 
 	

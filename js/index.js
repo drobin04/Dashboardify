@@ -190,6 +190,9 @@ function renderNewWidgetOptionsByDropdown() {
 		case "SQLiteResultsList":
 			document.getElementById("SQL").style.display = 'block';
 			break;
+		case "SQLite Chart (PHPGD)":
+			document.getElementById("SQL").style.display = 'block';
+			break;
 		}
 
 

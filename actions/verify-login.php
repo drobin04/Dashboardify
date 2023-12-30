@@ -185,7 +185,12 @@ exit();
     
 function failed_auth() {
     redirect('start-login.php?msg=Failed_Auth_On_Verification');
+    $Email = "";
+    
+    
     // Log failed login attempt in DB
+    logLoginAttempt(0);
+
 
     // Check if we've exceeded number of login attempts needed for lockout
 
@@ -193,7 +198,21 @@ function failed_auth() {
 
 }
 
-    
+    function logLoginAttempt($successful) {
+		if (isset($_POST["email"])) {
+			$Email = $_POST["email"];
+		}
+		$dbfile = getPDO_DBFile();
+		$sql = "INSERT INTO login_attempts (dt,Email,Successful) VALUES (?,?,?)";    
+		
+		$stmt1 = $dbfile->prepare($sql);
+		$date = date('Y-m-d H:i:s');
+		$stmt1->bindParam(1,$date,PDO::PARAM_STR);
+		$stmt1->bindParam(2,$Email,PDO::PARAM_STR);
+		$stmt1->bindParam(3,$successful,PDO::PARAM_BOOL);
+		$stmt1->execute();	
+    	
+    }
     function CreateUserIDForEmail($eml, $pwd) {
         $select = "Insert Into Users (Email, password) VALUES (?,?)";
         
@@ -246,7 +265,7 @@ function failed_auth() {
             //setcookie("succeeded_login_hash", )
             
             //
-            
+            logLoginAttempt(1);
             redirect("../index.php");
 
         }

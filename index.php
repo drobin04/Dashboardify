@@ -7,9 +7,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 <option value='Notes'>Notes</option>
 <option value='HTMLEmbed'>HTMLEmbed</option>
 <option value='SQLServerScalarQuery'>SQLServerScalarQuery</option>
-<option value='SQLiteResultsList'>SQLiteResultsList</option>"
-
-
+<option value='SQLiteResultsList'>SQLiteResultsList</option>
+<option value='SQLite Chart (PHPGD)'>SQLite Chart (PHPGD)</option>"
 ?>
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -144,8 +143,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 							if ($globalwidget == "1") {
 								$global_checked = "checked";
 							}
-							echo "<input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>"; } ?>
-							echo "<input type='checkbox'id='StoredWidgetBool' "  . "" . " name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>"; } ?>
+							echo "<input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>"; 
+							echo "<br /><input type='checkbox'id='StoredWidgetBool' "  . "" . " name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>"; } ?>
 						<hr><button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button>
 						<br />
                         <label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input><br />
@@ -162,7 +161,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php echo $sqlwidgetusername ?>"></input><br />
 						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php echo $sqlwidgetpass ?>"></input><br />
 						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php echo $sqlwidgetquery ?>"></input><br /></span>
-
+						<br />
+						</label>If you use GD / PHP Chart widget type, manually specify 'x' and 'y' column aliases for the x and y axis'.</label>
                     </div>
 		</div></form>
 
