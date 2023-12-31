@@ -18,8 +18,16 @@
 
     // Prepare INSERT statement.
     $dashboardid = GUID();
-	$select = "INSERT INTO Dashboards (Name, DashboardID,UserID) VALUES ('" . $dashboardname . "', '" . $dashboardid . "','" . $userid . "')";
-	execquery($select);
+	$select = "INSERT INTO Dashboards (Name, DashboardID,UserID) VALUES (?, ?, ?)";
+	
+	
+	$localdb = getPDO_DBFile();
+	$stmt1 = $localdb->prepare($select);
+	$stmt1->bindParam(1, $dashboardname, PDO::PARAM_STR);
+	$stmt1->bindParam(2, $dashboardid, PDO::PARAM_STR);
+	$stmt1->bindParam(3, $userid, PDO::PARAM_STR);
+	$stmt1->execute();
+	
 	redirect("../index.php");
 ?>
 
