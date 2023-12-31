@@ -8,8 +8,8 @@
     
 	if (DoIOwnThisWidget($d)) {
 
-		$select = "Delete From Widgets Where RecID = '" . $d . "'";
-		execquery($select);
+		$select = "Delete From Widgets Where RecID = ?";
+		execquery_bind1($select, $d);
 		
 
 	} else {
