@@ -14,9 +14,9 @@ if (isset($_POST["email"])) {
 	
 	
 	// Store confirmation code for user
-	execquery("Update Users
+	execquery_bind1("Update Users
 	Set ConfirmationCode = '" . $code . "' 
-	Where Email = '" . $username . "'");
+	Where Email = ?", $username);
 	
 	// Mail Confirmation Code for user on page load. 
 	// Mail confirmationcode to user!
@@ -29,7 +29,7 @@ if (isset($_POST["email"])) {
 } else {
 	// Return to login, something went wrong?
 	redirect('start-login.php');
-	
+	                                                                                                         
 }
 
 
