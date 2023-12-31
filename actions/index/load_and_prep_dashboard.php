@@ -78,7 +78,7 @@ Try { // Load Dashboard list
         $sql1 = "INSERT INTO Dashboards (DashboardID, UserID, DefaultDB, Name, BackgroundPhotoURL) VALUES ('" . $dashboardid . "', '" . $userid 
         . "', 'Y', 'Main', '" . $defaultdashimage . "')";
         debuglog($sql1,"SQL Dashboard Insert Query"); 
-        execquery($sql1); //Create Dashboard
+        execquery($sql1); //Create Dashboard // THIS ONE SHOULD BE FINE TO NOT REPLACE FOR SQL INJECTION, NO USER SUPPLIED INPUT.... RIGHT???
         $dashboardname = "Main";
         $embeddable = "";
         // First / Newly Created Dashboard; Populate Global/Default Widgets
@@ -96,20 +96,44 @@ Try { // Load Dashboard list
             $sqlpass = $w["sqlpass"];
             $sqlquery = $w["sqlquery"];
             $globaldefault = "0";
-            
+            $notesvalue = str_replace("'", "''",$w["Notes"]);
                                 
             // Prepare INSERT statement.
             $select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
             ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery, Global) 
-            VALUES 
-            ('" 
-            . $w["WidgetType"] . $sep . $w["BookmarkDisplayText"] . $sep . $w["PositionX"] 
-            . $sep . $w["PositionY"] . $sep . $w["SizeX"] . $sep . $w["SizeY"] . $sep . $w["WidgetURL"] 
-            . $sep . $w["WidgetCSSClass"] . $sep . str_replace("'", "''",$w["Notes"]) . $sep . $dashboardid . $sep 
-            .$sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
-            $sep . $globaldefault . "')";
-            debuglog($select, "Query for inserting global widget");
-            execquery($select);
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            
+            //$old = "
+            //('" 
+            //. $w["WidgetType"] . $sep . $w["BookmarkDisplayText"] . $sep . $w["PositionX"] 
+            //. $sep . $w["PositionY"] . $sep . $w["SizeX"] . $sep . $w["SizeY"] . $sep . $w["WidgetURL"] 
+            //. $sep . $w["WidgetCSSClass"] . $sep . str_replace("'", "''",$w["Notes"]) . $sep . $dashboardid . $sep 
+            //.$sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
+            //$sep . $globaldefault . "')";
+            //debuglog($select, "Query for inserting global widget");
+            
+            $localdb = getPDO_DBFile();
+			$stmt1 = $localdb->prepare($select);
+			$stmt1->bindParam(1, $w["WidgetType"], PDO::PARAM_STR);
+			$stmt1->bindParam(2, $w["BookmarkDisplayText"], PDO::PARAM_STR);
+			$stmt1->bindParam(3, $w["PositionX"], PDO::PARAM_STR);
+			$stmt1->bindParam(4, $w["PositionY"], PDO::PARAM_STR);
+			$stmt1->bindParam(5, $w["SizeX"], PDO::PARAM_STR);
+			$stmt1->bindParam(6, $w["SizeY"], PDO::PARAM_STR);
+			$stmt1->bindParam(7, $w["WidgetURL"], PDO::PARAM_STR);
+			$stmt1->bindParam(8, $w["WidgetCSSClass"], PDO::PARAM_STR);
+			$stmt1->bindParam(9, $notesvalue, PDO::PARAM_STR);
+			$stmt1->bindParam(10, $dashboardid, PDO::PARAM_STR);
+			$stmt1->bindParam(11, $sqlserveraddress, PDO::PARAM_STR);
+			$stmt1->bindParam(12, $sqldbname, PDO::PARAM_STR);
+			$stmt1->bindParam(13, $sqlusername, PDO::PARAM_STR);
+			$stmt1->bindParam(14, $sqlpass, PDO::PARAM_STR);
+			$stmt1->bindParam(15, $sqlquery, PDO::PARAM_STR);
+			$stmt1->bindParam(16, $globaldefault, PDO::PARAM_STR);
+			
+			$stmt1->execute();
+            
+            
             // Reload dashboard
             echo "<script>location.reload();</script>";
         }
