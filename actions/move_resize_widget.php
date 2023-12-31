@@ -8,7 +8,15 @@ if (isset($_GET["action"])) {
             $y_position = abs($_GET["y"]);
             $recid = $_GET["RecID"];
             if (DoIOwnThisWidget($recid)) { 
-                execquery("Update Widgets Set PositionX = '" . $x_position . "', PositionY = '" . $y_position . "' Where RecID = '" . $recid . "'");
+                $sql = "Update Widgets Set PositionX = ?, PositionY = ? Where RecID = ?";
+                
+                $localdb = getPDO_DBFile();
+				$stmt1 = $localdb->prepare($sql);
+				$stmt1->bindParam(1, $x_position, PDO::PARAM_STR);
+				$stmt1->bindParam(2, $y_position, PDO::PARAM_STR);
+				$stmt1->bindParam(3, $recid, PDO::PARAM_STR);
+				$stmt1->execute();
+                
             } else {
                 echo "you don't have rights to update this widget!";
             }
@@ -19,8 +27,15 @@ if (isset($_GET["action"])) {
             $y = abs($_GET["height"]);
             $recid = $_GET["id"];
             if (DoIOwnThisWidget($recid)) {
-                execquery("update widgets set SizeX = '" . $x . "', SizeY = '" . $y ."' Where RecID = '" . $recid ."'");
-
+                $sql = "update widgets set SizeX = ?, SizeY = ? Where RecID = ?";
+                
+                $localdb = getPDO_DBFile();
+				$stmt1 = $localdb->prepare($sql);
+				$stmt1->bindParam(1, $x, PDO::PARAM_STR);
+				$stmt1->bindParam(2, $y, PDO::PARAM_STR);
+				$stmt1->bindParam(3, $recid, PDO::PARAM_STR);
+				$stmt1->execute();
+                
             }
             break;
 
