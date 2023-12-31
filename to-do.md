@@ -1,11 +1,5 @@
 # To-Do
 
-* Ability to reset a lost password
-* Need a way to store config for how a user will authenticate / what their backup auth options are to support their password reset method
-* Because if we just have a button that resets a password to a temp one and emails it to someone, a spammer could just bot the button to infinite usernames
-
-* Ability to reset a lost password - Send a random password via email that they can log in with so they can then change their PW.
-
 
 * Email Config on setup page 
 
