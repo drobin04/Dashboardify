@@ -12,8 +12,8 @@ if (isset($_POST["password"])) {
 	
 	// Store in DB for the current user
 	$userid = getCurrentUserID();
-	
-	execquery("update Users Set password = '" . $password . "' where RecID = '" . $userid . "'");
+	$sql = "update Users Set password = ? where RecID = '" . $userid . "'";
+	execquery_bind1($sql, $password);
 		
 	redirect('../index.php');
 	//echo "Password Changed. Incoming hash: " . $_POST["password"] . ", Hash sent to server: " . $password;
