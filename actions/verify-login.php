@@ -63,9 +63,9 @@
 			
 			
 			// Store confirmation code for user
-			execquery("Update Users
+			execquery_bind1("Update Users
 			Set ConfirmationCode = '" . $code . "' 
-			Where Email = '" . $Email . "'");
+			Where Email = ?", $Email);
 			
 			// Mail confirmationcode to user!
 			include("../mailer.php");
@@ -93,7 +93,14 @@
 				$properconfcodeforuser = scalarquery("Select ConfirmationCode From Users Where RecID = '" . $user_id_for_reset_pw . "'", "ConfirmationCode");
 				if ($properconfcodeforuser == $conf_code_for_reset_pw) {
 				// Save into DB
-					execquery("update Users Set ConfirmationCode = '', Password = '" . $password . "' where RecID = '" . $user_id_for_reset_pw . "'");
+				$sql = "update Users Set ConfirmationCode = '', Password = ? where RecID = ?";
+				$localdb = getPDO_DBFile();
+				$stmt1 = $localdb->prepare($select);
+				$stmt1->bindParam(1, $password, PDO::PARAM_STR);
+				$stmt1->bindParam(2, $user_id_for_reset_pw, PDO::PARAM_STR);
+				$stmt1->execute();
+				
+				
 					redirect("start-login.php");
 				} else {
 					//failed. 
@@ -122,6 +129,7 @@
 				//Update user account
 				// Mark emailconf confirmed
 				// remove confirmationcode value
+				// THIS EXECQUERY IS SAFE, NO USER SUPPLIED CONTENT MAKES IT INTO THE QUERY.
 				execquery("Update Users 
 					Set EmailConfirmed = 1, ConfirmationCode = '' 
 					where RecID = '" . $userid . "'");
@@ -222,12 +230,17 @@ function failed_auth() {
         $stmt->bindParam(2,$pwd,PDO::PARAM_STR);
         $stmt->execute();
 
-        //execquery($select);
     }
 
     function CreateSessionForID($id, $sessid) {
-        $insert = "Insert Into Sessions (UserID, SessionID) VALUES ('". $id . "', '" . $sessid . "')";
-        execquery($insert);
+        $insert = "Insert Into Sessions (UserID, SessionID) VALUES (?, ?)";
+        
+        $localdb = getPDO_DBFile();
+		$stmt1 = $localdb->prepare($insert);
+		$stmt1->bindParam(1, $id, PDO::PARAM_STR);
+		$stmt1->bindParam(2, $sessid, PDO::PARAM_STR);
+		$stmt1->execute();
+        
     }   
 
     
