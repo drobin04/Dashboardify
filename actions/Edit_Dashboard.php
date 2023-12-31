@@ -10,11 +10,19 @@
     $dashboardid = $_GET["DashboardID"];
     $embeddable = $_POST["embeddable"];
     $sessionid = $_COOKIE["SessionID"];
-    //Get User for Session ID
-    //$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"];
 
-	$select = "Update Dashboards Set Name = '" . $dashboardname . "', Embeddable = '" . $embeddable . "' Where DashboardID = '" . $dashboardid . "'";
-	execquery($select);
+	//$select = "Update Dashboards Set Name = '" . $dashboardname . "', Embeddable = '" . $embeddable . "' Where DashboardID = '" . $dashboardid . "'";
+	
+	
+	$sql = "Update Dashboards Set Name = ?, Embeddable = ? Where DashboardID = ?";
+	
+	$localdb = getPDO_DBFile();
+	$stmt1 = $localdb->prepare($sql);
+	$stmt1->bindParam(1, $dashboardname, PDO::PARAM_STR);
+	$stmt1->bindParam(2,$embeddable,PDO::PARAM_BOOL);
+	$stmt1->bindParam(3,$dashboardid,PDO::PARAM_STR);
+	$stmt1->execute();
+
 	redirect("../index.php");
 ?>
 
