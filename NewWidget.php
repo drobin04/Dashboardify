@@ -24,8 +24,8 @@
 	If ($_POST["ID"] <> "") {
         $widgetID = $_POST["ID"];
         if (DoIOwnThisWidget($widgetID)) {
-            $sql = "Delete From Widgets Where RecID = '" . $_POST["ID"] . "'";
-            execquery($sql);
+            $sql = "Delete From Widgets Where RecID = ?";
+            execquery_bind1($sql, $_POST["ID"]);
             echo "DELETED WIDGET WITH ID '" . $_POST["ID"] . "', Inserting new copy now...";
         } else {
             $break_if_tried_editing_widget_without_permission = true;
@@ -64,21 +64,32 @@
             $globaldefault = "0";
         }
 
-        //$_POST[""]
-        
+        $notesvalue = str_replace("'", "''",$_POST["Notes"]);
         // Prepare INSERT statement.
         $select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
         ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery, Global) 
-        VALUES ('" . $_POST["WidgetType"] . $sep . $_POST["DisplayText"] . $sep . $_POST["PositionX"] . $sep . $_POST["PositionY"] . $sep . 
-        $_POST["SizeX"] . $sep . $_POST["SizeY"] . $sep . $_POST["URL"] . $sep . $_POST["CSSClass"] . $sep . str_replace("'", "''",$_POST["Notes"]) . $sep . $dashboardid . $sep .
-        $sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
-        "', '" . $globaldefault . "')";
-        debuglog($select);
-        debuglog($sessionID, "Session ID");
-        debuglog($dashboardid, "Dashboard ID");
-
-        //$stmt->bindParam(':notes', $_POST["Notes"]); // Failed, don't understand why.
-        execquery($select);
+        VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?)";
+        
+        $localdb = getPDO_DBFile();
+		$stmt1 = $localdb->prepare($select);
+		$stmt1->bindParam(1, $_POST["WidgetType"], PDO::PARAM_STR);
+		$stmt1->bindParam(2, $_POST["DisplayText"], PDO::PARAM_STR);
+		$stmt1->bindParam(3, $_POST["PositionX"], PDO::PARAM_STR);
+		$stmt1->bindParam(4, $_POST["PositionY"], PDO::PARAM_STR);
+		$stmt1->bindParam(5, $_POST["SizeX"], PDO::PARAM_STR);
+		$stmt1->bindParam(6, $_POST["SizeY"], PDO::PARAM_STR);
+		$stmt1->bindParam(7, $_POST["URL"], PDO::PARAM_STR);
+		$stmt1->bindParam(8, $_POST["CSSClass"], PDO::PARAM_STR);
+		$stmt1->bindParam(9, $notesvalue, PDO::PARAM_STR);
+		$stmt1->bindParam(10, $dashboardid, PDO::PARAM_STR);
+		$stmt1->bindParam(11, $sqlserveraddress, PDO::PARAM_STR);
+		$stmt1->bindParam(12, $sqldbname, PDO::PARAM_STR);
+		$stmt1->bindParam(13, $sqlusername, PDO::PARAM_STR);
+		$stmt1->bindParam(14, $sqlpass, PDO::PARAM_STR);
+		$stmt1->bindParam(15, $sqlquery, PDO::PARAM_STR);
+		$stmt1->bindParam(16, $globaldefault, PDO::PARAM_STR);
+		
+		$stmt1->execute();
             //echo "Finished; click <a href='index.php'>Here</a> to return to main dashboard.";
 	    redirect("index.php" . "?SelectDashboardID=" . $dashboardid);
     } else {
