@@ -101,6 +101,15 @@ function execquery($sql) {
 	$stmt1->execute();
 	
 }
+function execquery_bind1($sql,$param1) {
+	//$localdb = new PDO('sqlite:Dashboardify.s3db');
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+	$stmt1 = $localdb->prepare($sql);
+	$stmt1->bindParam(1, $param1, PDO::PARAM_STR);
+	$stmt1->execute();
+	
+}
 
 /**
  * Function to generate HTML table from array of objects
