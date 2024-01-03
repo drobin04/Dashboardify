@@ -1,5 +1,5 @@
 <?php
-
+include('../saved_functions.php');
 
 If (isset($_GET['CSS'])) { 
     // Retrieve the value from the form submission
