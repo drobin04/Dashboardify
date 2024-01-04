@@ -40,8 +40,11 @@ include('actions/logoutredirect.php');
             div:target {display:block;}
             
         </style>
-
-    </head>
+        <!-- Google Config Start -->
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <meta name="google-signin-client_id" content="814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com">
+        <!-- Google Config End ^^^ For Google signin for Email Configuration. Yuck, I know. Google. I don't know why people use it. -->
+        </head>
     <body>
 <!-- Everything should be below MainPanel for now -->
         <div class="MainPanel">
@@ -290,7 +293,7 @@ include('actions/logoutredirect.php');
 								echo "<tr><td>" . $user["RecID"] . "</td><td>" . $user["Email"] . "</td><td>" . $user["Admin"] . "</td><td><a href='config/delete_user.php?recID=" . $user["RecID"] 
 								. "'>Delete?</a> " . "<a href='config/make_admin.php?recID=" . $user["RecID"] 
 								. "'>Make Admin?</a> <a href='config/remove_admin.php?recID=" . $user["RecID"] . "'>Remove Admin?</a></tr>";
-					
+							
 					
 							}
 							
@@ -406,7 +409,12 @@ include('actions/logoutredirect.php');
 							<form id="testemail" method="POST" action="setup.php?action=testEmail">
 							<button>Test Email (Send to myself)</button>
 						</form>
-					
+						<!-- GOOGLE SIGNIN BUTTON -->
+						<br />
+						<br />
+						<div class="g-signin2" data-onsuccess="onSignIn"></div>
+						<!-- END OF GOOGLE SIGNIN BUTTON -->
+
 					</div>
 					<!--END OF EMAIL CONFIG-->
 					
