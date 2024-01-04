@@ -59,6 +59,24 @@ function scalarquery($sql, $columnname) {
 	return $results[0][$columnname];
 }
 
+function DoesUserExist($email) {
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
+	$db_file = new PDO($dbpath);
+	$sql = "Select Count(*) As Count From Users Where Email = ?";
+	$stmt1 = $db_file->prepare($sql);
+	$stmt1->bindParam(1, $email, PDO::PARAM_STR);
+	$stmt1->execute();
+	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC)[0]["Count"];
+	//return $results[0][$columnname];
+	If ($results >= 1) {
+		return true;
+	} else {
+		return false;
+	}
+
+}
+
 function getPDO_DBFile() {
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
 	$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');

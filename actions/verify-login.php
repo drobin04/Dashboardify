@@ -39,46 +39,52 @@
         switch ($action) {
         	
         case "register":
-        	
-			CreateUserIDForEmail($Email, $password);
+        	// Need to check if user already exists before creating new user account. 
+        	if (!DoesUserExist($Email)) {
+        		CreateUserIDForEmail($Email, $password);
 			$userid = GetUserIDFromEmail($Email);
 			if ($successful_prior_auth_cookie == hash('sha256', $userid)) {
 				// COOKIE MATCHED FOR PRIOR SUCCESSFUL AUTHENTICATION;
 				// WE CAN GRANT A VERY SMALL AMOUNT OF TRUST
 				// THUS WE CAN DECIDE NOT TO RATE LIMIT FAILED LOGINS AS HARD FOR THIS CLIENT
 				$prior_auth_cookie_matches = true;
-			}
-			
-			// Check if system setting for RequireConfirmationCode is set, and if so, if it's set to 1 indicating that users should b required
-			// if set, do redirect. 
-			// if not set or is set to 0, just complete login from this point. 
-			
-			$setting_for_requiredconfirmationcode = scalarquery("select Value from Settings Where Name = 'RequireConfirmationCode'", "Value");
-			
-			if ($setting_for_requiredconfirmationcode == "1") {
-			// Confirmation code is required then				
+				}
 				
-			//Generate code for confirmation
-			$code = mt_rand(100000, 999999);
-			
-			
-			// Store confirmation code for user
-			execquery_bind1("Update Users
-			Set ConfirmationCode = '" . $code . "' 
-			Where Email = ?", $Email);
-			
-			// Mail confirmationcode to user!
-			include("../mailer.php");
-			mailAuthenticationCode($Email,$code);
-			
-			
-			
-			//enforce confirmation code requirement, redirect to conf code page
-			registration_login_and_forward_for_email_confirmation($userid);
-			} else {
-			//Confirmation code is not required, so,
-			//Complete login
-			complete_login($userid);
+				// Check if system setting for RequireConfirmationCode is set, and if so, if it's set to 1 indicating that users should b required
+				// if set, do redirect. 
+				// if not set or is set to 0, just complete login from this point. 
+				
+				$setting_for_requiredconfirmationcode = scalarquery("select Value from Settings Where Name = 'RequireConfirmationCode'", "Value");
+				
+				if ($setting_for_requiredconfirmationcode == "1") {
+				// Confirmation code is required then				
+					
+				//Generate code for confirmation
+				$code = mt_rand(100000, 999999);
+				
+				
+				// Store confirmation code for user
+				execquery_bind1("Update Users
+				Set ConfirmationCode = '" . $code . "' 
+				Where Email = ?", $Email);
+				
+				// Mail confirmationcode to user!
+				include("../mailer.php");
+				mailAuthenticationCode($Email,$code);
+				
+				
+				
+				//enforce confirmation code requirement, redirect to conf code page
+				registration_login_and_forward_for_email_confirmation($userid);
+				} else {
+				//Confirmation code is not required, so,
+				//Complete login
+				complete_login($userid);
+				} // end of 'if require confirmation code setting = true' block
+        	}// end of check whether email already exists / skip past if not true
+			else {
+			// email already exists
+			echo "User is already registered.";
 			}
 			break;
 			

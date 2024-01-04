@@ -1,6 +1,7 @@
 <?php
 include("actions/logoutredirect.php");
 
+
 // Widget Types To Include on New Widget dialog. Moved here for convenience in hiding one or multiple. 
 $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 <option value='Collapseable IFrame'>Collapseable IFrame</option>
@@ -10,6 +11,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 <option value='SQLiteResultsList'>SQLiteResultsList</option>
 <option value='SQLite Chart (PHPGD)'>SQLite Chart (PHPGD)</option>"
 ?>
+
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
