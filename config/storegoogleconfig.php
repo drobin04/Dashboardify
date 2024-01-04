@@ -2,33 +2,23 @@
 // Get the authorization code from the request
 //$code = $_GET['code'];
 // Can't use $_GET because the data got sent as [url]#code= instead of [url]?code=
-function getCurrentURL() {
-    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
-    $host = $_SERVER['HTTP_HOST'];
-    $uri = $_SERVER['REQUEST_URI'];
-    return $protocol . "://" . $host . $uri;
-}
+// Get the current URL
+$currentUrl = $_SERVER['REQUEST_URI'];
 
-function getHashValueFromURL($url) {
-    $parsedUrl = parse_url($url);
-    if (isset($parsedUrl['fragment'])) {
-        $fragment = $parsedUrl['fragment'];
-        $params = explode('=', $fragment);
-        if (count($params) > 1) {
-            return $params[1];
-        }
-    }
-    return null; // Handle the case when the fragment or parameter is not present
-}
+// Parse the URL
+$parsedUrl = parse_url($currentUrl);
 
-// Get the currently sent URL
-$currentURL = getCurrentURL();
+// Get the fragment part of the URL
+$fragment = $parsedUrl['fragment'];
 
-// Retrieve the value after the '#' symbol
-$codeValue = getHashValueFromURL($currentURL);
+// Parse the fragment string into an array
+parse_str($fragment, $params);
 
-// Retrieve the value after the '#' symbol
-$code = $codeValue
+// Get the value of the 'code' parameter
+$code = $params['code'];
+
+// Output the parsed code
+echo $code;
 
 // Exchange the authorization code for an access token
 $client_id = '814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com';
