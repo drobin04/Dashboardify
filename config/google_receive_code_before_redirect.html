@@ -1,0 +1,12 @@
+<script>// Get the URL
+var url = window.location.href;
+
+// Extract the code from the URL
+var code = url.match(/#code=([^&]*)/)[1];
+
+// Alert the scraped code value
+//alert('Scraped code value: ' + code);
+
+window.location.href = 'google_store_code.php?code=' + code;
+
+</script>

@@ -1,24 +1,7 @@
 <?php
 // Get the authorization code from the request
-//$code = $_GET['code'];
-// Can't use $_GET because the data got sent as [url]#code= instead of [url]?code=
-// Get the current URL
-$currentUrl = $_SERVER['REQUEST_URI'];
+$code = $_GET["code"];
 
-// Parse the URL
-$parsedUrl = parse_url($currentUrl);
-
-// Get the fragment part of the URL
-$fragment = $parsedUrl['fragment'];
-
-// Parse the fragment string into an array
-parse_str($fragment, $params);
-
-// Get the value of the 'code' parameter
-$code = $params['code'];
-
-// Output the parsed code
-echo $code;
 
 // Exchange the authorization code for an access token
 $clientid = '814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com';
