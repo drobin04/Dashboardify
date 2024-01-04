@@ -11,16 +11,24 @@ function getCurrentURL() {
 
 function getHashValueFromURL($url) {
     $parsedUrl = parse_url($url);
-    $fragment = $parsedUrl['fragment'];
-    $params = explode('=', $fragment);
-    return $params[1];
+    if (isset($parsedUrl['fragment'])) {
+        $fragment = $parsedUrl['fragment'];
+        $params = explode('=', $fragment);
+        if (count($params) > 1) {
+            return $params[1];
+        }
+    }
+    return null; // Handle the case when the fragment or parameter is not present
 }
 
 // Get the currently sent URL
 $currentURL = getCurrentURL();
 
 // Retrieve the value after the '#' symbol
-$code = getHashValueFromURL($currentURL);
+$codeValue = getHashValueFromURL($currentURL);
+
+// Retrieve the value after the '#' symbol
+$code = $codeValue
 
 // Exchange the authorization code for an access token
 $client_id = '814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com';
