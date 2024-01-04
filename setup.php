@@ -416,7 +416,7 @@ include('actions/logoutredirect.php');
 						   data-onsuccess="onSignIn"
 						   data-scope="https://www.googleapis.com/auth/plus.login"
 						   data-accesstype="offline"
-						   data-redirecturi="https://dashboardify.app/Dashboardify/storegoogleconfig.php">
+						   data-redirecturi="https://dashboardify.app/Dashboardify/config/storegoogleconfig.php">
 					   </div>
 						<!-- END OF GOOGLE SIGNIN BUTTON -->
 

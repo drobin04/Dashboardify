@@ -1,6 +1,9 @@
 <?php
 // Get the authorization code from the request
-$code = $_GET['code'];
+//$code = $_GET['code'];
+// Can't use $_GET because the data got sent as [url]#code= instead of [url]?code=
+const url = new URL(window.location.href);
+$code = url.hash.split('=')[1];
 
 // Exchange the authorization code for an access token
 $client_id = '814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com';
