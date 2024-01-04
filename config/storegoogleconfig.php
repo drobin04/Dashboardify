@@ -2,8 +2,25 @@
 // Get the authorization code from the request
 //$code = $_GET['code'];
 // Can't use $_GET because the data got sent as [url]#code= instead of [url]?code=
-const url = new URL(window.location.href);
-$code = url.hash.split('=')[1];
+function getCurrentURL() {
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http";
+    $host = $_SERVER['HTTP_HOST'];
+    $uri = $_SERVER['REQUEST_URI'];
+    return $protocol . "://" . $host . $uri;
+}
+
+function getHashValueFromURL($url) {
+    $parsedUrl = parse_url($url);
+    $fragment = $parsedUrl['fragment'];
+    $params = explode('=', $fragment);
+    return $params[1];
+}
+
+// Get the currently sent URL
+$currentURL = getCurrentURL();
+
+// Retrieve the value after the '#' symbol
+$code = getHashValueFromURL($currentURL);
 
 // Exchange the authorization code for an access token
 $client_id = '814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com';
