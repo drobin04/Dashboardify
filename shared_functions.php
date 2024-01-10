@@ -58,6 +58,18 @@ function scalarquery($sql, $columnname) {
 	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 	return $results[0][$columnname];
 }
+function scalarquery_bind1($sql, $boundParam, $columnname) {
+	debuglog($sql,"about to execute scalar query");
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
+	$db_file = new PDO($dbpath);
+	$stmt1 = $db_file->prepare($sql);
+	$stmt1->bindParam(1,$boundParam,PDO::PARAM_STR);
+	$stmt1->execute();
+	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+	return $results[0][$columnname];
+}
+
 
 function DoesUserExist($email) {
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
