@@ -157,7 +157,7 @@
 		}
 	
     } else { // Action not sent via URL, this is a normal authentication, so Try to log in for existing user
-        if (scalarquery("Select Count(*) as matches from users where Email = '" . $Email . "'", "matches") == 1) { // existing user found
+        if (scalarquery_bind1("Select Count(*) as matches from users where Email = ?",$Email, "matches") == 1) { // existing user found
             // If we find a match for username in system
             $userid = GetUserIDFromEmail($Email); // get the user ID.
             debuglog("Results of GetUserIDFromEmail: " . $userid);
@@ -257,7 +257,7 @@ function failed_auth() {
             complete_login($userid);
         } elseif (getAuthMode() == "Password") {
             if ($userfound) {
-                $userpw = scalarquery("Select Password From Users Where Email = '" . $eml . "'", "password");
+                $userpw = scalarquery_bind1("Select Password From Users Where Email = ?",$eml, "password");
                 if ($userpw == $password) {
                     complete_login($userid);
                 } else {
