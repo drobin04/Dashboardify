@@ -1,5 +1,15 @@
 # To-Do
 
+* Spam protection on email confirmation code / signup page: 
+* In case someone sets up a bot for spamming out the email confirmation code to random addresses,
+* Setup a setting on the DB side that allows for a rate-limit? 
+* This would make it easy, unfortunately, for someone to DDOS the site by preventing new user signins...
+* Perhaps we could allow them to sign up by sending US an email?
+
+
+* Ability to browse existing stored widgets from index.php new widget screen
+
+
 
 * Email Config on setup page 
 
