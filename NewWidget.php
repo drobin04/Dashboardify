@@ -20,6 +20,9 @@
     $post_data = file_get_contents('php://input');
     $break_if_tried_editing_widget_without_permission = false;
 
+    $dashboardid = $_POST["dashboardID"]; //Identify which dashboard the widget needs to be added to.
+
+    
 	//Delete Existing Widget ID if Edit ID passed: 
 	If ($_POST["ID"] <> "") {
         $widgetID = $_POST["ID"];
@@ -29,14 +32,13 @@
             echo "DELETED WIDGET WITH ID '" . $_POST["ID"] . "', Inserting new copy now...";
         } else {
             $break_if_tried_editing_widget_without_permission = true;
-            redirect("index.php");
+            redirect("index.php" . "?SelectDashboardID=" . $dashboardid);
         }
 		
-		redirect("index.php");
+		redirect("index.php" . "?SelectDashboardID=" . $dashboardid);
 	}
     if (!$break_if_tried_editing_widget_without_permission) {
         //Insert new Widget
-        $dashboardid = $_POST["dashboardID"]; //Identify which dashboard the widget needs to be added to.
 
         //Prepare Variables
         $sep = "','"; // Seperator
