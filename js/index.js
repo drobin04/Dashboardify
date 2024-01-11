@@ -1,3 +1,24 @@
+function deleteWidget(recID, apiURL) {
+  document.getElementById(recID);
+
+  // Construct the URL with the parameters
+  const url = new URL(apiURL);
+  const params = new URLSearchParams();
+  params.append('recID', recID);
+  url.search = params.toString();
+
+  // Send a request to the API with the data in the URL
+  fetch(url, {
+	method: 'POST'
+  })
+  .then(response => {
+	// Handle the API response here
+  })
+  .catch(error => {
+	console.error('Error:', error);
+  });
+}
+
 $( function() {
     $( ".white_content" ).draggable();
   } );
