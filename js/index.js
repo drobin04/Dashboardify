@@ -37,61 +37,14 @@ $( function() {
 	});
   
 	// Function to toggle edit mode
-	function toggleEditMode() {
-	  // Toggle the "draggable" property of elements with the class "widget"
-	  $(".widget").each(function() {
-
-// Get the element you want to monitor for resize
-const widget = $(this);
-
-// Add a resize event listener to the widget
-$(this).on('resize', () => {
-  // Get the width and height of the resized widget
-  const width = widget.offsetWidth;
-  const height = widget.offsetHeight;
-
-  // Get the ID of the element being resized
-  const id = widget.id;
-
-  // Construct the URL with the parameters
-  const url = new URL('https://enspnistvlrb.x.pipedream.net');
-  const params = new URLSearchParams();
-  params.append('action', 'resize');
-  params.append('width', width);
-  params.append('height', height);
-  params.append('id', id);
-  url.search = params.toString();
-
-  // Send a request to the API with the data in the URL
-  fetch(url, {
-    method: 'POST'
-  })
-  .then(response => {
-    // Handle the API response here
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
-});
-
-
-
-
-
-
-
-
-
-
-
-
+function toggleEditMode() {
+// Toggle the "draggable" property of elements with the class "widget"
 
 
 		var draggable = $(this).data("ui-draggable");
 		if (draggable) {
 		  $(this).draggable("option", "disabled", !draggable.options.disabled);
 		}
-	  });
   
   // Initialize the draggable property of elements with the class "widget"
   $(".widget").draggable({
