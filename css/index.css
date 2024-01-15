@@ -1,3 +1,17 @@
+.Countdown {
+border-radius: 25px;
+
+	
+}
+.Countdown #countdowntitle {
+	
+}
+
+.Countdown #countdownvalue {
+	
+}
+
+
 html, body{
     height: 100%;
 }

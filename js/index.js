@@ -1,30 +1,4 @@
-// Need, at the beginning of page load, to identify list of widget types.
-// Need to check these to see if we have them in localstorage.
-// If we don't, then we need to query the server for them.
-// Need some security around this - 
-// When querying the server, it should check which widget types to send to the user.
-// There's some that shouldn't go to the user if they're not an admin
-// Regardless, should check when they submit a new widget to their dashboard,
-// That it's a widget that they have the right to submit, to prevent abuse & request forgery
 
-
-
-function drawNewWidgetBasedOnType() {
-	// Need to get value of currently selected widget type (get element by id, check value)	
-	
-	var ddl = document.getElementById('ddlWidgetType')
-	var ddlValue = ddl.value
-	// Need a div box to serve as the container for the HTML form
-	
-	// Clear out the existing items in the div container
-	
-	// Switch case based on the selected widget type, draw up the HTML form content
-	
-	// Set div container's inner HTML to HTML form
-
-	
-	
-}
 
 function deleteWidget(recID, apiURL) {
   document.getElementById(recID);
@@ -47,6 +21,7 @@ function deleteWidget(recID, apiURL) {
   });
 }
 
+// Make Dialogs Draggable
 $( function() {
     $( ".white_content" ).draggable();
   } );
@@ -440,3 +415,148 @@ function opencollapsediframe(recid) {
 				console.error('Error retrieving location:', error);
 			  });
 		  }
+		  
+		  
+		  
+// Need, at the beginning of page load, to identify list of widget types.
+// Need to check these to see if we have them in localstorage.
+// If we don't, then we need to query the server for them.
+// Need some security around this - 
+// When querying the server, it should check which widget types to send to the user.
+// There's some that shouldn't go to the user if they're not an admin
+// Regardless, should check when they submit a new widget to their dashboard,
+// That it's a widget that they have the right to submit, to prevent abuse & request forgery
+
+
+
+function drawNewWidgetBasedOnType() {
+	// Need to get value of currently selected widget type (get element by id, check value)	
+	
+	var ddl = document.getElementById('ddlWidgetType2');
+	var ddlValue = ddl.value;
+	var SizeAndCSSClassMarkup = "<hr><button type=\"button\" style=\"margin-left:5px\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set Position & Size</button><br /><label>PositionX: </label><input ID=\"txtpositionx2\" Text=\"0\" name=\"PositionX\"></input><br /><label>PositionY: </label><input ID=\"txtpositiony2\" Text=\"0\" name=\"PositionY\"></input><br /><label>SizeX: </label><input ID=\"txtsizeX2\" Text=\"0\" name=\"SizeX\"></input><br /><label>SizeY: </label><input ID=\"txtsizeY2\" Text=\"0\" name=\"SizeY\"></input><br /><label>CSS Class: </label><input ID=\"txtCSSClass\" name=\"CSSClass\"></input><br />";
+	
+	switch (ddlValue) {
+		
+	case "Bookmark":
+		//URL and Display Text needed,
+		//As well as position / size elements
+		var x = "<hr><span id='widgetURL'><label>Widget URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
+		break;
+		
+	case "Countdown":
+		var x = "</span><label>Countdown Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		var y = "<input type=\"date\" id=\"datepicker\" name=\"Notes\"> <br/>";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = x + y + SizeAndCSSClassMarkup;
+		
+		break;
+		
+	case "IFrame":
+		//URL and Display Text needed,
+		//As well as position / size elements
+		var x = "<span id='widgetURL'><label>IFrame URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Header / Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = x + SizeAndCSSClassMarkup;
+		break;
+	case "Collapseable IFrame":
+		//URL and Display Text needed,
+		//As well as position / size elements
+		var x = "<span id='widgetURL'><label>IFrame URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Header / Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = x + SizeAndCSSClassMarkup;
+		break;
+	case "Notes":
+		//Position, Sizine, Notes fields needed
+		//As well as position / size elements
+		var x = "<br />Notes:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
+		break;
+
+	case "HTMLEmbed":
+		//Position, Sizine, HTML fields needed
+		//As well as position / size elements
+		var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
+		break;
+	case "SQLServerScalarQuery":
+		//Position, Sizine, HTML fields needed
+		//As well as position / size elements
+		var x1 = "<hr>SQL Server Address<input ID=\"SQLServerAddressName\" name=\"SQLServerAddressName\"></input><br />";
+		var x2 = "SQL DBName<input ID=\"SQLDBName\" name=\"SQLDBName\"></input><br />";
+		var x3 = "SQLServer Username: (Empty for windows / SQLite auth) <input ID=\"sqluser\" name=\"sqluser\"></input><br />";
+		var x4 = "SQLServer PW: <input ID=\"sqlpass\" name=\"sqlpass\"></input><br />";
+		var x5 = "SQL Query: <input ID=\"sqlquery\" name=\"sqlquery\"></input><br />";
+		var sqlcontent = x1 + x2 + x3 + x4 + x5;
+		//var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + sqlcontent;
+		break;
+		
+		
+		
+		
+		
+
+	default:
+		var y = "1";
+		break;
+		
+	}
+	// Need a div box to serve as the container for the HTML form
+	
+	// Clear out the existing items in the div container
+	
+	// Switch case based on the selected widget type, draw up the HTML form content
+	
+	// Set div container's inner HTML to HTML form
+
+	
+	
+}
+
+function Experimental_New_Widget_Form_Sizer_init() {
+
+			if(canvas || ctx) return;
+
+    		canvas = document.createElement('canvas');
+
+    		canvas.width = document.body.clientWidth;
+
+    		canvas.height = document.body.clientHeight;
+
+    		canvas.style.position = 'absolute';
+
+    		canvas.style.top = '0px';
+
+    		canvas.style.left = '0px';
+
+    		canvas.style.cursor = 'crosshair';
+
+    		// canvas.style.background = "#f2f2f2";
+
+    		canvas.style.zIndex = 9999;
+
+    		document.body.appendChild(canvas);
+
+    		ctx = canvas.getContext('2d');
+
+		   	document.getElementById('txtpositionx2').value = 0;
+
+		    document.getElementById('txtpositiony2').value = 0;
+
+		    document.getElementById('txtsizeX2').value = 0;
+
+		    document.getElementById('txtsizeY2').value = 0;
+
+			canvas.addEventListener('mousedown', mouseDown, false);
+
+			canvas.addEventListener('mouseup', mouseUp, false);
+
+			canvas.addEventListener('mousemove', mouseMove, false);
+
+		}

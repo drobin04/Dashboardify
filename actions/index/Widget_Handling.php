@@ -6,7 +6,9 @@ $deletebuttonOnClick = "deleteWidget(" . $row["RecID"] . ", '" . $siteurl . "')"
 $deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" . $deletebuttonOnClick . "' href='";
 
 $imgstylecss = "<img style='height:24px; width:24px;' src='";
-$PositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; width: " . $row["SizeX"] . "px;' class='widget resize " . $row["WidgetCSSClass"] . "'>";
+$PositionAndSize = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; width: " . $row["SizeX"] . "px;' ";
+
+$PositionAndCSSClass = $PositionAndSize . " class='widget resize " . $row["WidgetCSSClass"] . "'>";
 $combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 $floatingbookmarkPositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px;' class='widget resize " . $row["WidgetCSSClass"] . "'>";
 $floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' style='position: absolute; width:100px; background-color: lightgrey;  border: 1px solid black; " 
@@ -16,13 +18,33 @@ $floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' sty
 . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 Switch ($row["WidgetType"]) {
 
-case "CountDown":
+case "Countdown":
 	// Draw box for countdown
 	// Just need to get date from the Notes field
 	// Ideally, on the front end / UI side, we render a nice date picker that enforces
 	// a nice convention for storing the date instead of relying on manual user input
-	
-	
+	if ($row["WidgetType"] == "Countdown") {
+		// Get string value out of Notes
+		$stringValue = $row["Notes"];
+		
+		// Get title
+		$title = $row["BookmarkDisplayText"];
+		
+		// Convert to date format
+		$dateValue = date_create($stringValue);
+		
+		// Calculate time from now until date value, in days
+		$now = new DateTime();
+		$interval = $now->diff($dateValue);
+		$days = $interval->format('%a');
+		
+		//Redraw widget details, to add in custom widget class for styling later on...
+		$PositionAndCSSClass = $PositionAndSize . "class='widget resize " . $row["WidgetCSSClass"] . " Countdown'>";
+		$combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+
+		
+		echo $combined . "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" . $title . "</b></div><br /><div id='countdownvalue'>" . $days . " Days Remaining.</div></div></p></div>";
+	}	
 	break;
 	
 case "SQLServerScalarQuery":
