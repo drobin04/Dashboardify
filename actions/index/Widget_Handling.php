@@ -15,7 +15,17 @@ $floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' sty
 . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss 
 . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 Switch ($row["WidgetType"]) {
-	case "SQLServerScalarQuery":
+
+case "CountDown":
+	// Draw box for countdown
+	// Just need to get date from the Notes field
+	// Ideally, on the front end / UI side, we render a nice date picker that enforces
+	// a nice convention for storing the date instead of relying on manual user input
+	
+	
+	break;
+	
+case "SQLServerScalarQuery":
 		If ($row["WidgetType"] == "SQLServerScalarQuery") {
 		$sqlservaddress = $row["sqlserveraddress"];
 		$sqldbname = $row["sqldbname"];
@@ -74,7 +84,10 @@ case "Collapseable IFrame":
 break;
 
 case "Notes":
-	echo $combined . "<p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $row["Notes"] ."</md-block></p></div>";
+	// Escape the Notes value to replace '' with '
+	$notesvalue = str_replace("''", "'", $row["Notes"]);
+	
+	echo $combined . "<p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $notesvalue ."</md-block></p></div>";
 	break;
 
 case "HTMLEmbed":

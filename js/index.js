@@ -1,3 +1,31 @@
+// Need, at the beginning of page load, to identify list of widget types.
+// Need to check these to see if we have them in localstorage.
+// If we don't, then we need to query the server for them.
+// Need some security around this - 
+// When querying the server, it should check which widget types to send to the user.
+// There's some that shouldn't go to the user if they're not an admin
+// Regardless, should check when they submit a new widget to their dashboard,
+// That it's a widget that they have the right to submit, to prevent abuse & request forgery
+
+
+
+function drawNewWidgetBasedOnType() {
+	// Need to get value of currently selected widget type (get element by id, check value)	
+	
+	var ddl = document.getElementById('ddlWidgetType')
+	var ddlValue = ddl.value
+	// Need a div box to serve as the container for the HTML form
+	
+	// Clear out the existing items in the div container
+	
+	// Switch case based on the selected widget type, draw up the HTML form content
+	
+	// Set div container's inner HTML to HTML form
+
+	
+	
+}
+
 function deleteWidget(recID, apiURL) {
   document.getElementById(recID);
 

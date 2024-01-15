@@ -102,7 +102,9 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 						$WidgetSizeX = $row["SizeX"];
 						$WidgetSizeY = $row["SizeY"];
 						$WidgetCSSClass = $row["WidgetCSSClass"];
-						$WidgetNotes = $row["Notes"];
+						//$WidgetNotes = $row["Notes"];
+						$WidgetNotes = str_replace("''", "'", $row["Notes"]);
+	
 						// LOAD SQL FIELDS
 						$sqlwidgetquery = $row["sqlquery"];
 						$sqlwidgetdbname = $row["sqldbname"];
@@ -121,12 +123,13 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
                     <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
                     <button id="btnSubmitNewWidget">Submit</button>
                     <br />
+                    <header >New Widget<hr /></header>
+                    <label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType" onclick="renderNewWidgetOptionsByDropdown()">
+					    
                     <div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
-                        <header >New Widget<hr /></header>
                         
-                        <label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType" onclick="renderNewWidgetOptionsByDropdown()">
-							<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option><!--<option value="Bookmark">Bookmark</option> Removed because duplicated by default value in line above-->
-                            
+                        	<!-- Need to identify what to do with this... Option has to get submitted w/ html form. -->
+                    		<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option><!--<option value="Bookmark">Bookmark</option> Removed because duplicated by default value in line above-->        
 							<?php
 								echo $New_Widget_Dropdown_Options;
 								// Populate additional options for Custom Widget Providers
