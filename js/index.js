@@ -298,13 +298,13 @@ function opencollapsediframe(recid) {
 
     		ctx = canvas.getContext('2d');
 
-		   	document.getElementById('txtpositionx').value = 0;
+		   	document.getElementById('txtpositionx2').value = 0;
 
-		    document.getElementById('txtpositiony').value = 0;
+		    document.getElementById('txtpositiony2').value = 0;
 
-		    document.getElementById('txtsizeX').value = 0;
+		    document.getElementById('txtsizeX2').value = 0;
 
-		    document.getElementById('txtsizeY').value = 0;
+		    document.getElementById('txtsizeY2').value = 0;
 
 			canvas.addEventListener('mousedown', mouseDown, false);
 
@@ -334,16 +334,17 @@ function opencollapsediframe(recid) {
 
 			if(rect.endX < rect.startX || rect.endY < rect.startY) {
 
-			   	document.getElementById('txtpositionx').value = rect.endX;
+			   	document.getElementById('txtpositionx2').value = rect.endX;
 
-			    document.getElementById('txtpositiony').value = rect.endY;
+			    document.getElementById('txtpositiony2').value = rect.endY;
+			    
 
 			}
 
 		    ctx.clearRect(0,0,canvas.width,canvas.height);
 
 		    destroy_canvas();
-
+		    UpdateSizeCalcs();
 		}
 
 		function mouseMove(e) {
@@ -358,13 +359,14 @@ function opencollapsediframe(recid) {
 
 		    draw();
 
-		   	document.getElementById('txtpositionx').value = rect.startX;
+		   	document.getElementById('txtpositionx2').value = rect.startX;
 
-		    document.getElementById('txtpositiony').value = rect.startY;
+		    document.getElementById('txtpositiony2').value = rect.startY;
 
-		    document.getElementById('txtsizeX').value = Math.abs(rect.w);
+		    document.getElementById('txtsizeX2').value = Math.abs(rect.w);
 
-		    document.getElementById('txtsizeY').value = Math.abs(rect.h);
+		    document.getElementById('txtsizeY2').value = Math.abs(rect.h);
+		    //UpdateSizeCalcs();
 
 		  }
 
@@ -434,7 +436,7 @@ function drawNewWidgetBasedOnType() {
 	
 	var ddl = document.getElementById('ddlWidgetType2');
 	var ddlValue = ddl.value;
-	var SizeAndCSSClassMarkup = "<hr><button type=\"button\" style=\"margin-left:5px\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set Position & Size</button><br /><label>PositionX: </label><input ID=\"txtpositionx2\" Text=\"0\" name=\"PositionX\"></input><br /><label>PositionY: </label><input ID=\"txtpositiony2\" Text=\"0\" name=\"PositionY\"></input><br /><label>SizeX: </label><input ID=\"txtsizeX2\" Text=\"0\" name=\"SizeX\"></input><br /><label>SizeY: </label><input ID=\"txtsizeY2\" Text=\"0\" name=\"SizeY\"></input><br /><label>CSS Class: </label><input ID=\"txtCSSClass\" name=\"CSSClass\"></input><br />";
+	var SizeAndCSSClassMarkup = "<hr><button type=\"button\" style=\"margin-left:5px\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set Position & Size</button><br /><label id='sizelabel'></label><div style='display:none;'><label>PositionX: </label><input ID=\"txtpositionx2\" Text=\"0\" name=\"PositionX\"></input><br /><label>PositionY: </label><input ID=\"txtpositiony2\" Text=\"0\" name=\"PositionY\"></input><br /><label>SizeX: </label><input ID=\"txtsizeX2\" Text=\"0\" name=\"SizeX\"></input><br /><label>SizeY: </label><input onchange='UpdateSizeCalcs();' ID=\"txtsizeY2\" Text=\"0\" name=\"SizeY\"></input></div><br /><label>CSS Class: </label><input ID=\"txtCSSClass\" name=\"CSSClass\"></input><br />";
 	
 	switch (ddlValue) {
 		
@@ -447,26 +449,26 @@ function drawNewWidgetBasedOnType() {
 		break;
 		
 	case "Countdown":
-		var x = "</span><label>Countdown Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		var x = "<hr></span><label>Countdown Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
 		var y = "<input type=\"date\" id=\"datepicker\" name=\"Notes\"> <br/>";
 		//Fill content to the dialog
-		document.getElementById('NewWidget_Form').innerHTML = x + y + SizeAndCSSClassMarkup;
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x + y;
 		
 		break;
 		
 	case "IFrame":
 		//URL and Display Text needed,
 		//As well as position / size elements
-		var x = "<span id='widgetURL'><label>IFrame URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Header / Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		var x = "<hr><span id='widgetURL'><label>IFrame URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Header / Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
 		//Fill content to the dialog
-		document.getElementById('NewWidget_Form').innerHTML = x + SizeAndCSSClassMarkup;
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
 		break;
 	case "Collapseable IFrame":
 		//URL and Display Text needed,
 		//As well as position / size elements
-		var x = "<span id='widgetURL'><label>IFrame URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Header / Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		var x = "<hr><span id='widgetURL'><label>IFrame URL: </label><input ID='txtWidgetURL' name='URL'></input><br /></span><label>Header / Display Text: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
 		//Fill content to the dialog
-		document.getElementById('NewWidget_Form').innerHTML = x + SizeAndCSSClassMarkup;
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
 		break;
 	case "Notes":
 		//Position, Sizine, Notes fields needed
@@ -497,9 +499,40 @@ function drawNewWidgetBasedOnType() {
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + sqlcontent;
 		break;
 		
-		
-		
-		
+	case "SQLServerResultsList":
+		//Position, Sizine, HTML fields needed
+		//As well as position / size elements
+		var x1 = "<hr>SQL Server Address<input ID=\"SQLServerAddressName\" name=\"SQLServerAddressName\"></input><br />";
+		var x2 = "SQL DBName<input ID=\"SQLDBName\" name=\"SQLDBName\"></input><br />";
+		var x3 = "SQLServer Username: (Empty for windows / SQLite auth) <input ID=\"sqluser\" name=\"sqluser\"></input><br />";
+		var x4 = "SQLServer PW: <input ID=\"sqlpass\" name=\"sqlpass\"></input><br />";
+		var x5 = "SQL Query: <input ID=\"sqlquery\" name=\"sqlquery\"></input><br />";
+		var sqlcontent = x1 + x2 + x3 + x4 + x5;
+		//var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + sqlcontent;
+		break;		
+	case "SQLiteResultsList":
+		//Position, Sizine, HTML fields needed
+		//As well as position / size elements
+		var x1 = "<hr>SQLite File Name / Path: <input ID=\"SQLDBName\" name=\"SQLDBName\"></input><br />";
+		var x2 = "SQL Query: <input ID=\"sqlquery\" name=\"sqlquery\"></input><br />";
+		var sqlcontent = x1 + x2;
+		//var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + sqlcontent;
+		break;
+	case "SQLite Chart (PHPGD)":
+		//Position, Sizine, HTML fields needed
+		//As well as position / size elements
+		var x1 = "<hr>SQLite File Name / Path: <input ID=\"SQLDBName\" name=\"SQLDBName\"></input><br />";
+		var x2 = "SQL Query: <input ID=\"sqlquery\" name=\"sqlquery\"></input><br />";
+		var x3 = "<br /> Note: You must <b>explicitly</b> specify column aliases as 'x' and 'y' for which columns should be treated as the x and y axis.";
+		var sqlcontent = x1 + x2 + x3;
+		//var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + sqlcontent;
+		break;	
 		
 
 	default:
@@ -517,6 +550,18 @@ function drawNewWidgetBasedOnType() {
 
 	
 	
+}
+
+function UpdateSizeCalcs() {
+	// Collect ID's
+	var positionx = document.getElementById('txtpositionx2');
+	var positiony = document.getElementById('txtpositiony2');
+	var sizex = document.getElementById('txtsizeX2');
+	var sizey = document.getElementById('txtsizeY2');
+	
+	var outputdata = "<br /> X: " + positionx.value + ", Y: " + positiony.value + ", Size X: " + sizex.value + ", SizeY: " + sizey.value + "<br />";
+	//alert(outputdata);
+	document.getElementById('sizelabel').innerHTML = outputdata;
 }
 
 function Experimental_New_Widget_Form_Sizer_init() {

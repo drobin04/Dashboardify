@@ -11,7 +11,16 @@ border-radius: 25px;
 	
 }
 
+.menubar {
+			float: left !important;
 
+}
+		
+#NewWidgetDialog2 {
+width: 240px;
+overflow: auto;
+height: 500px;
+}
 html, body{
     height: 100%;
 }
