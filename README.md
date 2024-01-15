@@ -106,9 +106,7 @@ You can set https://dashboardify.com/Dashboardify/ as your Home page in your bro
 
 We've built a browser extension that will set your home page and new-tab page to the Dashboardify URL! 
 
-However, It's not yet on the Chrome Web Store (The review process takes quite a while).
-
-To install it manually, download the 'browser_extension' folder, zip up its contents (with no directory above them) navigate to chrome://extensions, turn on developer mode, and then select 'Load Packed'.
+[Click Here To Find It On The Chrome Web Store](https://chromewebstore.google.com/detail/dashboardify-customizeabl/phbjhlidkcjnidiidoladnblpmlfajdd)
 
 #### Using the 3rd Party Custom New Tab Page Extension from the chrome web store 
 
