@@ -1,4 +1,11 @@
 <?php 
+
+function breakifnotadmin() {
+if (!AmIAdmin()) {
+	echo "you are not permitted to perform this operation.";
+	exit();	
+}
+}
 function doesDatabaseExist() {
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
 	$dbpath = $rootPath . '/Dashboardify/Dashboardify.s3db';

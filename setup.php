@@ -232,6 +232,7 @@ include('actions/logoutredirect.php');
 				<div class="tabs_row">
 					<a href="#EmailConfig">Email Config</a>
 					<a href="#UpdateSiteCodeFromGithub">Update Site Code From Github</a>
+					<a href="#Maintenance">Maintenance</a>
 				</div>
 			</div>
 			<br />
@@ -445,7 +446,19 @@ include('actions/logoutredirect.php');
 				
 				
 			</div><!-- end of Tabbed Panel-->
-
+			<!-- Beginning of Maintenance Panel-->
+			<div class="tab" id="Maintenance">
+			
+				<div>
+					<h3>Remove Unused Dashboards and Widgets</h3>
+					<p>This link will search for dashboards linked to any users that don't exist, and remove them. It will then remove any widgets that belong to dashboards that don't exist.
+					(Future-proofing - need to ensure this doesn't affed ' stored widget ' functionality when built)</p>
+					<br />
+					<a href="config/remove_unused_dashboards_and_widgets.php">Remove Unused Dashboards and Widgets</a>
+					
+				</div>
+			
+			</div><!-- End of Maintennace Panel -->
 
 
 	
