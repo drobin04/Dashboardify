@@ -274,7 +274,7 @@ function failed_auth() {
     function complete_login($uid) {
             $sessionid = GUID();
             CreateSessionForID($uid, $sessionid);
-            setcookie("SessionID", $sessionid, 2147483640, "/"); //Save session ID into cookie
+			SendCookieToUser($sessionid); //Save session ID into cookie
             // HASH THE USERID BEFORE SENDING IT OUT - HASH IS IMPORTANT SO WE DONT REVEAL THE USERID TO THE END USER.
             $hasheduid = hash('sha256',$uid);
             setcookie("successful_auth_for_id", $hasheduid, 2147483640, "/");
@@ -291,10 +291,33 @@ function failed_auth() {
    function registration_login_and_forward_for_email_confirmation($uid) {
             $sessionid = GUID();
             CreateSessionForID($uid, $sessionid);
-            setcookie("SessionID", $sessionid, 2147483640, "/"); //Save session ID into cookie
+            SendCookieToUser($sessionid); //Save session ID into cookie
             // HASH THE USERID BEFORE SENDING IT OUT - HASH IS IMPORTANT SO WE DONT REVEAL THE USERID TO THE END USER.
                         
             redirect("confirm-email.php");
 
+   }
+   
+   function SendCookieToUser($sessionid) {
+   	   //First, need to get setting from database on what the appropriate session length should be for cookie expiration
+   	   $sessionlength = scalarquery("Select Value From Settings Where Name = 'sessionlength'", "Value");
+   	   //Initialize variable for session length, start with infinite
+   	   $cookie_expiry = 2147483640;
+   	   
+   	   switch ($sessionlength) {
+   	   	case "30 Days":
+   	   		$cookie_expiry = time() + (30 * 24 * 60 * 60); // 30 days in seconds
+   	   		break;
+   	   	case "7 Days":
+			$cookie_expiry = time() + (7 * 24 * 60 * 60); // 30 days in seconds
+			break;
+		case "Infinite":
+			$cookie_expiry = 2147483640;
+			break;
+   	   }
+   	   
+   	   
+   	   
+   	   setcookie("SessionID", $sessionid, $cookie_expiry, "/");
    }
 ?>

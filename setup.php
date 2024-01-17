@@ -2,6 +2,9 @@
 include_once('config/check_admin.php');
 include_once('shared_functions.php');
 include('actions/logoutredirect.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 ?>
 <html>
     <head>
@@ -59,6 +62,18 @@ include('actions/logoutredirect.php');
 				$css = "";
 				$urlvalue = "";
 				$widgetproviderlist = "";
+				$sessionlength = "";
+				
+				
+				if (scalarquery("Select count(*) as countval from settings where Name = 'sessionlength'", "countval") == 0) {
+					$sessionlength = "Infinite";
+					execquery_bind1("Insert Into settings (Name, Value) Values ('sessionlength', ?)", $sessionlength);
+								
+				} else {
+					$sessionlength = scalarquery("select Value from settings where Name = 'sessionlength'", "Value");
+				}
+				
+				
 				
 				if (isset($_GET["action"])) {
 				
@@ -117,7 +132,16 @@ include('actions/logoutredirect.php');
 							debuglog($stmt, "AuthMode query");
 							
 							$stmt->execute();
-					
+							
+							
+							
+							if (scalarquery("Select count(*) As countval from settings where Name = 'sessionlength'", "countval") == 0) {
+								// Already handled further above
+							} else {
+								$sessionlength = $_POST["sessionlength"];
+								execquery_bind1("Update settings Set Value = ? Where Name = 'sessionlength'", $sessionlength);
+									
+							}
 									
 							$defaultdashimg = $_POST["defaultdashimage"];
 					
@@ -147,6 +171,9 @@ include('actions/logoutredirect.php');
 				
 				
 				}
+				
+				// Update sessionlength variable from db for dropdown later
+				//$sessionlength = scalarquery("Select Value from settings where name = 'sessionlength'","Value");
 				
 				$filename = 'Dashboardify.s3db';
 				$Exists = False;
@@ -233,6 +260,7 @@ include('actions/logoutredirect.php');
 					<a href="#EmailConfig">Email Config</a>
 					<a href="#UpdateSiteCodeFromGithub">Update Site Code From Github</a>
 					<a href="#Maintenance">Maintenance</a>
+					<a href="#ViewSettings">View Settings</a>
 				</div>
 			</div>
 			<br />
@@ -270,7 +298,7 @@ include('actions/logoutredirect.php');
 					</p>
 					
 					<form action="config/savecss.php">
-						<textarea cols="50" rows="5" name="CSS"><?php echo $css ?></textarea><br />
+						<textarea cols="50" rows="5" name="CSS" style="width: 99%; height: 420px;"><?php echo $css ?></textarea><br />
 						<button>Submit</button>
 					</form>
 				</div><!-- end of Global DB CSS Section -->
@@ -332,6 +360,16 @@ include('actions/logoutredirect.php');
 						<br />
 						<input type='checkbox' <?php echo $form_require_confirmation_code_state ?> name='requireconfirmationcode' id='requireconfirmationcode'></input><label for='requireconfirmationcode'>Should new users be required to confirm their email addresses when registering?</label>
 						<br /><br />
+						<label>Time Period For Sessions</label>
+						<select id="sessionlength" name="sessionlength">
+						<option value='<?php echo $sessionlength ?>'><?php echo $sessionlength?></option>
+						<option value="30 Days">30 Days</option>
+						<option value="7 Days">7 Days</option>
+						<option value="Infinite">Infinite</option>
+						
+						
+						</select>
+						<br /><br />
 						<button>Submit</button>
 					
 					</form>
@@ -391,7 +429,7 @@ include('actions/logoutredirect.php');
 								<p>This section configures the mail account used, and if it should be used to lock new user accounts until they submit an email confirmation code.
 								The purpose of this is to prevent bots from creating accounts and attempting to spam various functions on the site. </p>
 							</div>
-							<div style="">
+							<!--<div style="">-->
 							<label>Username</label><br />
 							<input id ="username" name="username"></input>
 							<br />
@@ -422,12 +460,24 @@ include('actions/logoutredirect.php');
 						<!-- END OF GOOGLE SIGNIN BUTTON -->
 
 					</div>
-					<!--END OF EMAIL CONFIG-->
+
 					
-				
+					
 				</div>
-				</div>
+				<!--END OF EMAIL CONFIG-->
 				
+				<!-- View System Settings Table -->
+				<div class="tab" id="ViewSettings">
+					
+						<?php 
+						
+						echo generateTableFromObjects(selectquery("Select * From Settings"));
+						
+						?>
+					
+					<!--END OF Settings Table-->
+					
+					</div>
 				<div class="tab" id="UpdateSiteCodeFromGithub">
 					
 					<div style="">
@@ -455,9 +505,9 @@ include('actions/logoutredirect.php');
 					(Future-proofing - need to ensure this doesn't affed ' stored widget ' functionality when built)</p>
 					<br />
 					<a href="config/remove_unused_dashboards_and_widgets.php">Remove Unused Dashboards and Widgets</a>
-					
+					<br />
 				</div>
-			
+			<br />
 			</div><!-- End of Maintennace Panel -->
 
 
