@@ -80,6 +80,10 @@ error_reporting(E_ALL);
 					$action = $_GET["action"];
 					//echo "Action to run: " . $action ;
 					switch ($action) {
+						case "ClearExistingSessionTokens":
+							execquery("delete from sessions");
+							break;
+						
 						case "SubmitWidgetProvider":	
 							$d = $_POST;
 				
@@ -506,6 +510,10 @@ error_reporting(E_ALL);
 					<br />
 					<a href="config/remove_unused_dashboards_and_widgets.php">Remove Unused Dashboards and Widgets</a>
 					<br />
+					<br />
+					<h3>Clear Existing Session Tokens / Log Everyone Out</h3>
+					<p>This will log out everyone from the system and force them to get new session tokens.</p>
+					<a href="setup.php?action=ClearExistingSessionTokens">Clear Existing Session Tokens</a>
 				</div>
 			<br />
 			</div><!-- End of Maintennace Panel -->
