@@ -6,8 +6,15 @@
 </head>
 <body>
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 include("shared_functions.php");
 
+if (doesDatabaseExist()) {
+	echo "The database already exists and is non-empty; please <a href='delete-dashboardify-db.php'>Delete the database file first.</a>";
+	exit();
+}
 
 $widgetsSQL = "CREATE TABLE [Widgets] (
     [RecID] INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -96,7 +103,9 @@ $CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
     CSS_Styling TEXT  NULL,
     HTML_Content TEXT  NULL,
     PHP_To_Run TEXT  NULL)";
-
+    
+$SessionLengthSetting = "Insert into Settings (Name, Value) VALUES ('sessionlength', 'Infinite')";
+$RequireConfirmationCodeSetting = "Insert into Settings (Name, Value) VALUES ('RequireConfirmationCode', 0)";
 
 execquery($widgetsSQL);
 execquery($usersSQL);
@@ -108,8 +117,9 @@ execquery($settingsSQL);
 execquery($populatefirstauthmodesetting);
 execquery("INSERT INTO Settings (Name, Value) VALUES ('SiteUrlConfig', 'https://localhost/Dashboardify/');");
 execquery($CustomwidgetProvidersSQL);
-execquery($FailedLogins);
 execquery($login_attempts);
+execquery($SessionLengthSetting);
+execquery($RequireConfirmationCodeSetting);
 
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";

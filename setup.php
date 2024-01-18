@@ -1,4 +1,12 @@
 <?php
+
+if (!extension_loaded('sqlite3')) {
+    echo "The SQLite extension is missing. <br /> Please install it and then return here. <br /> If you're on an Ubuntu-based server, you can run ' sudo apt install php-sqlite3 '.";
+    exit();
+} else {
+    // SQLite extension is installed
+}
+
 include_once('config/check_admin.php');
 include_once('shared_functions.php');
 include('actions/logoutredirect.php');
@@ -63,16 +71,6 @@ error_reporting(E_ALL);
 				$urlvalue = "";
 				$widgetproviderlist = "";
 				$sessionlength = "";
-				
-				
-				if (scalarquery("Select count(*) as countval from settings where Name = 'sessionlength'", "countval") == 0) {
-					$sessionlength = "Infinite";
-					execquery_bind1("Insert Into settings (Name, Value) Values ('sessionlength', ?)", $sessionlength);
-								
-				} else {
-					$sessionlength = scalarquery("select Value from settings where Name = 'sessionlength'", "Value");
-				}
-				
 				
 				
 				if (isset($_GET["action"])) {
@@ -193,6 +191,23 @@ error_reporting(E_ALL);
 						$urlvalue = scalarquery("Select Value From Settings Where Name = 'SiteUrlConfig'", "Value");
 					
 					}
+					
+					//Session Length Initialization - Moved here so it doesn't break if DB doesn't exist
+					if (scalarquery("Select count(*) as countval from settings where Name = 'sessionlength'", "countval") == 0) {
+						$sessionlength = "Infinite";
+						execquery_bind1("Insert Into settings (Name, Value) Values ('sessionlength', ?)", $sessionlength);
+									
+					} else {
+						$sessionlength = scalarquery("select Value from settings where Name = 'sessionlength'", "Value");
+					}
+				
+				
+					$form_require_confirmation_code_state = "";
+					if (scalarquery("Select Value From Settings Where Name = 'RequireConfirmationCode'", "Value") == "1") {
+						$form_require_confirmation_code_state = "checked";
+					}
+					
+					
 				} else {
 					// Run this if db doesn't exist yet!!
 					$dbfound = "The database file is either missing or has not been created yet. <br/>
@@ -203,14 +218,14 @@ error_reporting(E_ALL);
 				
 				
 				
-				}
+				} // End of Database Exists Check
 				
 				if (file_exists('config/defaultdashboardurl.txt')) {
 					$defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
 				} else { $defaultdashimage = ""; }
 				if (file_exists('config/globalcss.css')) {
 					$css = file_get_contents('config/globalcss.css');
-				}
+				} // End of DefaultDashboardUrl config
 				
 				if (isset($_GET["SQLUpdate"])) {
 					$sqlqueryresults = "";
@@ -228,14 +243,13 @@ error_reporting(E_ALL);
 				
 				
 				
-				} else { $sqlqueryresults = "";}
+				} else { $sqlqueryresults = "";} // End of SQLUpdate block
 				
 				//Loading page... set remaining variables for form
 				
-				$form_require_confirmation_code_state = "";
-				if (scalarquery("Select Value From Settings Where Name = 'RequireConfirmationCode'", "Value") == "1") {
-					$form_require_confirmation_code_state = "checked";
-				}
+				// DO NOT PLACE NET-NEW CODE HERE WITHOUT CONSIDERING WHETHER IT SHOULD BE INCLUDED INSIDE THE DATABASE-EXISTS CHECK ABOVE.
+				// WE BREAK THE NEW SETUP FOR THIS APP EVERY TIME CODE GETS ADDED RIGHT HERE, BECAUSE IT FAILS WHEN THE DATABASE DOESN'T EXIST.
+				// IF CODE NEEDS TO BE PLACED HERE, IT SHOULD CHECK WHETHER $Exists == True BEFORE EXECUTING OR EVALUATING ANYTHING ELSE.
 			
 			?> <!--End of initial PHP setup Segment -->
 			
