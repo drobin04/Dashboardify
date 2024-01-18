@@ -314,6 +314,9 @@ function failed_auth() {
 		case "Infinite":
 			$cookie_expiry = 2147483640;
 			break;
+		default:
+			$cookie_expiry = 2147483640;
+			break;
    	   }
    	   
    	   
