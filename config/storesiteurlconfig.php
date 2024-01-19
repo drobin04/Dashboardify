@@ -1,7 +1,8 @@
 <?php
 If (isset($_POST['siteurlconfig'])) { 
     include_once('../shared_functions.php');
-
+    $filename = rootdir() . '/Dashboardify.s3db';
+    //echo $filename;
     If (doesDatabaseExist() && filesize($filename) > 0) {
 		// Retrieve the value from the form submission
 		$siteurlconfig = $_POST['siteurlconfig'];
@@ -14,5 +15,6 @@ If (isset($_POST['siteurlconfig'])) {
 		// Break! DB Doesn't exist!
 		echo "The database doesn't exist yet; please go back, and open the create DB tab and create the database.";
 		exit();
+	}
 }
 ?>

@@ -2,8 +2,8 @@
 
 $editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 
-$deletebuttonOnClick = "deleteWidget(" . $row["RecID"] . ", '" . $siteurl . "')";
-$deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" . $deletebuttonOnClick . "' href='";
+$deletebuttonOnClick = "deleteWidget(" . $row["RecID"] . ",)";
+$deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" . $deletebuttonOnClick . "' href2='";
 
 $imgstylecss = "<img style='height:24px; width:24px;' src='";
 $PositionAndSize = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; width: " . $row["SizeX"] . "px;' ";
@@ -17,7 +17,12 @@ $floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' sty
 . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss 
 . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 Switch ($row["WidgetType"]) {
-
+case "Blood Pressure":
+	// Let's 
+	// Draw widget here
+	
+	break;
+		
 case "Countdown":
 	// Draw box for countdown
 	// Just need to get date from the Notes field

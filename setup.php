@@ -410,6 +410,9 @@ error_reporting(E_ALL);
 					
 					
 						<?php echo $sqlqueryresults ?>
+						<br />
+						<br />
+						<?php echo generateTableFromObjects(selectquery("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")); ?>
 					</div>
 				</div>
 				

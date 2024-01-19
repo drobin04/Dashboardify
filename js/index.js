@@ -1,12 +1,21 @@
 
 
-function deleteWidget(recID, apiURL) {
-  document.getElementById(recID);
+function deleteWidget(recID) {
+  var x = document.getElementById(recID);
+  x.remove();
+  // Get the current URL path
+  var currentPath = window.location.pathname;
+	
+  const url9 = new URL(window.location.href);
+  const pathWithoutFile = url9.origin + url9.pathname.substring(0, url9.pathname.lastIndexOf('/') + 1);
+  const apiURL = pathWithoutFile + '/actions/DeleteWidget.php';
+  // Delete The Widget From The Screen
+  
 
   // Construct the URL with the parameters
   const url = new URL(apiURL);
   const params = new URLSearchParams();
-  params.append('recID', recID);
+  params.append('RecID', recID);
   url.search = params.toString();
 
   // Send a request to the API with the data in the URL
@@ -489,7 +498,9 @@ function drawNewWidgetBasedOnType() {
 		
 
 	default:
-		var y = "1";
+		var y = "";
+
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + y;
 		break;
 		
 	}

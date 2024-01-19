@@ -107,6 +107,14 @@ $CustomwidgetProvidersSQL = "CREATE TABLE CustomWidgetProviders (
 $SessionLengthSetting = "Insert into Settings (Name, Value) VALUES ('sessionlength', 'Infinite')";
 $RequireConfirmationCodeSetting = "Insert into Settings (Name, Value) VALUES ('RequireConfirmationCode', 0)";
 
+$WidgetStylesTable = "Create Table WidgetStyles (
+Name TEXT,
+WidgetType TEXT,
+ClassName TEXT,
+CSS TEXT NULL,
+Description TEXT NULL
+)";
+
 execquery($widgetsSQL);
 execquery($usersSQL);
 execquery($userCSSsql);
@@ -120,7 +128,7 @@ execquery($CustomwidgetProvidersSQL);
 execquery($login_attempts);
 execquery($SessionLengthSetting);
 execquery($RequireConfirmationCodeSetting);
-
+execquery($WidgetStylesTable);
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
     redirect('register_user.php');

@@ -1,4 +1,23 @@
 <?php 
+function rootdir() { // Added for testing evaluation of __DIR__ when referenced from another file
+	// Seems to work properly and always returns this file's root location and not the referencing file's location
+	
+return __DIR__;	
+}
+
+function getCurrentUserFolder() {
+	$myuserid = getCurrentUserID();
+	$dir = rootdir() . "/user/" . $myuserid . "/";
+	// Check if folder exists. If not, create it. 
+	if (!file_exists($dir)) {
+		mkdir($dir, 0777, true);
+		//echo "Folder created successfully!";
+	} else {
+		//echo "Folder already exists!";
+	}
+	
+	return $dir;
+}
 
 function breakifnotadmin() {
 if (!AmIAdmin()) {

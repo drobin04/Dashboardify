@@ -11,7 +11,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 <option value='SQLiteResultsList'>SQLiteResultsList</option>
 <option value='SQLite Chart (PHPGD)'>SQLite Chart (PHPGD)</option>
 <option value='Countdown'>Countdown</option>
-
+<option value='Blood Pressure Tracker</option>
 "
 ?>
 

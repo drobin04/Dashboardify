@@ -3,22 +3,19 @@
 <?php
 	include_once('logoutredirect.php');
 	include_once('../shared_functions.php');
-	$qr = $_SERVER['QUERY_STRING']; // Get querystring value
-	$d = str_replace("RecID=","",$qr); // strip out querystring key / header, just want the value
-    
+
+    $d = $_GET['RecID'];
+    //echo "Widget Posted: " . $d;
 	if (DoIOwnThisWidget($d)) {
 
 		$select = "Delete From Widgets Where RecID = ?";
 		execquery_bind1($select, $d);
+		echo "Deleted Widget " . $d;
 		
-
 	} else {
-
+		echo "You don't own this widget.";
 	}
-	echo "<script>window.close();</script>Complete. Window should close now. <br />Query Executed: " . $select;
-		
-	echo "<a href='http://douglasrobinson.me/Dashboardify/'>Return to Management</a>";
-	redirect("../index.php");
+	
 ?>
 
 </body>
