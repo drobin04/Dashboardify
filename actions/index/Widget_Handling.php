@@ -3,19 +3,18 @@
 $editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
 
 $deletebuttonOnClick = "deleteWidget(" . $row["RecID"] . ",)";
-$deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" . $deletebuttonOnClick . "' href2='";
+$deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" . $deletebuttonOnClick . "'";
 
 $imgstylecss = "<img style='height:24px; width:24px;' src='";
 $PositionAndSize = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; width: " . $row["SizeX"] . "px;' ";
 
 $PositionAndCSSClass = $PositionAndSize . " class='widget resize " . $row["WidgetCSSClass"] . "'>";
-$combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+$combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 $floatingbookmarkPositionAndCSSClass = "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px;' class='widget resize " . $row["WidgetCSSClass"] . "'>";
 $floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' style='position: absolute; width:100px; background-color: lightgrey;  border: 1px solid black; " 
 . $floatingbookmarkPositionAndCSSClass . $editbuttonscss 
 . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" 
-. $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss 
-. $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+. $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 Switch ($row["WidgetType"]) {
 case "Blood Pressure":
 	// Let's 
