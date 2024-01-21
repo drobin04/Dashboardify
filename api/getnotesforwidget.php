@@ -17,6 +17,7 @@ $notes = scalarquery_bind1("
 	Select Notes from v_Widgets
 	Where UserRecID = '" . $userrecid . "' and RecID = ?
 	",$recid, "Notes");
-
-echo $notes;
+$notes_msged = str_replace("''","'",$notes);
+	
+echo $notes_msged;
 ?>
