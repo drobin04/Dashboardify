@@ -115,6 +115,13 @@ CSS TEXT NULL,
 Description TEXT NULL
 )";
 
+$widgets_users_view = "
+Create View v_Widgets As 
+Select u.Email, d.DashboardID, u.RecID As UserRecID, w.* From Widgets w
+	Left Join Dashboards d On w.DashboardRecID = d.DashboardID
+	Left Join Users u on d.UserID = u.RecID
+	";
+
 execquery($widgetsSQL);
 execquery($usersSQL);
 execquery($userCSSsql);
@@ -129,6 +136,7 @@ execquery($login_attempts);
 execquery($SessionLengthSetting);
 execquery($RequireConfirmationCodeSetting);
 execquery($WidgetStylesTable);
+execquery($widgets_users_view);
 
     echo "Database creation completed - If you're seeing this, no error has occurred yet.";
     redirect('register_user.php');

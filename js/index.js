@@ -1,14 +1,62 @@
+function editExistingNote(RecID) {
+	// Get note contents from API call
+	// Construct the URL with the parameters
+	var NotesData = "";
+var requesturl = getrooturlpath() + '/api/getnotesforwidget.php';
+const url = new URL(requesturl);
+const params = new URLSearchParams();
+params.append('RecID', RecID);
+url.search = params.toString();
+fetch(url)
+  .then(response => response.text())  // Update to handle response as text
+  .then(data => {
+    // Save the response to a variable here
+    const apiResponse = data;
+    NotesData = apiResponse;
+    // Now you can use the apiResponse variable to work with the API response
+    var y = document.getElementById(RecID + '_note');
+    y.innerHTML = "<form style='height: 100%;width:100%;' method='POST' id='notes_submission' action='" + getrooturlpath() + "/api/updatenoteswidget.php?RecID=" + RecID + "'><textarea name='Notes' style='width: 95%; height: 90%;'>" + NotesData + "</textarea><br /><button>Save</button></form>";
+  })
+  .catch(error => {
+    // Handle any errors here
+    console.error('Error:', error);
+  });
+	
+	
+	// After we get note contents, blank the content already in the note widget
+	
+	// Then, display text box with the API content ready for editing, and a text box / HTML form that submits the edit? 
+	
+	// Probably want the saved content to trigger a postback / page refresh, unless we can trigger md-block to render content in realtime, in which case we would just want it to be javascript... but html form would be easier.
+	
+}
 
+// Listen for shift-click on any notes widgets.
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(event) {
+    if (event.shiftKey) {
+      let targetElement = event.target.closest('.notes');
+      if (targetElement) {
+        let clickedElementId = targetElement.id;
+        editExistingNote(clickedElementId);
+      }
+    }
+  });
+});
+
+
+function getrooturlpath() {
+  const url9 = new URL(window.location.href);
+  const pathWithoutFile = url9.origin + url9.pathname.substring(0, url9.pathname.lastIndexOf('/') + 1);
+  const apiURL = pathWithoutFile
+  return apiURL;
+}
 
 function deleteWidget(recID) {
   var x = document.getElementById(recID);
   x.remove();
-  // Get the current URL path
-  var currentPath = window.location.pathname;
-	
-  const url9 = new URL(window.location.href);
-  const pathWithoutFile = url9.origin + url9.pathname.substring(0, url9.pathname.lastIndexOf('/') + 1);
-  const apiURL = pathWithoutFile + '/actions/DeleteWidget.php';
+  
+  const apiURL = getrooturlpath() + '/actions/DeleteWidget.php';
   // Delete The Widget From The Screen
   
 

@@ -1,6 +1,9 @@
 .editbuttons {
 cursor: pointer;
 }
+.notes div {
+height:100%;	
+}
 .Countdown {
 border-radius: 25px;
 

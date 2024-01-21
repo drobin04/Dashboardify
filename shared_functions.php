@@ -1,4 +1,15 @@
 <?php 
+
+// Notes - 
+// For transitioning to a javascript client side model;
+// Have a function that serializes out a list of all widget data as output for an api request; Just the actual widget contents though (minus maybe any sensitive creds?)
+// Then, hash the value of the output, and store that hash with the dashboard record
+// On the client side, store this hash as well
+// On page load, render from cache. Check if there's an updated hash on the server. If so, download from the server and redraw locally
+// This way, the page can be built out locally without depending on a php generation every time we build the page. 
+// I think this is going to be important for scaling up, while minimizing server compute necessary for functionality. 
+// Ideally we minimize the amount of traffic that has to pass in either direction, while also minimizing the amount of php compute that has to happen; so at the base, they are just pinging an html page for the initial serve, and then retrieving data from PHP based API's afterwards
+
 function rootdir() { // Added for testing evaluation of __DIR__ when referenced from another file
 	// Seems to work properly and always returns this file's root location and not the referencing file's location
 	
@@ -72,6 +83,15 @@ function selectquery($sql) {
 	$stmt1->execute();
 	$results = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 	//debuglog($results,"Query results");
+	return $results;
+}
+function selectquery_bind1($sql,$param1) {
+	$dbpath = 'sqlite:' . rootdir() . '/Dashboardify.s3db';
+	$db_file = new PDO($dbpath);
+	$stmt = $db_file->prepare($sql);
+	$stmt->bindParam(1,$param1,PDO::PARAM_STR);
+	$stmt->execute();
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	return $results;
 }
 function scalarquery($sql, $columnname) {
@@ -166,7 +186,16 @@ function execquery_bind1($sql,$param1) {
 	$stmt1->execute();
 	
 }
-
+function execquery_bind2($sql,$param1, $param2) {
+	//$localdb = new PDO('sqlite:Dashboardify.s3db');
+	$rootPath = $_SERVER['DOCUMENT_ROOT'];
+	$localdb = new PDO('sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db');
+	$stmt = $localdb->prepare($sql);
+	$stmt->bindParam(1, $param1, PDO::PARAM_STR);
+	$stmt->bindParam(2, $param2, PDO::PARAM_STR);
+	$stmt->execute();
+	
+}
 /**
  * Function to generate HTML table from array of objects
  *
@@ -188,7 +217,7 @@ function generateTableFromObjects(array $data): string {
     foreach ($data as $row) {
         $html .= '<tr>';
         foreach ($row as $value) {
-            $html .= '<td>' . htmlspecialchars($value) . '</td>';
+            $html .= '<td>' . (is_null($value) ? '' : htmlspecialchars($value)) . '</td>';
         }
         $html .= '</tr>';
     }
