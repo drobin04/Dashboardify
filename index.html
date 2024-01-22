@@ -1,0 +1,43 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Dashboardify</title>
+		<link type="text/css" rel="stylesheet" href="css/index.css">
+		<link rel="stylesheet" href="config/globalcss.css">
+
+		<script type="module" src="js/md-block.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  		<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<style>
+			
+		</style>
+		</head>
+		
+<body id="dashboardcontent"><form id="form1" method="POST" action="NewWidget.php" >
+	
+        <div>
+			<!--Buttons at top left-->
+            <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
+            <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
+            <div id='widgetcontainer'>
+            <!-- Need ways to populate / render the New Widget dialog boxes, New Dashboard edit box, Edit Dashboard edit box, Edit CSS dialog,  -->
+            
+            <!-- Widgets will go here. 
+            Script will check whether a hash for a stored computed set of widgets matches the hash on the server.
+            If not, / if it's updated, or if we don't have the hash locally, we should pull an update from the server and then display it here , and dump it into localstorage for future reference too. -->
+			
+            // For initial prototyping: 
+            <script>
+            getWidgetsForDashboard("74641D45-2148-4D29-B1F6-3204300D234C");
+            
+            </script>
+            
+            
+            
+            </div>            
+            
+			<script>//document.getElementById("dashboardcontent").innerHTML = localStorage.getItem("dashboardcontent")
+			</script>
+			</body></html>

@@ -1,6 +1,34 @@
 <?php 
 
+function serializeWidgetsForDashboard($dashboardid) {
+	// Assume this runs for the current user, should never need to run this for anyone else other than current....
+	
+	//Get list of widgets for this dashboard
+	// Filter by current user!
+	$sql = "Select BookmarkDisplayText, WidgetURL, WidgetCSSClass, Notes, PositionX, PositionY,SizeX,SizeY,RecID, DashboardRecID, WidgetType,Notes From v_Widgets Where DashboardRecID = ? and UserRecID = ?";
+	$currentuserid = getCurrentUserID();
+	$data = selectquery_bind2($sql,$dashboardid,$currentuserid); 
+	// Serialize $data variable into JSON format
+	$jsonData = json_encode($data);
+	echo $jsonData;
+	
+}
+
 // Notes - 
+
+// Try and rework things so that the section inside 'dashboard content' has a container just for widgets.
+// In the widget container, once it's just widgets being generated via PHP (the 'forms' / dialogs are static content, right?), we can have that be content that's loaded via a javascript api request, with most of the rest being HTML data.
+// We can then swap over to largely serving the page via HTML, with ***VERY LITTLE*** traffic and compute being done by PHP.
+// Need JS on client side that can receive, for example, an array (JSON or javascript array), and then iterate upon that to build the widgets onto the screen.
+// There will be SOME widget types with special data (i.e sql usernames / passwords) where not all data can be passed; and for those we will have them rendered on the server. Might want to wrap in JSON and have a field that just reads that it'll be direct HTML output or something that just gets printed at that point, dunno.
+// Store a HASH value for the container of widgets! 
+// Hash value gets copied into separate item in localstorage on client; and stored on server against the Dashboard recID.
+// Ideally, some way to store a list of these hashes in localstorage or browser sql, one per dashboard used (could even just append dashboard ID as part of the key).
+// When loading the dashboard, maybe check if the hash has changed from the server; using a small javascript ping. If so, re-load the data from the server, dispose of what's in the widget container, and redraw the page.
+
+
+
+
 // For transitioning to a javascript client side model;
 // Have a function that serializes out a list of all widget data as output for an api request; Just the actual widget contents though (minus maybe any sensitive creds?)
 // Then, hash the value of the output, and store that hash with the dashboard record
@@ -94,6 +122,16 @@ function selectquery_bind1($sql,$param1) {
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	return $results;
 }
+function selectquery_bind2($sql,$param1, $param2) {
+	$dbpath = 'sqlite:' . rootdir() . '/Dashboardify.s3db';
+	$db_file = new PDO($dbpath);
+	$stmt = $db_file->prepare($sql);
+	$stmt->bindParam(1,$param1,PDO::PARAM_STR);
+	$stmt->bindParam(2,$param2,PDO::PARAM_STR);
+	$stmt->execute();
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	return $results;
+}
 function scalarquery($sql, $columnname) {
 	debuglog($sql,"about to execute scalar query");
 	$rootPath = $_SERVER['DOCUMENT_ROOT'];
@@ -144,9 +182,7 @@ function getPDO_DBFile() {
 function getCurrentUserID() {
 	if (isset($_COOKIE["SessionID"])) {
 		$sessionid = $_COOKIE["SessionID"]; 
-		debuglog($sessionid, "SessionID"); //Get User for Session ID
-		$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; 
-		debuglog($userid, "User ID found for user");
+		$userid = selectquery_bind1("Select UserID From Sessions Where SessionID = ?", $sessionid)[0]["UserID"]; 
 		return $userid;
 	} else {
 		$userid = "0";

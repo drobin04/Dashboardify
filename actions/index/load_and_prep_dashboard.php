@@ -1,6 +1,5 @@
 <?php
 
-//debuglog("shared functions module loaded.");
 $db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
 $sessionid = $_COOKIE["SessionID"]; debuglog($sessionid, "SessionID"); //Get User for Session ID
 $userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; debuglog($userid, "User ID found for user");

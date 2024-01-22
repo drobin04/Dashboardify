@@ -1,26 +1,60 @@
+function getWidgetsForDashboard(dashboardID) {
+	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php';
+	// Update later to actually send a dashboard id and filter by it , right now is hard-coded to just one dashboard
+	
+	var data1 = fetchData(urlforapi);
+	
+	//Next, output some data to the screen so we know we got the data and can iterate thru it... 
+	
+	
+}
+
+async function fetchData(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+    
+function drawWidget(widget) {
+	//Variables
+	// Deserialize JSON data in JavaScript
+	var jsonData = '<?php echo $jsonData; ?>'; // Assuming $jsonData contains the serialized JSON string
+	var dataArray = JSON.parse(jsonData);
+	var WidgetType = '';
+	var xpos = '';
+	var ypos = '';
+	var width = '';
+	var height = '';
+	var bookmarkdisplaytext = '';
+	var bookmarkurl = '';
+	var cssclass = '';
+	var notes_html = "";
+	
+	
+}
+
 function editExistingNote(RecID) {
 	// Get note contents from API call
 	// Construct the URL with the parameters
 	var NotesData = "";
-var requesturl = getrooturlpath() + '/api/getnotesforwidget.php';
-const url = new URL(requesturl);
-const params = new URLSearchParams();
-params.append('RecID', RecID);
-url.search = params.toString();
-fetch(url)
-  .then(response => response.text())  // Update to handle response as text
-  .then(data => {
-    // Save the response to a variable here
-    const apiResponse = data;
-    NotesData = apiResponse;
-    // Now you can use the apiResponse variable to work with the API response
-    var y = document.getElementById(RecID + '_note');
-    y.innerHTML = "<form style='height: 100%;width:100%;' method='POST' id='notes_submission' action='" + getrooturlpath() + "/api/updatenoteswidget.php?RecID=" + RecID + "'><textarea name='Notes' style='width: 95%; height: 90%;'>" + NotesData + "</textarea><br /><button>Save</button></form>";
-  })
-  .catch(error => {
-    // Handle any errors here
-    console.error('Error:', error);
-  });
+	var requesturl = getrooturlpath() + '/api/getnotesforwidget.php';
+	const url = new URL(requesturl);
+	const params = new URLSearchParams();
+	params.append('RecID', RecID);
+	url.search = params.toString();
+	fetch(url)
+	  .then(response => response.text())  // Update to handle response as text
+	  .then(data => {
+		// Save the response to a variable here
+		const apiResponse = data;
+		NotesData = apiResponse;
+		// Now you can use the apiResponse variable to work with the API response
+		var y = document.getElementById(RecID + '_note');
+		y.innerHTML = "<form style='height: 100%;width:100%;' method='POST' id='notes_submission' action='" + getrooturlpath() + "/api/updatenoteswidget.php?RecID=" + RecID + "'><textarea name='Notes' style='width: 95%; height: 90%;'>" + NotesData + "</textarea><br /><button>Save</button></form>";
+	  })
+	  .catch(error => {
+		// Handle any errors here
+		console.error('Error:', error);
+	  });
 	
 	
 	// After we get note contents, blank the content already in the note widget
@@ -442,6 +476,8 @@ function opencollapsediframe(recid) {
 
 
 function drawNewWidgetBasedOnType() {
+	// THIS IS FOR THE DROPDOWN ON THE NEW WIDGET DIALOG / FORM
+	
 	// Need to get value of currently selected widget type (get element by id, check value)	
 	
 	var ddl = document.getElementById('ddlWidgetType2');

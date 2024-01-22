@@ -29,6 +29,7 @@ $widgetsSQL = "CREATE TABLE [Widgets] (
     [WidgetCSSClass] NVARCHAR(150)  NULL
     , Notes TEXT NULL, sqlserveraddress TEXT(75) NULL, sqldbname TEXT(75) NULL, sqluser TEXT(75) NULL, sqlpass TEXT(75) NULL, sqlquery TEXT(2000) NULL
     , Global BOOLEAN NULL
+    , UserRecID TEXT NULL
     )";
     
 $StoredWidgets = "CREATE TABLE StoredWidgets (

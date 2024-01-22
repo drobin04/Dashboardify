@@ -1,5 +1,5 @@
 <?php
-
+//ob_end_flush();
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -18,4 +18,11 @@ echo "<br />";
 
 <br />
 <br />
-<?php include ('shared_functions.php'); echo "User Folder: " . getCurrentUserFolder(); ?>
+<?php include ('shared_functions.php'); echo "User Folder: " . getCurrentUserFolder(); 
+
+
+echo "<br /><br />";
+
+echo serializeWidgetsForDashboard("74641D45-2148-4D29-B1F6-3204300D234C");
+
+?>
