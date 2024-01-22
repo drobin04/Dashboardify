@@ -1,11 +1,33 @@
-function getWidgetsForDashboard(dashboardID) {
-	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php';
+async function getWidgetsForDashboard(dashboardID) {
+	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php?recid='+ dashboardID;
 	// Update later to actually send a dashboard id and filter by it , right now is hard-coded to just one dashboard
 	
-	var data1 = fetchData(urlforapi);
-	
+	var widgets = await fetchData(urlforapi);
+	console.log(widgets);
 	//Next, output some data to the screen so we know we got the data and can iterate thru it... 
 	
+	// Iterate through the array of objects
+	for (const widget of widgets) {
+	  // Destructure the object to create variables for each field
+	  const {
+		BookmarkDisplayText,
+		WidgetURL,
+		WidgetCSSClass,
+		Notes,
+		PositionX,
+		PositionY,
+		SizeX,
+		SizeY,
+		RecID,
+		DashboardRecID,
+		WidgetType
+	  } = widget;
+	
+	  // Now you can work with the data using the created variables
+	  // For example, you can log the values of the variables
+	  //console.log(BookmarkDisplayText, WidgetURL, WidgetCSSClass, Notes, PositionX, PositionY, SizeX, SizeY, RecID, DashboardRecID, WidgetType);
+	  drawWidget(widget);
+	}
 	
 }
 
@@ -13,21 +35,39 @@ async function fetchData(url) {
     const response = await fetch(url);
     const data = await response.json();
     return data;
-    
+}
+
 function drawWidget(widget) {
 	//Variables
 	// Deserialize JSON data in JavaScript
-	var jsonData = '<?php echo $jsonData; ?>'; // Assuming $jsonData contains the serialized JSON string
-	var dataArray = JSON.parse(jsonData);
-	var WidgetType = '';
-	var xpos = '';
-	var ypos = '';
-	var width = '';
-	var height = '';
-	var bookmarkdisplaytext = '';
-	var bookmarkurl = '';
-	var cssclass = '';
-	var notes_html = "";
+	const {
+		BookmarkDisplayText,
+		WidgetURL,
+		WidgetCSSClass,
+		Notes,
+		PositionX,
+		PositionY,
+		SizeX,
+		SizeY,
+		RecID,
+		DashboardRecID,
+		WidgetType
+	  } = widget;
+	  
+	  switch (WidgetType) {
+	  	case "Bookmark":
+	  		if (PositionX != "") {
+	  			console.log(RecID + " is a positioned bookmark");	
+	  		}
+	  		if (PositionX == "") {
+	  			console.log(RecID + " is a normal bookmark");
+	  		}
+	  		break;
+		default: 
+			
+			console.log("Not yet handling widget: " + RecID + ", " + WidgetType);
+	  	  
+	  }
 	
 	
 }
