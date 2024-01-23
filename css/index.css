@@ -21,7 +21,9 @@ border-radius: 25px;
 			float: left !important;
 
 }
-		
+#ddlWidgetType2 {
+	width: 160px;
+}
 #NewWidgetDialog2 {
 width: 240px;
 overflow: auto;

@@ -12,7 +12,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 <option value='SQLiteResultsList'>SQLiteResultsList</option>
 <option value='SQLite Chart (PHPGD)'>SQLite Chart (PHPGD)</option>
 <option value='Countdown'>Countdown</option>
-<option value='Blood Pressure Tracker</option>
+<option value='Blood Pressure Tracker'>Blood Pressure Tracker (unfinished)</option>
 "
 ?>
 
@@ -205,9 +205,10 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 							if ($globalwidget == "1") {
 								$global_checked = "checked";
 							}
-						echo "<br /><input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>"; 
-						echo "<br /><input type='checkbox'id='StoredWidgetBool' "  . "" . " name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>"; } ?>
-
+						 } 
+						?>
+						<br /><input type='checkbox'id='GlobalWidgetBool' <?php echo $global_checked; ?> name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>
+						<br /><input type='checkbox'id='StoredWidgetBool'  name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>
 						<!-- FORM CONTENT SHOULD GET PASTED HERE -->
 						<div id="NewWidget_Form">
 						<!-- This section intentionally left empty, as it gets pasted into / filled by code-->
@@ -224,7 +225,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		<!-- End of new Test version of New Widget Dialog
 		                                  
 		
-			<!--Edit CSS Box--><form id="form1" method="POST" action="SaveStyling.php">
+			<!--Edit CSS Box-->
+			<form id="form1" method="POST" action="SaveStyling.php">
 			<div id="cssEditorBox" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
 				<button type="button" style="float: left !important;" onclick="document.getElementById('cssEditorBox').style.display='none';">Close</button><br />
 				<div id="columnd" class="column" style="width: 85% !important; height:100% !important; clear: both; margin: 0 auto;">
@@ -258,21 +260,6 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		</div>
 		</form>
 		<script type="text/javascript" src="js/index.js"></script><br />
-	
-	
-	
-		<script>
-			  
-
-  
-
-
-		</script>
-		<script>
-
-
-</script>
-	
 	</body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 
 		
