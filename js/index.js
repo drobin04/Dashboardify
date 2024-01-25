@@ -98,32 +98,48 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 				y.innerHTML += x;
 	  		}
 	  		break;
+	  	case "Notes":
+	  		// Escape the Notes value to replace '' with '
+			let notesvalue = Notes.replace(/''/g, "'");
+			let left = PositionX + "px";
+			let top = PositionY + "px";
+			let width = SizeX + "px";
+			let height = SizeY + "px";
+			let customclass = WidgetCSSClass;
+			let combined_notes = "<div class='notes resize widget $customclass ' id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: " + left + "; top: " + top + "; width: " + width + "; height: " + height + ";'>" + "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" + siteurl +  "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" +  imgstylecss + siteurl + "icons/edit.png'></img></a>" +  deletebuttoncss + ">" + imgstylecss + siteurl +  "icons/cancel.png'></img></a>";
+		
+			echo(combined_notes + "<div style='height: 100%;' id='" + RecID + "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>" + notesvalue +"</md-block></p></div></div>");
+	  		
+	  		break;
 		case "Countdown":
 			
-		stringValue = Notes;
-		
-		// Get title
-		title = BookmarkDisplayText;
-		
-		
-		// Calculate time from now until date value, in days
-		let now = new Date();
-		// Convert to date format
-		let dateValue = new Date(stringValue);
-		let interval = Math.floor((dateValue - now) / (1000 * 60 * 60 * 24));
-		let days = interval;
-		
-		//Redraw widget details, to add in custom widget class for styling later on...
-		
-		
-		
-
-		
-		echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + days + " Days Remaining.</div></div></p></div>");
+			stringValue = Notes;
 			
+			// Get title
+			title = BookmarkDisplayText;
+			
+			
+			// Calculate time from now until date value, in days
+			let now = new Date();
+			// Convert to date format
+			let dateValue = new Date(stringValue);
+			let interval = Math.floor((dateValue - now) / (1000 * 60 * 60 * 24));
+			let days = interval;
+			
+			//Redraw widget details, to add in custom widget class for styling later on...
+			
+			
+			
+	
+			
+			echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + days + " Days Remaining.</div></div></p></div>");
+				
 			break;
 		case "IFrame":
 			echo(combined + "<iframe style='height:100%;width:100%' src='" + WidgetURL + "'></iframe></a></div>");
+			break;
+		case "HTMLEmbed":
+			echo(combined + Notes+"</div>");
 			break;
 		default: 
 			
