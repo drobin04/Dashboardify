@@ -54,15 +54,77 @@ function drawWidget(widget) {
 		WidgetType
 	  } = widget;
 	  
+		// Variable Declarations to be shared between widget types: 
+		let siteurl = getrooturlpath();
+		let editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
+		
+		
+		const floatingbookmarkPositionAndCSSClass = "left: " + PositionX + "px; top: " + PositionY + "px;' class='widget resize " + WidgetCSSClass + "'>";
+		
+		const dashboardid = DashboardRecID;
+		const imgstylecss = "<img style='height:24px; width:24px;' src='";
+		
+		deletebuttonOnClick = "deleteWidget(" + RecID + ",)";
+		deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" + deletebuttonOnClick + "'";
+		
+		
+		
+		PositionAndSize = "left: " + PositionX + "px; top: " + PositionY + "px; width: " + SizeX + "px; height: " + SizeY + "px; width: " + SizeX + "px;' ";
+		
+		PositionAndCSSClass = PositionAndSize + "class='widget resize " + WidgetCSSClass + " Countdown'>";
+		
+		combined = "<div id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" + PositionAndCSSClass + editbuttonscss + siteurl + "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" + imgstylecss + siteurl + "icons/edit.png'></img></a>" + deletebuttoncss + siteurl + "actions/DeleteWidget.php?RecID=" + RecID + "'>" + imgstylecss + siteurl + "icons/cancel.png'></img></a>";
+	  
+	  
 	  switch (WidgetType) {
 	  	case "Bookmark":
+	  			  		
 	  		if (PositionX != "") {
-	  			console.log(RecID + " is a positioned bookmark");	
-	  		}
+	  			//console.log(RecID + " is a positioned bookmark");
+	  			// echo $floatingbookmark
+	  			var floatingbookmark = `<div id='${RecID}' class='widget bookmark' style='position: absolute; width:100px; background-color: lightgrey;  border: 1px solid black; ${floatingbookmarkPositionAndCSSClass}${editbuttonscss}${siteurl}?EditRecID=${RecID}&SelectDashboardID=" 
+${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebuttoncss}>${imgstylecss}${siteurl}/icons/cancel.png'></img></a>`;
+	  		
+				var widget_output = floatingbookmark + " <div style='padding: 5px; width: 100%; class='widget bookmark " + WidgetCSSClass + "'><a target='_blank' href='" + WidgetURL + "'>" + BookmarkDisplayText + "</a></div></div>";
+				let y = document.getElementById('widgetcontainer');
+				y.innerHTML += widget_output;
+			
+			}
 	  		if (PositionX == "") {
-	  			console.log(RecID + " is a normal bookmark");
+	  			//console.log(RecID + " is a normal bookmark");
+	  			
+	  			let x = `<div id='${RecID}' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='widget bookmark ${WidgetCSSClass}'><a target='_blank' href='${WidgetURL}'>${BookmarkDisplayText}</a>${editbuttonscss}${siteurl}?EditRecID=${RecID}&SelectDashboardID=${dashboardid}'>${imgstylecss}${siteurl}icons/edit.png'></img></a>${deletebuttoncss}${siteurl}actions/DeleteWidget.php?RecID=${RecID}'>${imgstylecss}${siteurl}icons/cancel.png'></img></a></div>`;
+	  			let y = document.getElementById('widgetcontainer');
+				y.innerHTML += x;
 	  		}
 	  		break;
+		case "Countdown":
+			
+		stringValue = Notes;
+		
+		// Get title
+		title = BookmarkDisplayText;
+		
+		
+		// Calculate time from now until date value, in days
+		let now = new Date();
+		// Convert to date format
+		let dateValue = new Date(stringValue);
+		let interval = Math.floor((dateValue - now) / (1000 * 60 * 60 * 24));
+		let days = interval;
+		
+		//Redraw widget details, to add in custom widget class for styling later on...
+		
+		
+		
+
+		
+		echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + days + " Days Remaining.</div></div></p></div>");
+			
+			break;
+		case "IFrame":
+			echo(combined + "<iframe style='height:100%;width:100%' src='" + WidgetURL + "'></iframe></a></div>");
+			break;
 		default: 
 			
 			console.log("Not yet handling widget: " + RecID + ", " + WidgetType);
@@ -70,6 +132,11 @@ function drawWidget(widget) {
 	  }
 	
 	
+}
+
+function echo(stringData) {
+	var container = document.getElementById('widgetcontainer');
+	container.innerHTML += stringData;
 }
 
 function editExistingNote(RecID) {
