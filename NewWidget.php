@@ -3,17 +3,54 @@
 <body>
 
 <?php
+// Test this code...
+// Maps widget object from POST.
+class CustomObject {
+    public $WidgetType;
+    public $DisplayText;
+    public $PositionX;
+    public $PositionY;
+    public $SizeX;
+    public $SizeY;
+    public $URL;
+    public $CSSClass;
+    public $Notes;
+    public $GlobalDefault;
+    public $SQLServerAddressName;
+    public $SQLDBName;
+    public $sqluser;
+    public $sqlpass;
+    public $sqlquery;
+    public $ID;
+    public $DashboardRecID;
+
+    public function mapFromPost($postArray) {
+        foreach ($postArray as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->{$key} = (string)$value;
+            }
+        }
+    }
+}
+
+// Example usage
+$customObject = new CustomObject();
+$customObject->mapFromPost($_POST);
+?>
+
+
+<?php
     include_once('shared_functions.php');
 	$sessionID = $_COOKIE["SessionID"];
-
+	$userid = getCurrentUserID();
     function GetUsersDashboard() {
         $select = "SELECT S.UserID, D.RecID As DashboardRecID FROM Sessions S Left Join Dashboards D On D.UserID = S.UserID Where SessionID = '" . $_COOKIE["SessionID"] . "'";
-        debuglog($select,"SQL Query Searching For User Dashboard By SessionID");
+        //debuglog($select,"SQL Query Searching For User Dashboard By SessionID");
         // Get the results.
         $results = selectquery($select);
-        debuglog($results,"Results from SQL Query search");
+        //debuglog($results,"Results from SQL Query search");
         $dash = $results[0]["DashboardRecID"];
-        debuglog($user,"User info selected");
+        //debuglog($user,"User info selected");
         return $dash;
     }
 
@@ -69,8 +106,8 @@
         $notesvalue = str_replace("'", "''",$_POST["Notes"]);
         // Prepare INSERT statement.
         $select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
-        ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery, Global) 
-        VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?)";
+        ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery, Global, UserRecID) 
+        VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?,?,?,?,?,?,?)";
         
         $localdb = getPDO_DBFile();
 		$stmt1 = $localdb->prepare($select);
@@ -90,7 +127,7 @@
 		$stmt1->bindParam(14, $sqlpass, PDO::PARAM_STR);
 		$stmt1->bindParam(15, $sqlquery, PDO::PARAM_STR);
 		$stmt1->bindParam(16, $globaldefault, PDO::PARAM_STR);
-		
+		$stmt1->bindParam(17, $userid, PDO::PARAM_STR);		
 		$stmt1->execute();
             //echo "Finished; click <a href='index.php'>Here</a> to return to main dashboard.";
 	    redirect("index.php" . "?SelectDashboardID=" . $dashboardid);
