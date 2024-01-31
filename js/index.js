@@ -1,9 +1,15 @@
 async function getWidgetsForDashboard(dashboardID) {
+	clearWidgetContainer();
 	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php?recid='+ dashboardID;
 	// Update later to actually send a dashboard id and filter by it , right now is hard-coded to just one dashboard
 	
 	var widgets = await fetchData(urlforapi);
 	console.log(widgets);
+	renderwidgetsfromjson(widgets);
+	
+}
+
+function renderwidgetsfromjson(widgets) {
 	//Next, output some data to the screen so we know we got the data and can iterate thru it... 
 	
 	// Iterate through the array of objects
@@ -28,7 +34,6 @@ async function getWidgetsForDashboard(dashboardID) {
 	  //console.log(BookmarkDisplayText, WidgetURL, WidgetCSSClass, Notes, PositionX, PositionY, SizeX, SizeY, RecID, DashboardRecID, WidgetType);
 	  drawWidget(widget);
 	}
-	
 }
 
 async function fetchData(url) {
@@ -106,7 +111,7 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 			let width = SizeX + "px";
 			let height = SizeY + "px";
 			let customclass = WidgetCSSClass;
-			let combined_notes = "<div class='notes resize widget $customclass ' id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: " + left + "; top: " + top + "; width: " + width + "; height: " + height + ";'>" + "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" + siteurl +  "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" +  imgstylecss + siteurl + "icons/edit.png'></img></a>" +  deletebuttoncss + ">" + imgstylecss + siteurl +  "icons/cancel.png'></img></a>";
+			let combined_notes = "<div class='notes resize widget " + customclass + " ' id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: " + left + "; top: " + top + "; width: " + width + "; height: " + height + ";'>" + "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" + siteurl +  "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" +  imgstylecss + siteurl + "icons/edit.png'></img></a>" +  deletebuttoncss + ">" + imgstylecss + siteurl +  "icons/cancel.png'></img></a>";
 		
 			echo(combined_notes + "<div style='height: 100%;' id='" + RecID + "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>" + notesvalue +"</md-block></p></div></div>");
 	  		
@@ -138,8 +143,17 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 		case "IFrame":
 			echo(combined + "<iframe style='height:100%;width:100%' src='" + WidgetURL + "'></iframe></a></div>");
 			break;
+		case "Collapseable IFrame":
+			let combined2 = "<div id='" + RecID + "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" + "width: " + SizeX + "px; height: " + SizeY + "px; width: " + SizeX + "px;' class='widget resize " + WidgetCSSClass + "'>" + editbuttonscss + siteurl + "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" + imgstylecss + siteurl + "icons/edit.png'></img></a>" + editbuttonscss + siteurl + "actions/DeleteWidget.php?RecID=" + RecID + "'>" + imgstylecss + siteurl + "icons/cancel.png'></img></a>";
+    
+			let hidden = "<div id='' class='collapse' style='" + "left: " + PositionX + "px; top: " + PositionY + "px; width: " + SizeX + "px; height: 20px; width: " + SizeX + "px;'" + "'>";
+			echo(hidden + "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" + RecID + "&quot;)'>" + BookmarkDisplayText + "</a>");
+			echo(combined2 + "<iframe style='height:100%;width:100%;' id='" + RecID + "/iframe' src2='" + WidgetURL + "'></iframe></a></div>");
+			echo("</div>"); //this wraps combined variable, into a surrounding div.
+			
+			break;
 		case "HTMLEmbed":
-			echo(combined + Notes+"</div>");
+			//echo(combined + Notes+"</div>");
 			break;
 		default: 
 			
@@ -153,6 +167,11 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 function echo(stringData) {
 	var container = document.getElementById('widgetcontainer');
 	container.innerHTML += stringData;
+}
+
+function clearWidgetContainer() {
+	var container = document.getElementById('widgetcontainer');
+	container.innerHTML = "";
 }
 
 function editExistingNote(RecID) {

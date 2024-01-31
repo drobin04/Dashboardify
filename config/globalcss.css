@@ -7,6 +7,12 @@ body {background-color: lightgrey !important;}
 
 .TableResults, .TableResults tr, .TableResults th, .TableResults td {border: 1px black solid; text-align: center; background-color: white;}
 
+.bookmark:hover { background-color: yellow !important;}
+.rounded {border-radius: 25px;)
+
 .bookmark a {
   text-decoration: none;
+}
+div:has(.note) {
+overflow: auto;
 }

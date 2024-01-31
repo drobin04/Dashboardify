@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include("actions/logoutredirect.php");
 include_once("shared_functions.php");
 // Future Note - Send a Cookie with dashboard ID on page load.... This will make it easier to populate the dialogs with data for this dashboard using API's....
@@ -23,6 +27,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="config/globalcss.css">
 <script type="module" src="js/md-block.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
@@ -55,13 +60,16 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			?>
 			<!-- Begin Widget Loading -->
 			<div id="widgetcontainer">	
-
+			<script>
+            getWidgetsForDashboard('<?php echo $dashboardid; ?>');
+            
+            </script>
 			<?php
 				//
 				//
 				//
 				// Load Widgets For Selected Dashboard
-				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'"; debuglog($select,"Query for widgets");
+				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'"; 
 				$stmt = $db_file->prepare($select); $stmt->execute();
 				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); debuglog($results, "Widget results");
 				$siteurl = scalarquery("Select Value From Settings Where Name = 'SiteUrlConfig'", "Value");
@@ -262,8 +270,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<script type="text/javascript" src="js/index.js"></script><br />
-	</body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+		<br />
+		</body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
 
 		
 		</html>

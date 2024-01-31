@@ -47,7 +47,7 @@ case "Countdown":
 		$combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 
 		
-		echo $combined . "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" . $title . "</b></div><br /><div id='countdownvalue'>" . $days . " Days Remaining.</div></div></p></div>";
+		//echo $combined . "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" . $title . "</b></div><br /><div id='countdownvalue'>" . $days . " Days Remaining.</div></div></p></div>";
 	}	
 	break;
 	
@@ -96,16 +96,16 @@ case "SQLServerScalarQuery":
 	break;
 	
 case "IFrame":
-    echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";
+    //echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";
 break;
 	
 case "Collapseable IFrame":
 	$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; width: " . $row["SizeX"] . "px;' class='widget resize " . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
     
 	$hidden = "<div id='' class='collapse' style='" . "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: 20px; width: " . $row["SizeX"] . "px;'" . "'>";
-	echo $hidden . "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" . $row["RecID"] . "&quot;)'>" . $row["BookmarkDisplayText"] . "</a>";
-	echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
-	echo "</div>"; //this wraps combined variable, into a surrounding div.
+	//echo $hidden . "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" . $row["RecID"] . "&quot;)'>" . $row["BookmarkDisplayText"] . "</a>";
+	//echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
+	//echo "</div>"; //this wraps combined variable, into a surrounding div.
 	
 break;
 
@@ -119,7 +119,7 @@ case "Notes":
 	$customclass = $row["WidgetCSSClass"];
 	$combined_notes = "<div class='notes resize widget $customclass ' id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: $left; top: $top; width: $width; height: $height;'>" . "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 
-	echo $combined_notes . "<div style='height: 100%;' id='" . $row['RecID'] . "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $notesvalue ."</md-block></p></div></div>";
+	//echo $combined_notes . "<div style='height: 100%;' id='" . $row['RecID'] . "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $notesvalue ."</md-block></p></div></div>";
 	break;
 
 case "HTMLEmbed":
