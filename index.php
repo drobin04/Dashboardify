@@ -71,7 +71,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 				// Load Widgets For Selected Dashboard
 				$select = "SELECT * FROM Widgets Where DashboardRecID = '" . $dashboardid . "'"; 
 				$stmt = $db_file->prepare($select); $stmt->execute();
-				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); debuglog($results, "Widget results");
+				$results = $stmt->fetchAll(PDO::FETCH_ASSOC); 
 				$siteurl = scalarquery("Select Value From Settings Where Name = 'SiteUrlConfig'", "Value");
 				foreach($results as $row) { //Load Widgets, Starting with Re-useable texts
 					// import Widget_Handling.php
