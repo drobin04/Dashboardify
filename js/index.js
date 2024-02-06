@@ -10,7 +10,8 @@ async function getWidgetsForDashboard(dashboardID) {
 }
 
 function renderwidgetsfromjson(widgets) {
-	//Next, output some data to the screen so we know we got the data and can iterate thru it... 
+	// Create a new array for HTMLEmbed widgets
+	const htmlEmbedWidgets = [];
 	
 	// Iterate through the array of objects
 	for (const widget of widgets) {
@@ -29,9 +30,19 @@ function renderwidgetsfromjson(widgets) {
 		WidgetType
 	  } = widget;
 	
-	  // Now you can work with the data using the created variables
-	  // For example, you can log the values of the variables
-	  //console.log(BookmarkDisplayText, WidgetURL, WidgetCSSClass, Notes, PositionX, PositionY, SizeX, SizeY, RecID, DashboardRecID, WidgetType);
+	  // Check if WidgetType is 'HTMLEmbed'
+	  if (WidgetType === "HTMLEmbed") {
+		// Add the widget to the htmlEmbedWidgets array
+		htmlEmbedWidgets.push(widget);
+	  } else {	  
+	  	  drawWidget(widget);
+	  }
+	}
+	
+	// Manually process the list of HTML Embeds, after everything else
+	
+	// Loop through the htmlEmbedWidgets array and call drawWidget for each widget
+	for (const widget of htmlEmbedWidgets) {
 	  drawWidget(widget);
 	}
 }

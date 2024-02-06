@@ -16,7 +16,6 @@ function serializeWidgetsForDashboard($dashboardid) {
 
 // Notes - 
 
-// Try and rework things so that the section inside 'dashboard content' has a container just for widgets.
 // In the widget container, once it's just widgets being generated via PHP (the 'forms' / dialogs are static content, right?), we can have that be content that's loaded via a javascript api request, with most of the rest being HTML data.
 // We can then swap over to largely serving the page via HTML, with ***VERY LITTLE*** traffic and compute being done by PHP.
 // Need JS on client side that can receive, for example, an array (JSON or javascript array), and then iterate upon that to build the widgets onto the screen.

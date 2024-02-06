@@ -78,19 +78,19 @@ case "SQLServerScalarQuery":
 	}
 	break;
 	case "Bookmark":
-		If (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
-		echo $floatingbookmark 
-		." <div style='padding: 5px; width: 100%; class='widget bookmark "
-		. $row["WidgetCSSClass"] 
-		. "'><a target='_blank' href='" 
-		. $row["WidgetURL"] 
-		. "'>" 
-		. $row["BookmarkDisplayText"] 
-		."</a></div></div>";
-		}
-		elseIf ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {
-		echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='widget bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";
-		}
+		//If (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
+		//echo $floatingbookmark 
+		//." <div style='padding: 5px; width: 100%; class='widget bookmark "
+		//. $row["WidgetCSSClass"] 
+		//. "'><a target='_blank' href='" 
+		//. $row["WidgetURL"] 
+		//. "'>" 
+		//. $row["BookmarkDisplayText"] 
+		//."</a></div></div>";
+		//}
+		//elseIf ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {
+		//echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='widget bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";
+		//}
 
 	
 	break;
