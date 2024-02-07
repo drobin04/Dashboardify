@@ -31,7 +31,7 @@ function renderwidgetsfromjson(widgets) {
 	  } = widget;
 	
 	  // Check if WidgetType is 'HTMLEmbed'
-	  if (WidgetType === "HTMLEmbed") {
+	  if (WidgetType == "HTMLEmbed") {
 		// Add the widget to the htmlEmbedWidgets array
 		htmlEmbedWidgets.push(widget);
 	  } else {	  
