@@ -173,7 +173,9 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 						</label>If you use GD / PHP Chart widget type, manually specify 'x' and 'y' column aliases for the x and y axis'.</label>
 					</div><!-- End of 'columnc' div -->
 				</form><!-- End of original new widget form -->
-			</div><!-- End of 'NewWidgetDialog' div-->
+			</div>
+			<script>openeditdialog()</script>
+			<!-- End of 'NewWidgetDialog' div-->
 
 		<!-- New Test Version of New Widget Dialog -->
 		

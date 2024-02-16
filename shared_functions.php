@@ -10,7 +10,7 @@ function serializeWidgetsForDashboard($dashboardid) {
 	$data = selectquery_bind2($sql,$dashboardid,$currentuserid); 
 	// Serialize $data variable into JSON format
 	$jsonData = json_encode($data);
-	echo $jsonData;
+	return $jsonData;
 	
 }
 

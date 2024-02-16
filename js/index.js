@@ -1,10 +1,23 @@
 async function getWidgetsForDashboard(dashboardID) {
-	clearWidgetContainer();
-	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php?recid='+ dashboardID;
-	// Update later to actually send a dashboard id and filter by it , right now is hard-coded to just one dashboard
 	
+	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php?recid='+ dashboardID;
+		
 	var widgets = await fetchData(urlforapi);
 	console.log(widgets);
+	
+	if (widgets == "") {
+		console.log("Response for new widgets was empty. Will try to draw from cache.");	
+	} else {
+		console.log("Response received for widgets, drawing with updated data.");	
+	}
+	
+	// Before this point, check if we received any response data at all from the API request. If the body / response data is empty, don't proceed, and don't run clearWidgetContainer. 
+	
+	// The server side can check whether our cookie value for the hash for this dashboard is correct or not. Therefore, the server will determine whether to send us an update or not. 
+	
+	
+	//clearWidgetContainer();
+	
 	renderwidgetsfromjson(widgets);
 	
 }
@@ -45,6 +58,10 @@ function renderwidgetsfromjson(widgets) {
 	for (const widget of htmlEmbedWidgets) {
 	  drawWidget(widget);
 	}
+	
+	// Rendering is now finished.
+	// Hash value should have been sent and set into a cookie now automatically, using PHP's 'setcookie' value. So next time, we should check if the hash for this dashboard has been found. 
+	
 }
 
 async function fetchData(url) {
@@ -394,10 +411,11 @@ function toggleEditMode() {
 	}
   });
 
-
-if (window.location.href.indexOf("EditRecID") != -1) {
-	document.getElementById('NewWidgetDialog').style.display='block';
-}		
+function openeditdialog() {
+	if (window.location.href.indexOf("EditRecID") != -1) {
+		document.getElementById('NewWidgetDialog').style.display='block';
+	}
+}
 
 function renderNewWidgetOptionsByDropdown() {
 
