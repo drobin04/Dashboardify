@@ -1,5 +1,5 @@
 async function getWidgetsForDashboard(dashboardID) {
-	
+	document.cookie = "dashboardid=" + dashboardID;
 	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php?recid='+ dashboardID;
 		
 	var widgets = await fetchData(urlforapi);
