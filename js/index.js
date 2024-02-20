@@ -181,7 +181,7 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 			
 			break;
 		case "HTMLEmbed":
-			//echo(combined + Notes+"</div>");
+			echo(combined + Notes+"</div>");
 			break;
 		default: 
 			

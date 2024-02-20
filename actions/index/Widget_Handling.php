@@ -111,13 +111,13 @@ break;
 
 case "Notes":
 	// Escape the Notes value to replace '' with '
-	$notesvalue = str_replace("''", "'", $row["Notes"]);
-	$left = $row['PositionX'] . "px";
-	$top = $row["PositionY"] . "px";
-	$width = $row["SizeX"] . "px";
-	$height = $row["SizeY"] . "px";
-	$customclass = $row["WidgetCSSClass"];
-	$combined_notes = "<div class='notes resize widget $customclass ' id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: $left; top: $top; width: $width; height: $height;'>" . "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
+	//$notesvalue = str_replace("''", "'", $row["Notes"]);
+	//$left = $row['PositionX'] . "px";
+	//$top = $row["PositionY"] . "px";
+	//$width = $row["SizeX"] . "px";
+	//$height = $row["SizeY"] . "px";
+	//$customclass = $row["WidgetCSSClass"];
+	//$combined_notes = "<div class='notes resize widget $customclass ' id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: $left; top: $top; width: $width; height: $height;'>" . "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 
 	//echo $combined_notes . "<div style='height: 100%;' id='" . $row['RecID'] . "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $notesvalue ."</md-block></p></div></div>";
 	break;
