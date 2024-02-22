@@ -1,6 +1,6 @@
 ![Demo Photo](https://i.imgur.com/bG2qEP7.jpeg)
 # About Dashboardify
-This is a PHP web application for developing personal, customizeable dashboards with bookmarks, embedded frames, notes, as well as database and API connectivity.
+This is a PHP-based web application for developing personal, customizeable dashboards with bookmarks, embedded frames, notes, as well as database and API connectivity.
 
 The purpose of this application is to extend the function of your browser's Home page & New Tab Page. (To set this as your new tab page you'll need to be using a firefox-based browser such as firefox or librewolf, and the Custom New Tab Page Extension)
 
