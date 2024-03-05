@@ -17,7 +17,7 @@
 	
         <div>
 			<!--Buttons at top left-->
-            <button type="button" style="float: left !important;" onclick="document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">New Widget</button>
+            <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog2').style.display='block';">New Widget</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
@@ -36,7 +36,44 @@
             
             
             
-            </div>            
+            </div> 
+            <!-- New Test Version of New Widget Dialog -->
+		
+		<div id="NewWidgetDialog2" class="white_content">
+		<form id="form_ExperimentalNewWidgetDialog" method="POST" action="NewWidget.php" >
+                    <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog2').style.display='none';">Close</button>
+                    <button id="btnSubmitNewWidget">Submit</button>
+                    <!--<button onclick='' type="button">Render</button>-->
+                    <br />
+                    <header >New Widget<hr /></header>
+                    <label>Widget Type: </label>
+                    <div class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
+                    
+                    
+                    <select ID="ddlWidgetType2" name="WidgetType" onchange="drawNewWidgetBasedOnType()">
+					                       
+                        	<!-- Option has to get submitted w/ html form. So keep this inside the <form> element, ideally above the pasted section below -->
+                    		     
+							<!-- NEED TO GET JAVASCRIPT HERE TO POPULATE DROPDOWN OPTIONS... MAYBE FROM LOCALSTORAGE? 
+							WOULD NEED A LOCALSTORAGE CACHE AND AN INDEX.JS QUERY THAT CHECKS IF THIS IS POPULATED, AND IF NOT POPULATED, QUERIES FOR IT...-->
+                        </select><br />
+						<br /><input type='checkbox'id='GlobalWidgetBool'  name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>
+						<br /><input type='checkbox'id='StoredWidgetBool'  name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>
+						<!-- FORM CONTENT SHOULD GET PASTED HERE -->
+						<div id="NewWidget_Form">
+						<!-- This section intentionally left empty, as it gets pasted into / filled by code-->
+						
+						</div>
+					<!-- Used to store Dashboard ID-->
+					<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" value=""></input><br />
+					Dashboard ID: 
+					<input ID="txtDashboardID" name="dashboardID" value=""></input></span><br />
+
+					</div>
+		</div></form>
+
+		
+		<!-- End of new Test version of New Widget Dialog
             
 			<script>//document.getElementById("dashboardcontent").innerHTML = localStorage.getItem("dashboardcontent")
 			</script>
