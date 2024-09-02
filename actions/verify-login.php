@@ -1,6 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 //to-do - Fix bug where it seems like people entering user/pw for account doesn't exist are getting logged in. It's acting as if 'none' auth is still allowed,
 // even when it's not.
+// -- ^^ Tested 8/30/24 and issue was not reproduced. 
 
     include_once('../shared_functions.php');
     $sessionid = "";

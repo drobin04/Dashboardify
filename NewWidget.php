@@ -45,6 +45,9 @@ $customObject->mapFromPost($_POST);
 
 
 <?php
+
+$Debugging_Mode = true;
+
     include_once('shared_functions.php');
 	$sessionID = $_COOKIE["SessionID"];
 	$userid = getCurrentUserID();
