@@ -177,6 +177,115 @@ async function fetchData(url) {
     return data;
 }
 
+function editwidget(RecID) {
+	// Open the New/Edit Widget Form
+	document.getElementById('NewWidgetDialog2').style.display='block';
+	
+	// Get Details (Including widget type) from API regarding this widget.
+	// Define the API endpoint and query parameter
+	const apiEndpoint = getrooturlpath() + '/api/editwidget.php';
+	const queryString = `?EditRecID=${encodeURIComponent(RecID)}`;
+	var result2 = "";
+	// Send the API request
+	fetch(apiEndpoint + queryString)
+	  .then(response => {
+		if (!response.ok) {
+		  throw new Error(`HTTP error! Status: ${response.status}`);
+		}
+		return response.json(); // Assuming the response is in JSON format
+	  })
+	  .then(data => { // THE REST OF CODE NEEDS TO EXECUTE HERE SINCE IT'S ASYNCHRONOUS
+	  	
+	  	// Select widget type in dropdown of edit widget form so correct widget type is selected
+		// Store the response in the variable 'result'
+		result2 = data[0];
+		console.log(result2); // Do something with the result
+		let x = document.getElementById('ddlWidgetType2');
+		x.value = result2.WidgetType;
+		
+		// Run drawnewwidgetbasedontype() so that proper fields get drawn
+		drawNewWidgetBasedOnType();
+		
+		// Populate widget ID onto form
+		
+		let y = document.getElementById('txtWidgetID');
+		y.value = RecID;
+		// Populate form with data previously retrieved from API
+		
+		// ^^ Need a case statement to populate fields based on data from widget, dependent on widgettype. 
+		let CSSClass = document.getElementById('txtCSSClass');
+		CSSClass.value = result2.WidgetCSSClass;
+		// txtpositionx2 , txtpositiony2 , 	txtsizeX2 , txtsizeY2
+		// PositionX , PositionY , SizeX, SizeY
+		let PositionX = document.getElementById('txtpositionx2');
+		PositionX.value = result2.PositionX;
+		let PositionY = document.getElementById('txtpositiony2');
+		PositionY.value = result2.PositionY;
+		let SizeX = document.getElementById('txtsizeX2');
+		SizeX.value = result2.SizeX;
+		let SizeY = document.getElementById('txtsizeY2');
+		SizeY.value = result2.SizeY;
+		
+		switch (result2.WidgetType) {
+			case "Bookmark":
+				let z = document.getElementById('txtWidgetURL');
+				z.value = result2.WidgetURL;
+				let BookmarkDisplayText = document.getElementById('txtWidgetDisplayText');
+				BookmarkDisplayText.value = result2.BookmarkDisplayText;
+				break;
+			case "Notes": 
+				let Notes = document.getElementById('txtNotes');
+				Notes.innerHTML = result2.Notes;
+				break;
+			case "HTMLEmbed": 
+				let HTMLE = document.getElementById('txtNotes');
+				HTMLE.innerHTML = result2.Notes;
+				break;
+			case "Countdown":
+				// txtWidgetDisplayText , datepicker
+				let CountdownTitle = document.getElementById('txtWidgetDisplayText');
+				CountdownTitle.value = result2.BookmarkDisplayText;
+				let CountdownDate = document.getElementById('datepicker');
+				
+				// Original date string in MM/DD/YYYY format
+				var dateValue = result2.Notes;
+	
+				// Split the dateValue string into parts
+				var parts = dateValue.split('/');
+				var month = parts[0];
+				var day = parts[1];
+				var year = parts[2];
+	
+				// Create a new date string in YYYY-MM-DD format
+				var formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+				CountdownDate.value = formattedDate;
+				
+				break;
+			case "IFrame":
+				//txtWidgetDisplayText , txtWidgetURL
+				let displayt = document.getElementById('txtWidgetDisplayText');
+				displayt.value = result2.BookmarkDisplayText;
+				let URL2 = document.getElementById('txtWidgetURL');
+				URL2.value = result2.WidgetURL;
+			case "Collapseable IFrame":
+				//txtWidgetDisplayText , txtWidgetURL
+				let displayt2 = document.getElementById('txtWidgetDisplayText');
+				displayt2.value = result2.BookmarkDisplayText;
+				let URL = document.getElementById('txtWidgetURL');
+				URL.value = result2.WidgetURL;
+			default: ;
+			
+				
+		}
+	  })
+	  .catch(error => {
+		console.error('There was an error with the fetch operation:', error);
+	  });
+	//^ Should be able to call api/editwidget.php and send the RecID of the widget, to get back a set of details for the particular widget. 
+	
+	
+}
+
 function drawWidget(widget) {
 	//Variables
 	// Deserialize JSON data in JavaScript
@@ -196,7 +305,7 @@ function drawWidget(widget) {
 	  
 		// Variable Declarations to be shared between widget types: 
 		let siteurl = getrooturlpath();
-		let editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
+		let editbuttonscss = "<a class='editbuttons' onclick='editwidget(" + RecID + ")' style='display:none;height:24px; width:24px;'";
 		
 		
 		const floatingbookmarkPositionAndCSSClass = "left: " + PositionX + "px; top: " + PositionY + "px;' class='widget resize " + WidgetCSSClass + "'>";
@@ -213,7 +322,7 @@ function drawWidget(widget) {
 		
 		PositionAndCSSClass = PositionAndSize + "class='widget resize " + WidgetCSSClass + " Countdown'>";
 		
-		combined = "<div id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" + PositionAndCSSClass + editbuttonscss + siteurl + "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" + imgstylecss + siteurl + "icons/edit.png'></img></a>" + deletebuttoncss + siteurl + "actions/DeleteWidget.php?RecID=" + RecID + "'>" + imgstylecss + siteurl + "icons/cancel.png'></img></a>";
+		combined = "<div id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" + PositionAndCSSClass + editbuttonscss + ">" + imgstylecss + siteurl + "icons/edit.png'></img></a>" + deletebuttoncss + ">" + imgstylecss + siteurl + "icons/cancel.png'></img></a>";
 	  
 	  
 	  switch (WidgetType) {
@@ -520,7 +629,7 @@ function toggleEditMode() {
 
 function openeditdialog() {
 	if (window.location.href.indexOf("EditRecID") != -1) {
-		document.getElementById('NewWidgetDialog').style.display='block';
+		document.getElementById('NewWidgetDialog2').style.display='block';
 	}
 }
 
@@ -719,29 +828,7 @@ function opencollapsediframe(recid) {
 			rect = {};
 		}
 		
-		function getLocation(userID, bookname) {
-			// Set the data to be sent in the message body as an object
-			const data = { userID: userID, bookname: bookname };
-			
-			// Send a POST request to the PHP page with the data in the message body
-			fetch('getbookprogress.php', {
-			  method: 'POST',
-			  headers: { 'Content-Type': 'application/json' },
-			  body: JSON.stringify(data)
-			})
-			  .then(response => response.json())
-			  .then(data => {
-				// Update the local storage item with the retrieved location data
-				localStorage.setItem(bookname, JSON.stringify(data));
-				console.log('updated localstorage with book position: ' + JSON.stringify(data));
-			  })
-			  .catch(error => {
-				console.error('Error retrieving location:', error);
-			  });
-		  }
-		  
-		  
-		  
+			  
 // Need, at the beginning of page load, to identify list of widget types.
 // Need to check these to see if we have them in localstorage.
 // If we don't, then we need to query the server for them.
