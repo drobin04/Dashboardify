@@ -15,7 +15,7 @@ $dashboardphotourl = ""; // Used later at end of script to pre-populate value in
 Try { // Load Dashboard list
     $count = count($dashboards);
     debuglog($count, "Count variable");
-    if ((int)$count == 1) {
+    if ((int)$count == 1) { // If there's only one dashboard for the user
         foreach($dashboards as $row) {
             debuglog($dashboards, "Dashboards Array - Single Result"); 
             $dashboardid = $dashboards[0]["DashboardID"]; 
@@ -25,13 +25,24 @@ Try { // Load Dashboard list
             $dashboardname = $row["Name"];
             $embeddable = $row["Embeddable"];
         }
-    } elseif ((int)$count > 1) {
+    } elseif ((int)$count > 1) { // If there's multiple dash's for the user
         debuglog($dashboards, "Dashboards Array - Multiple Results"); 
         echo "<label> Dashboard: </label><select ID='ddlSelectedDashboard' name='SelectedDashboard' onchange='loadselecteddashboard()'>";
         $match = 0;
         $matcheddashboardid = -1;
-        If (Isset($_GET["SelectDashboardID"])) { $matcheddashboardid = $_GET["SelectDashboardID"];}
+        If (Isset($_GET["SelectDashboardID"])) { 
+        	$matcheddashboardid = $_GET["SelectDashboardID"];
+        }
+        $last_dashboard_selected_cookie_found = FALSE;
+        $last_dashboard_id = "";
+        if (isset($_COOKIE['lastselecteddashboardid'])) {
+        	$last_dashboard_selected_cookie_found = TRUE;
+        	$last_dashboard_id = $_COOKIE['lastselecteddashboardid'];
+        }
+        
+        $debugdata = " Last Dashboard ID Readin: " . ($last_dashboard_selected_cookie_found ? 'true' : 'false') . ", Last Dashboard ID: " . $_COOKIE['lastselecteddashboardid'];
 
+        
         foreach($dashboards as $row) {
             $recid = $row["DashboardID"];
             if ($row["DefaultDB"] == "Y") {
@@ -41,18 +52,26 @@ Try { // Load Dashboard list
                 $dashboardphotourl = $row["BackgroundPhotoURL"];
                 $usercss = $row["CustomCSS"];
                 debuglog($dashboardid, "Selected Dashboard ID.");
-                
+                // Need to check whether we have a value for lastselected dashboard
+                // If value exists, we need to select THAT dashboard in the dropdown instead of the default 
+                // 
                 echo "<option value='" . $row["DashboardID"] . "'";
-                If ($recid == $matcheddashboardid){echo "selected='selected'";} elseif ($matcheddashboardid <> -1) {} else {echo "selected='selected'";}
+                If ($recid == $matcheddashboardid){echo "selected='selected'";} elseif ($matcheddashboardid <> -1 || $last_dashboard_selected_cookie_found) {} else {echo "selected='selected'";}
                 echo ">" . $row["Name"] . "</option>";
 
             } else {
                 echo "<option value='" . $row["DashboardID"] . "'";
-                If ($recid == $matcheddashboardid){echo "selected='selected'";}
+                If ($recid == $matcheddashboardid || ($last_dashboard_selected_cookie_found && $recid == $last_dashboard_id && !isset($_GET['SelectDashboardID'])))
+                {
+                	echo "selected='selected'";
+                	$dashboardphotourl = $row["BackgroundPhotoURL"];
+                	$usercss = $row["CustomCSS"];
+                }
                 echo ">" . $row["Name"] . "</option>";
-
+                
             }
             if (isset($_GET["SelectDashboardID"])) {
+            	// If this is a dashboard selected via the changing dropdown, mark that we found a match & collect some data. 
                 if ($row["DashboardID"] == $_GET["SelectDashboardID"]) { 
                     $match = 1; 
                     debuglog(array($match,$matcheddashboardid), "Match / selected db from URL if present?"); 
@@ -62,10 +81,17 @@ Try { // Load Dashboard list
                 }
             }
         }
+        
+        If ($matcheddashboardid == -1 && isset($_COOKIE['lastselecteddashboardid'])) { 
+        	$dashboardid = $_COOKIE['lastselecteddashboardid'];
+        }
         echo "</select><br />";
 
         //debuglog($_GET['SelectDashboardID'], "Selected Dashboard ID from URL");
-        If ($match == 1) {$dashboardid = $_GET["SelectDashboardID"];}
+        If ($match == 1) {
+        	$dashboardid = $_GET["SelectDashboardID"]; 
+        	setcookie('lastselecteddashboardid', $dashboardid, 0, '/');
+        }
 
     } else { // If dash not found, create one
         $dashboardid = GUID(); 

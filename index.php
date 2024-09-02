@@ -9,18 +9,21 @@ include_once("shared_functions.php");
 // In the future, will want to populate the same cookie using javascript if possible when we pull down the dashboard widgets / details etc. 
 
 // Widget Types To Include on New Widget dialog. Moved here for convenience in hiding one or multiple. 
-$New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
+$New_Widget_Dropdown_Options = "
+<option value='Bookmark'>Bookmark</option>
+<option value='IFrame'>IFrame</option>
 <option value='Collapseable IFrame'>Collapseable IFrame</option>
 <option value='Notes'>Notes</option>
 <option value='HTMLEmbed'>HTMLEmbed</option>
+<option value='Countdown'>Countdown</option>
+"
+?>
+<!--
+Removed following options from New_Widget_Dropdown_Options: 
 <option value='SQLServerScalarQuery'>SQLServerScalarQuery</option>
 <option value='SQLiteResultsList'>SQLiteResultsList</option>
 <option value='SQLite Chart (PHPGD)'>SQLite Chart (PHPGD)</option>
-<option value='Countdown'>Countdown</option>
-<option value='Blood Pressure Tracker'>Blood Pressure Tracker (unfinished)</option>
-"
-?>
-
+-->
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -83,99 +86,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 			
 			?>
 			</div>
-			<!-- Original (DEPRECATED) New Widget box; Now only using for EDITS! -->
-			<div id="NewWidgetDialog" class="white_content">
-				<form id="form1" method="POST" action="NewWidget.php" >
-					<?php   //Check if this is an 'Edit' or 'New' widget submission , set up.  
-						// NEW WIDGET FORM
-						
-						$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
-						//If EditRecID is in the URL, load details from DB
-						If (Isset($_GET["EditRecID"])) {
-							$WidgetID = $_GET["EditRecID"];
-							$select = "SELECT * FROM Widgets Where RecID = '" . $WidgetID . "'"; // Prepare SELECT statement.
-							$results = selectquery($select);
-							foreach($results as $row) {
-								If ($row["RecID"] == $WidgetID) {
-									$WidgetTypeValue = $row["WidgetType"];
-									$WidgetURLValue = $row["WidgetURL"];
-									$WidgetDisplayText = $row["BookmarkDisplayText"];
-									$WidgetPositionX = $row["PositionX"];
-									$WidgetPositionY = $row["PositionY"];
-									$WidgetSizeX = $row["SizeX"];
-									$WidgetSizeY = $row["SizeY"];
-									$WidgetCSSClass = $row["WidgetCSSClass"];
-									//$WidgetNotes = $row["Notes"];
-									$WidgetNotes = str_replace("''", "'", $row["Notes"]);
-				
-									// LOAD SQL FIELDS
-									$sqlwidgetquery = $row["sqlquery"];
-									$sqlwidgetdbname = $row["sqldbname"];
-									$sqlwidgetusername = $row["sqluser"];
-									$sqlwidgetpass = $row["sqlpass"];
-									$sqlwidgetserveraddress = $row["sqlserveraddress"];
-									$globalwidget = $row["Global"];
-									}
-							}
-						} else {$WidgetTypeValue = "Bookmark";$WidgetURLValue = "";$WidgetDisplayText = "";$WidgetPositionX = "";
-							$WidgetPositionY = "";$WidgetSizeX = "";$WidgetSizeY = "";$WidgetCSSClass = "";$WidgetNotes = "";
-							$WidgetID = "";
-							$sqlwidgetquery = ""; $sqlwidgetdbname = ""; $sqlwidgetserveraddress = ""; $sqlwidgetusername = ""; $sqlwidgetpass = ""; $globalwidget = "0";
-						} // Prepare unused variables
-					?>
-					<button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog').style.display='none';document.getElementById('fade').style.display='none'">Close</button>
-					<button id="btnSubmitNewWidget">Submit</button>
-					<br />
-					<header >New Widget<hr /></header>
-					<label>Widget Type: </label><select ID="ddlWidgetType" name="WidgetType" onclick="renderNewWidgetOptionsByDropdown()">
-						
-					<div id="columnc" class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
-						
-							<!-- Need to identify what to do with this... Option has to get submitted w/ html form. -->
-							<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option><!--<option value="Bookmark">Bookmark</option> Removed because duplicated by default value in line above-->        
-							<?php
-								echo $New_Widget_Dropdown_Options;
-								// Populate additional options for Custom Widget Providers
-								if (scalarquery("Select Count(*) As Matches From CustomWidgetProviders", "Matches") != 0) {
-									$wis = selectquery("Select WidgetProviderName From CustomWidgetProviders");
-									foreach ($wis as $widgetprovider) {
-										echo "<option value='" . $widgetprovider["WidgetProviderName"] ."'>" . $widgetprovider["WidgetProviderName"] . "</option>";
-									}
-								}
-							?>
-						</select><br />
-						<span id="widgetURL"><label>Widget URL: </label><input ID="txtWidgetURL" name="URL" value="<?php echo $WidgetURLValue; ?>"></input><br /></span>
-						<label>Display Text: </label><input ID="txtWidgetDisplayText" name="DisplayText" value="<?php echo $WidgetDisplayText; ?>"></input><br />
-						<?php if (isadmin($userid)) { 
-							$global_checked = "";
-							if ($globalwidget == "1") {
-								$global_checked = "checked";
-							}
-							echo "<input type='checkbox'id='GlobalWidgetBool' "  . $global_checked . " name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>"; 
-							echo "<br /><input type='checkbox'id='StoredWidgetBool' "  . "" . " name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>"; } ?>
-						<hr><!--<button type="button" style="margin-left:5px" onclick="init()">Set Position & Size</button>-->
-						<br />
-						<label>PositionX: </label><input ID="txtpositionx" Text="0" name="PositionX" value="<?php echo $WidgetPositionX; ?>"></input><br />
-						<label>PositionY: </label><input ID="txtpositiony" Text="0" name="PositionY" value="<?php echo $WidgetPositionY; ?>"></input><br />
-						<label>SizeX: </label><input ID="txtsizeX" Text="0" name="SizeX" value="<?php echo $WidgetSizeX; ?>"></input><br />
-						<label>SizeY: </label><input ID="txtsizeY" Text="0" name="SizeY" value="<?php echo $WidgetSizeY; ?>"></input><br />
-						<label>CSS Class: </label><input ID="txtCSSClass" name="CSSClass" value="<?php echo $WidgetCSSClass; ?>"></input><br />
-						Notes/HTML Embed: <textarea ID="txtNotes" rows="4" cols="50" name="Notes"><?php echo $WidgetNotes; ?></textarea><br />
-						<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input><br />
-						Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input></span><br />
-						
-						<span id="SQL">SQL Server Address<input ID="SQLServerAddressName" name="SQLServerAddressName" value="<?php echo $sqlwidgetserveraddress ?>"></input><br />
-						SQL DBName<input ID="SQLDBName" name="SQLDBName" value="<?php echo $sqlwidgetdbname ?>"></input><br />
-						SQLServer Username: (Empty for windows / SQLite auth) <input ID="sqluser" name="sqluser" value="<?php echo $sqlwidgetusername ?>"></input><br />
-						SQLServer PW: <input ID="sqlpass" name="sqlpass" value="<?php echo $sqlwidgetpass ?>"></input><br />
-						SQL Query: <input ID="sqlquery" name="sqlquery" value="<?php echo $sqlwidgetquery ?>"></input><br /></span>
-						<br />
-						</label>If you use GD / PHP Chart widget type, manually specify 'x' and 'y' column aliases for the x and y axis'.</label>
-					</div><!-- End of 'columnc' div -->
-				</form><!-- End of original new widget form -->
-			</div>
-			<script>openeditdialog()</script>
-			<!-- End of 'NewWidgetDialog' div-->
+											
 
 		<!-- New Test Version of New Widget Dialog -->
 		
@@ -201,7 +112,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
                     <select ID="ddlWidgetType2" name="WidgetType" onchange="drawNewWidgetBasedOnType()">
 					                       
                         	<!-- Option has to get submitted w/ html form. So keep this inside the <form> element, ideally above the pasted section below -->
-                    		<option value='<?php echo $WidgetTypeValue?>' selected='selected'><?php echo $WidgetTypeValue?></option><!--default value = Bookmark-->        
+                    		<!--default value = Bookmark-->        
 							<?php
 								echo $New_Widget_Dropdown_Options; // Populated from beginning of page, for convenient editing / switching on/off until we get a config editor for this
 								// Populate additional options for Custom Widget Providers
@@ -213,14 +124,8 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 								}
 							?>
                         </select><br />
-                        <?php if (isadmin($userid)) { 
-							$global_checked = "";
-							if ($globalwidget == "1") {
-								$global_checked = "checked";
-							}
-						 } 
-						?>
-						<br /><input type='checkbox'id='GlobalWidgetBool' <?php echo $global_checked; ?> name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>
+                        
+						<br /><input type='checkbox'id='GlobalWidgetBool' name='GlobalDefault' value='1'><label>Create as Default widget for new users?</label></input>
 						<br /><input type='checkbox'id='StoredWidgetBool'  name='storedwidgetbool' value='1'><label>Create as a re-usable, stored widget that can be selected from a list?</label></input>
 						<!-- FORM CONTENT SHOULD GET PASTED HERE -->
 						<div id="NewWidget_Form">
@@ -228,7 +133,7 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 						
 						</div>
 					<!-- Used to store Dashboard ID-->
-					<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" value="<?php echo $WidgetID; ?>"></input><br />
+					<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" ></input><br />
 					Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input></span><br />
 
 					</div>
@@ -273,7 +178,10 @@ $New_Widget_Dropdown_Options = "<option value='IFrame'>IFrame</option>
 		</div>
 		</form>
 		<br />
-		</body><script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
-
+		<debuginfo>
+		
+		</debuginfo>
+		<script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
+</body>
 		
 		</html>

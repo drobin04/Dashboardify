@@ -1,3 +1,110 @@
+async function populateEditRecID(recid) {
+  console.log("About to get edit details...");
+	const url9 = getrooturlpath() + '/api/editwidget.php?EditRecID=' + recid;
+  document.getElementById('NewWidgetDialog2').style.display='block';
+  try {
+    const response = await fetch(url9);
+    const data = await response.json();
+    console.log(data);
+    if (data.length > 0) {
+      const widget = data[0];
+      console.log("Widget details: " + widget);
+      // Store WidgetType in a variable
+      const widgetType = widget.WidgetType;
+      
+      // Call a separate function here for populating the ddlwidget combo with values before selecting one
+      drawNewWidgetBasedOnType();
+      
+      // Populate fields with values
+      try {
+		  document.getElementById('ddlWidgetType2').value = widgetType;
+		} catch (error) {
+		  console.log('Error setting ddlWidgetType2 value:', error);
+		}
+		
+		try {
+		  document.getElementById('txtWidgetID').value = widget.RecID;
+		} catch (error) {
+		  console.log('Error setting txtWidgetID value:', error);
+		}
+		
+		try {
+		  document.getElementById('txtWidgetURL').value = widget.WidgetURL;
+		} catch (error) {
+		  console.log('Error setting txtWidgetURL value:', error);
+		}
+		
+		try {
+		  document.getElementById('txtWidgetDisplayText').value = widget.BookmarkDisplayText;
+		} catch (error) {
+		  console.log('Error setting txtWidgetDisplayText value:', error);
+		}
+		
+		try {
+		  document.getElementById('txtCSSClass').value = widget.WidgetCSSClass;
+		} catch (error) {
+		  console.log('Error setting txtCSSClass value:', error);
+		}
+		
+		try {
+		  document.getElementById('txtNotes').value = widget.Notes;
+		} catch (error) {
+		  console.log('Error setting txtNotes value:', error);
+		}
+		
+		try {
+		  document.getElementById('SQLServerAddressName').value = widget.sqlserveraddress;
+		} catch (error) {
+		  console.log('Error setting SQLServerAddressName value:', error);
+		}
+		
+		try {
+		  document.getElementById('SQLDBName').value = widget.sqldbname;
+		} catch (error) {
+		  console.log('Error setting SQLDBName value:', error);
+		}
+		
+		try {
+		  document.getElementById('sqluser').value = widget.sqluser;
+		} catch (error) {
+		  console.log('Error setting sqluser value:', error);
+		}
+		
+		try {
+		  document.getElementById('sqlpass').value = widget.sqlpass;
+		} catch (error) {
+		  console.log('Error setting sqlpass value:', error);
+		}
+		
+		try {
+		  document.getElementById('sqlquery').value = widget.sqlquery;
+		} catch (error) {
+		  console.log('Error setting sqlquery value:', error);
+		}
+		
+		// Check if WidgetType is Countdown
+		if (widgetType === 'Countdown') {
+		  try {
+			document.getElementById('datepicker').value = widget.Notes;
+		  } catch (error) {
+			console.log('Error setting datepicker value:', error);
+		  }
+		}
+
+      
+      // Check if WidgetType is Countdown
+      if (widgetType === 'Countdown') {
+        document.getElementById('datepicker').value = widget.Notes;
+      }
+    } else {
+    	console.log("Data length was 0, double check, may have run into error.");	
+    }
+  } catch (error) {
+    console.log('Error:', error);
+  }
+}
+
+
 async function getWidgetsForDashboard(dashboardID) {
 	document.cookie = "dashboardid=" + dashboardID;
 	var urlforapi = getrooturlpath() + '/api/getWidgetsForDashboard.php?recid='+ dashboardID;
@@ -5,7 +112,7 @@ async function getWidgetsForDashboard(dashboardID) {
 	var widgets = await fetchData(urlforapi);
 	console.log(widgets);
 	
-	if (widgets == "") {
+	if (widgets == "") {  
 		console.log("Response for new widgets was empty. Will try to draw from cache.");	
 	} else {
 		console.log("Response received for widgets, drawing with updated data.");	
