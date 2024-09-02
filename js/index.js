@@ -355,7 +355,7 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 			let width = SizeX + "px";
 			let height = SizeY + "px";
 			let customclass = WidgetCSSClass;
-			let combined_notes = "<div class='notes resize widget " + customclass + " ' id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: " + left + "; top: " + top + "; width: " + width + "; height: " + height + ";'>" + "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" + siteurl +  "?EditRecID=" + RecID + "&SelectDashboardID=" + dashboardid + "'>" +  imgstylecss + siteurl + "icons/edit.png'></img></a>" +  deletebuttoncss + ">" + imgstylecss + siteurl +  "icons/cancel.png'></img></a>";
+			let combined_notes = "<div class='notes resize widget " + customclass + " ' id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: " + left + "; top: " + top + "; width: " + width + "; height: " + height + ";'>" + "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='editwidget(" + RecID + ")'>" +  imgstylecss + siteurl + "icons/edit.png'></img></a>" +  deletebuttoncss + ">" + imgstylecss + siteurl +  "icons/cancel.png'></img></a>";
 		
 			echo(combined_notes + "<div style='height: 100%;' id='" + RecID + "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>" + notesvalue +"</md-block></p></div></div>");
 	  		
