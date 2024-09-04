@@ -140,6 +140,8 @@ Removed following options from New_Widget_Dropdown_Options:
 					<textarea ID="txtCSS" name="txtCSS" cols="40" rows="5" style="width:100%; height:50%;"><?php echo $usercss ?></textarea><br />
 					Background Image URL: <input ID="backgroundurl" name="backgroundurl" value="<?php echo $dashboardphotourl ?>"></input><br /> 
 					Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input><br />
+					User ID: <?php echo getCurrentUserID() ?>
+					User Email: <?php echo getCurrentUserEmail() ?>
 				</div>
 			</div></form>
         </div>

@@ -1,4 +1,7 @@
 <?php
+require '../vendor/autoload.php'; // Load Composer's autoloader for Google API client
+use Google\Client as Google_Client;
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -42,6 +45,63 @@ error_reporting(E_ALL);
         
         switch ($action) {
         	
+        case "login-with-google":
+        	// Check if the cookie exists
+			if (isset($_COOKIE['g_idtoken'])) {
+				
+				
+				
+				$client = new Google_Client(['client_id' => '814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com']); // Specify your Client ID
+				
+				// Check if the cookie exists
+				//if (isset($_COOKIE['g_idtoken'])) {
+				$id_token_temp = $_COOKIE['g_idtoken'];
+				$id_token = "";
+				// Validate the ID token
+				try {
+					$payload = $client->verifyIdToken($id_token_temp);
+			
+					if ($payload) {
+						// Token is valid
+						$userId_google = $payload['sub']; // User ID from the payload
+						$id_token = htmlspecialchars($userId_google);
+						// Optionally, store user info in the session or database
+
+						// 2. Check if user is already present in users table
+						$sql1 = "Select Count(Email) As Number From Users Where Email = '" . $id_token . "'";
+						$UserAlreadyExistsBool = scalarquery($sql1, "Number");
+						if ($UserAlreadyExistsBool == "1") {
+							// We do nothing
+							//echo "<br />User already exists!";
+							// Continue to logging them in / establishing a session and redirecting them....
+							$userid = GetUserIDFromEmail($id_token);
+							complete_login($userid);
+						}
+						if ($UserAlreadyExistsBool == "0") {
+							// We create the user. 
+							//echo "<br />User does not exist yet!";
+							CreateUserIDForEmail($id_token, "GAuth");
+							$userid = GetUserIDFromEmail($id_token);
+							complete_login($userid);
+						}
+					} else {
+						echo "Invalid ID token.";
+						exit;
+					}
+				} catch (Exception $e) {
+					echo "Error: " . htmlspecialchars($e->getMessage());
+					exit;
+				}
+				//} 
+				
+					
+				
+
+			} else {
+				// Display a message if the cookie does not exist
+				echo "Cookie 'g_idtoken' not found.";
+			}
+        	break;
         case "register":
         	// Need to check if user already exists before creating new user account. 
         	if (!DoesUserExist($Email)) {
@@ -169,22 +229,10 @@ error_reporting(E_ALL);
             If (is_scalar($userid)) {
                 $userfound = true; // found match for username
                 // See if pw matches
+				setcookie("debug_1", "User found for id: " . $userid, 2147483640, "/");
                 authenticate($Email, $userid, $password, $userfound); 
             }
-            // else {
-            //     if ($authmode == "None") {
-            //             // Create User record, re-run statement
-            //             complete_login($userid);
-
-                    
-                
-            //     } else {
-            //         // failed to authenticate!
-            //         failed_auth();
-            //     }
-    
-    
-            // }
+            
         } else { // User not found. 
         		// IF 'None' authentication is enabled, then create user account, this is intended for a dev use case (Deprecated, may remove later).
         		// Otherwise, fail auth attempt. 
@@ -263,6 +311,7 @@ function failed_auth() {
             if ($userfound) {
                 $userpw = scalarquery_bind1("Select Password From Users Where Email = ?",$eml, "password");
                 if ($userpw == $password) {
+					setcookie("debug_2", "Password Authentication verified", 2147483640, "/");
                     complete_login($userid);
                 } else {
                     failed_auth();
@@ -277,7 +326,9 @@ function failed_auth() {
 
     function complete_login($uid) {
             $sessionid = GUID();
+			setcookie("debug_3", "Session ID: " . $sessionid, 2147483640, "/");
             CreateSessionForID($uid, $sessionid);
+			setcookie("debug_4", "Session created.", 2147483640, "/");
 			SendCookieToUser($sessionid); //Save session ID into cookie
             // HASH THE USERID BEFORE SENDING IT OUT - HASH IS IMPORTANT SO WE DONT REVEAL THE USERID TO THE END USER.
             $hasheduid = hash('sha256',$uid);
