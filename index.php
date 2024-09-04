@@ -5,8 +5,6 @@ error_reporting(E_ALL);
 
 include("actions/logoutredirect.php");
 include_once("shared_functions.php");
-// Future Note - Send a Cookie with dashboard ID on page load.... This will make it easier to populate the dialogs with data for this dashboard using API's....
-// In the future, will want to populate the same cookie using javascript if possible when we pull down the dashboard widgets / details etc. 
 
 // Widget Types To Include on New Widget dialog. Moved here for convenience in hiding one or multiple. 
 $New_Widget_Dropdown_Options = "
@@ -33,13 +31,17 @@ Removed following options from New_Widget_Dropdown_Options:
 <script type="text/javascript" src="js/index.js"></script>
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
+    .repositioning_widget {
+            text-decoration: underline;
+            cursor: pointer;
+            user-select: none; /* Prevents text selection */
+        }
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }
 	</style></head>
 <body id='dashboardcontent'>
         <div>
 			<!--Buttons at top left-->
-            <!--<button type="button" class="menubar" onclick='toggleDisplay("NewWidgetDialog");'>New Widget</button> -->
             <button type="button" class="menubar" onclick='toggleDisplay("NewWidgetDialog2");drawNewWidgetBasedOnType();'>New Widget</button>
             <button type="button" class="menubar" onclick='toggleDisplay("cssEditorBox");'>Edit CSS</button>
             <button type="button" class="menubar" onclick='toggleDisplay("NewDashboardDialog");'>New Dashboard</button>
@@ -63,10 +65,7 @@ Removed following options from New_Widget_Dropdown_Options:
 			?>
 			<!-- Begin Widget Loading -->
 			<div id="widgetcontainer">	
-			<script>
-            getWidgetsForDashboard('<?php echo $dashboardid; ?>');
-            
-            </script>
+			<script>getWidgetsForDashboard('<?php echo $dashboardid; ?>');</script>
 			<?php
 				//
 				//
@@ -81,25 +80,13 @@ Removed following options from New_Widget_Dropdown_Options:
 					include('actions/index/Widget_Handling.php');
 					// Lots of code here.
 					//
-					//
 				}
-			
 			?>
 			</div>
 											
-
-		<!-- New Test Version of New Widget Dialog -->
-		
+		<!-- Edit/New Widget Dialog -->
 		<div id="NewWidgetDialog2" class="white_content">
 		<form id="form_ExperimentalNewWidgetDialog" method="POST" action="NewWidget.php" >
-		<?php   //Check if this is an 'Edit' or 'New' widget submission , set up.  
-			// NEW WIDGET FORM
-			// NEW WIDGET FORM
-			
-			$querystring = $_SERVER['QUERY_STRING']; //Get value from URL
-			//If EditRecID is in the URL, load details from DB
-			
-		?>
                     <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog2').style.display='none';">Close</button>
                     <button id="btnSubmitNewWidget">Submit</button>
                     <!--<button onclick='' type="button">Render</button>-->
@@ -108,9 +95,7 @@ Removed following options from New_Widget_Dropdown_Options:
                     <label>Widget Type: </label>
                     <div class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
                     
-                    
                     <select ID="ddlWidgetType2" name="WidgetType" onchange="drawNewWidgetBasedOnType()">
-					                       
                         	<!-- Option has to get submitted w/ html form. So keep this inside the <form> element, ideally above the pasted section below -->
                     		<!--default value = Bookmark-->        
 							<?php
@@ -130,19 +115,15 @@ Removed following options from New_Widget_Dropdown_Options:
 						<!-- FORM CONTENT SHOULD GET PASTED HERE -->
 						<div id="NewWidget_Form">
 						<!-- This section intentionally left empty, as it gets pasted into / filled by code-->
-						
 						</div>
 					<!-- Used to store Dashboard ID-->
-					<span style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" ></input><br />
+					<span id="WidgetAndDashboardIDSpan" style="display: none;">Edit Widget ID: <input ID="txtWidgetID" name="ID" ></input><br />
 					Dashboard ID: <input ID="txtDashboardID" name="dashboardID" value="<?php echo $dashboardid; ?>"></input></span><br />
 
 					</div>
 		</div></form>
-
-		
-		<!-- End of new Test version of New Widget Dialog
-		                                  
-		
+		<!-- End of New/Edit Widget Dialog-->
+		                          
 			<!--Edit CSS Box-->
 			<form id="form1" method="POST" action="SaveStyling.php">
 			<div id="cssEditorBox" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
@@ -177,11 +158,9 @@ Removed following options from New_Widget_Dropdown_Options:
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
-		<br />
-		<debuginfo>
-		
-		</debuginfo>
 		<script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
-</body>
-		
+<script>
+        
+    </script>
+		</body>
 		</html>

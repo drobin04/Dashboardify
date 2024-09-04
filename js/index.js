@@ -506,55 +506,91 @@ $( function() {
 
   $(document).ready(function() {
   
-
+  	
 	// Add event handler to the button with id "editmode"
 	$("#editmode").click(function() {
 	  // Call the toggleEditMode function
 	  toggleEditMode();
 	});
-  
+});
+	// Track the state of the 'x' key
+//        let xPressed = false;
+
+//        function updateWidgets() {
+//            const widgets = document.querySelectorAll('.widget');
+//            widgets.forEach(el => {
+//                if (xPressed) {
+//                    el.classList.add('repositioning_widget');
+//                } else {
+//                    el.classList.remove('repositioning_widget');
+//                }
+//            });
+//        }
+
+//       function handleKeyDown(event) {
+//            // Check if the pressed key is 'x' (key code 88) or 'X'
+//            if (event.key === 'x' || event.key === 'X') {
+//                xPressed = true;
+//                console.log("X Key Pressed!");
+//                updateWidgets();
+//                toggleEditMode();
+//            }
+//        }
+
+//        function handleKeyUp(event) {
+            // Check if the released key is 'x' (key code 88) or 'X'
+//            if (event.key === 'x' || event.key === 'X') {
+//                xPressed = false;
+//                updateWidgets();
+//                toggleEditMode();
+//            }
+//        }
+
+        // Add event listeners for key down and key up
+//        document.addEventListener('keydown', handleKeyDown);
+//        document.addEventListener('keyup', handleKeyUp);
+
+	
 	// Function to toggle edit mode
+var isEditMode = false; // This flag will help track the state
+
 function toggleEditMode() {
-// Toggle the "draggable" property of elements with the class "widget"
+    isEditMode = !isEditMode; // Toggle the state
 
+    if (isEditMode) {
+        // Enable draggable functionality
+        $(".widget").draggable({
+            stop: function(event, ui) {
+                // Get the current position of the widget element
+                var x = ui.position.left;
+                var y = ui.position.top;
 
-		var draggable = $(this).data("ui-draggable");
-		if (draggable) {
-		  $(this).draggable("option", "disabled", !draggable.options.disabled);
-		}
-  
-  // Initialize the draggable property of elements with the class "widget"
-  $(".widget").draggable({
-	  stop: function(event, ui) {
-		// Get the current position of the widget element
-		var x = ui.position.left;
-		var y = ui.position.top;
-  
-		// Get the ID of the moved element
-		var widgetId = $(this).attr("id");
-  
-		// Send API request with X, Y, and ID as query string parameters
-		var apiUrl = "actions/move_resize_widget.php?action=movewidget";
-		var urlWithParams = apiUrl + "&x=" + x + "&y=" + y + "&RecID=" + widgetId;
-  
-		$.ajax({
-		  url: urlWithParams,
-		  method: "GET",
-		  success: function(response) {
-			// Handle the API response if needed
-			console.log("API request successful");
-		  },
-		  error: function(xhr, status, error) {
-			// Handle any errors that occur during the API request
-			console.error("API request failed:", error);
-		  }
-		});
-	  }
-	});
-  
-  
-	}
-  });
+                // Get the ID of the moved element
+                var widgetId = $(this).attr("id");
+
+                // Send API request with X, Y, and ID as query string parameters
+                var apiUrl = "actions/move_resize_widget.php?action=movewidget";
+                var urlWithParams = apiUrl + "&x=" + x + "&y=" + y + "&RecID=" + widgetId;
+
+                $.ajax({
+                    url: urlWithParams,
+                    method: "GET",
+                    success: function(response) {
+                        // Handle the API response if needed
+                        console.log("API request successful");
+                    },
+                    error: function(xhr, status, error) {
+                        // Handle any errors that occur during the API request
+                        console.error("API request failed:", error);
+                    }
+                });
+            }
+        });
+    } else {
+        // Disable draggable functionality
+        $(".widget").draggable("destroy");
+    }
+}
 
 
 
