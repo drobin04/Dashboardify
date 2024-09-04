@@ -1,0 +1,24 @@
+#settingsLink {
+		text-decoration: none;
+		color: blue;
+		font-weight: bold;
+		cursor: pointer;
+		position: fixed; /* Fixed position so it stays in place */
+		top: 5px;
+		right: 20px;
+		width: 70px;
+	}
+	
+	#settingsMenu {
+		position: absolute;
+		background-color: white;
+		border: 1px solid black;
+		padding: 10px;
+		z-index: 1000; /* Ensure it appears above other content */
+		display: none; /* Hide initially */
+	}
+	
+	#settingsMenu button {
+		display: block;
+		margin-bottom: 5px;
+	}

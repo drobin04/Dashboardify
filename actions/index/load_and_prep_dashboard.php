@@ -1,11 +1,6 @@
-<?php
-
-$db_file = new PDO('sqlite:Dashboardify.s3db'); // Connect to SQLite database file.
-$sessionid = $_COOKIE["SessionID"]; debuglog($sessionid, "SessionID"); //Get User for Session ID
-$userid = selectquery("Select UserID From Sessions Where SessionID = '" . $sessionid . "'")[0]["UserID"]; debuglog($userid, "User ID found for user");
-if (isadmin($userid)) { // Display Setup button if user is an admin. 
-    echo "<button type='button' style='float:left !important;''><a class='nodeco' href='setup.php'>Setup</a></button>";
-}
+<?php //Prior to reaching this point, the DB is loaded into $db_file and an admin check is done 
+// to see if we should populate the setup button or not. 
+// for reference, check 'loaddb_checkadmin_populate-setup-button.php' under actions/index.
 echo "<script>localStorage.setItem('userID', '$userid');</script>";
 $dashboards = selectquery("Select * From Dashboards Where UserID = '" . $userid . "'"); // Query for dashboards for user. 
 $dashboardname = "";

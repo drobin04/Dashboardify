@@ -27,8 +27,10 @@ Removed following options from New_Widget_Dropdown_Options:
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
 <link rel="stylesheet" href="config/globalcss.css">
+<link rel="stylesheet" href="css/settings_flyout.css">
 <script type="module" src="js/md-block.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/settings_flyout.js"></script>
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
     .repositioning_widget {
@@ -36,6 +38,7 @@ Removed following options from New_Widget_Dropdown_Options:
             cursor: pointer;
             user-select: none; /* Prevents text selection */
         }
+    
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }
 	</style></head>
@@ -43,19 +46,24 @@ Removed following options from New_Widget_Dropdown_Options:
         <div>
 			<!--Buttons at top left-->
             <button type="button" class="menubar" onclick='toggleDisplay("NewWidgetDialog2");drawNewWidgetBasedOnType();'>New Widget</button>
-            <button type="button" class="menubar" onclick='toggleDisplay("cssEditorBox");'>Edit CSS</button>
-            <button type="button" class="menubar" onclick='toggleDisplay("NewDashboardDialog");'>New Dashboard</button>
             <button type="button" class="menubar" onclick="var all = toggleDisplayByClass('editbuttons');">Edit Widgets</button>
-			<button><a type="button" class="menubar" onclick="toggleDisplay('EditDashboardDialog');">Edit Dashboard</button>
-			<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
-			<button><a id="editmode" class="menubar nodeco">Move Widgets</button>
-			<button><a id="resizewidgets" class="menubar nodeco">Resize Widgets</a></button>
+            <button type="button" class="menubar" onclick='toggleDisplay("NewDashboardDialog");'>New Dashboard</button>
 			<button><a id="changepassword" class="menubar nodeco" href="actions/change_password.php">Change Password</a></button>
-				
-			
-			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.
-				doesDatabaseExist() ? null : redirect('setup.php'); // Redirect IF DB DOESNT EXIST
-				include("config/check_admin.php");
+			<button id="settingsLink"><a href="#" id="settingsLink2">Settings</a></button>	
+			<!--Settings Flyout Menu-->
+			<div id="settingsMenu" class="hidden">
+				<button><a id="editmode" class="menubar nodeco">Move Widgets</button>
+				<button><a id="resizewidgets" class="menubar nodeco">Resize Widgets</a></button>
+				<?php 
+					doesDatabaseExist() ? null : redirect('setup.php'); // Redirect IF DB DOESNT EXIST
+					include("config/check_admin.php"); // this needs to be here before next line
+					include('actions/index/loaddb_checkadmin_populate-setup-button.php'); 
+				?>
+				<button type="button" class="menubar" onclick='toggleDisplay("cssEditorBox");'>Edit CSS</button><br />
+				<button><a type="button" class="menubar" onclick="toggleDisplay('EditDashboardDialog');">Edit Dashboard</button>
+				<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
+			</div>
+			<?php //Check for dashboards for user; Create first dashboard if none exist, then load any widgets found for dashboard if exists.				
 				// Load and Prep Dashboard
 				// Renders setup button here >>
 				include('actions/index/load_and_prep_dashboard.php');
