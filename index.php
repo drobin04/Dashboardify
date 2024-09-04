@@ -46,8 +46,6 @@ Removed following options from New_Widget_Dropdown_Options:
             <button type="button" class="menubar" onclick='toggleDisplay("cssEditorBox");'>Edit CSS</button>
             <button type="button" class="menubar" onclick='toggleDisplay("NewDashboardDialog");'>New Dashboard</button>
             <button type="button" class="menubar" onclick="var all = toggleDisplayByClass('editbuttons');">Edit Widgets</button>
-			<button><a class='nodeco menubar' href="cachedpage.html">Cached Page</a></button>
-			<button><a class='nodeco menubar' href="index.php">Main Page / Reload Cache</a></button>
 			<button><a type="button" class="menubar" onclick="toggleDisplay('EditDashboardDialog');">Edit Dashboard</button>
 			<button><a class="menubar nodeco" href="actions/logout.php">Log Out</a></button>
 			<button><a id="editmode" class="menubar nodeco">Move Widgets</button>
