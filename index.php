@@ -14,6 +14,8 @@ $New_Widget_Dropdown_Options = "
 <option value='Notes'>Notes</option>
 <option value='HTMLEmbed'>HTMLEmbed</option>
 <option value='Countdown'>Countdown</option>
+<option value='CountUp_Hours'>Count Up- Hours Since Last</option>
+<option value='CountUp_Days'>Count Up- Days Since Last</option>
 "
 ?>
 <!--
@@ -33,11 +35,11 @@ Removed following options from New_Widget_Dropdown_Options:
 <script type="text/javascript" src="js/settings_flyout.js"></script>
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
-    .repositioning_widget {
+		/*.repositioning_widget {
             text-decoration: underline;
             cursor: pointer;
             user-select: none; /* Prevents text selection */
-        }
+        }*/
     
 	<?php include("usercss.php"); //Load user-defined CSS for page from DB. Moved to file to make this file easier to read, as this code has long been finished. ?>
 	md-block:not([rendered]) { display: none }

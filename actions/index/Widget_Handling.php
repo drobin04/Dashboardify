@@ -16,41 +16,13 @@ $floatingbookmark = "<div id='" . $row["RecID"] . "' class='widget bookmark' sty
 . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" 
 . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
 Switch ($row["WidgetType"]) {
-case "Blood Pressure":
-	// Let's 
-	// Draw widget here
 	
-	break;
-		
 case "Countdown":
-	// Draw box for countdown
-	// Just need to get date from the Notes field
-	// Ideally, on the front end / UI side, we render a nice date picker that enforces
-	// a nice convention for storing the date instead of relying on manual user input
-	if ($row["WidgetType"] == "Countdown") {
-		// Get string value out of Notes
-		$stringValue = $row["Notes"];
-		
-		// Get title
-		$title = $row["BookmarkDisplayText"];
-		
-		// Convert to date format
-		$dateValue = date_create($stringValue);
-		
-		// Calculate time from now until date value, in days
-		$now = new DateTime();
-		$interval = $now->diff($dateValue);
-		$days = $interval->format('%a');
-		
-		//Redraw widget details, to add in custom widget class for styling later on...
-		$PositionAndCSSClass = $PositionAndSize . "class='widget resize " . $row["WidgetCSSClass"] . " Countdown'>";
-		$combined = "<div id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" . $PositionAndCSSClass . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
-
-		
-		//echo $combined . "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" . $title . "</b></div><br /><div id='countdownvalue'>" . $days . " Days Remaining.</div></div></p></div>";
-	}	
+	// Do nothing, this gets handled in JS client-side.
 	break;
-	
+case "CountUp_Hours":
+	// Do nothing, this gets handled in JS client-side.
+	break;
 case "SQLServerScalarQuery":
 		If ($row["WidgetType"] == "SQLServerScalarQuery") {
 		$sqlservaddress = $row["sqlserveraddress"];
@@ -78,48 +50,19 @@ case "SQLServerScalarQuery":
 	}
 	break;
 	case "Bookmark":
-		//If (($row["WidgetType"] == "Bookmark") and ($row["PositionX"] != 0 and $row["PositionX"] != "")) { // For Bookmarks with custom positions
-		//echo $floatingbookmark 
-		//." <div style='padding: 5px; width: 100%; class='widget bookmark "
-		//. $row["WidgetCSSClass"] 
-		//. "'><a target='_blank' href='" 
-		//. $row["WidgetURL"] 
-		//. "'>" 
-		//. $row["BookmarkDisplayText"] 
-		//."</a></div></div>";
-		//}
-		//elseIf ($row["WidgetType"] == "Bookmark" and ($row["PositionX"] == 0 or $row["PositionX"] == "")) {
-		//echo "<div id='" . $row["RecID"] . "' style='padding: 5px; margin: 5px; width:100px; background-color: lightgrey;  border: 1px solid black;' class='widget bookmark" . $row["WidgetCSSClass"] . "'><a target='_blank' href='". $row["WidgetURL"] ."'>". $row["BookmarkDisplayText"] ."</a>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a></div>";
-		//}
-
-	
+	// Do nothing, this gets handled in JS client-side.
 	break;
 	
 case "IFrame":
-    //echo $combined . "<iframe style='height:100%;width:100%' src='". $row["WidgetURL"] ."'></iframe></a></div>";
+	// Do nothing, this gets handled in JS client-side.
 break;
 	
 case "Collapseable IFrame":
-	$combined2 = "<div id='" . $row["RecID"] . "' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" . "width: " . $row["SizeX"] . "px; height: " . $row["SizeY"] . "px; width: " . $row["SizeX"] . "px;' class='widget resize " . $row["WidgetCSSClass"] . "'>" . $editbuttonscss . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $editbuttonscss . $siteurl . "actions/DeleteWidget.php?RecID=" . $row["RecID"] . "'>" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
-    
-	$hidden = "<div id='' class='collapse' style='" . "left: " . $row["PositionX"] . "px; top: " . $row["PositionY"] . "px; width: " . $row["SizeX"] . "px; height: 20px; width: " . $row["SizeX"] . "px;'" . "'>";
-	//echo $hidden . "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" . $row["RecID"] . "&quot;)'>" . $row["BookmarkDisplayText"] . "</a>";
-	//echo $combined2 . "<iframe style='height:100%;width:100%;' id='" . $row["RecID"] . "/iframe' src2='". $row["WidgetURL"] ."'></iframe></a></div>";
-	//echo "</div>"; //this wraps combined variable, into a surrounding div.
-	
+	// Do nothing, this gets handled in JS client-side.
 break;
 
 case "Notes":
-	// Escape the Notes value to replace '' with '
-	//$notesvalue = str_replace("''", "'", $row["Notes"]);
-	//$left = $row['PositionX'] . "px";
-	//$top = $row["PositionY"] . "px";
-	//$width = $row["SizeX"] . "px";
-	//$height = $row["SizeY"] . "px";
-	//$customclass = $row["WidgetCSSClass"];
-	//$combined_notes = "<div class='notes resize widget $customclass ' id='" . $row["RecID"] . "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;left: $left; top: $top; width: $width; height: $height;'>" . "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='" . $siteurl . "?EditRecID=" . $row["RecID"] . "&SelectDashboardID=" . $dashboardid . "'>" . $imgstylecss . $siteurl . "icons/edit.png'></img></a>" . $deletebuttoncss . ">" . $imgstylecss . $siteurl . "icons/cancel.png'></img></a>";
-
-	//echo $combined_notes . "<div style='height: 100%;' id='" . $row['RecID'] . "_note'><p class='note' style='padding-left: 15px; padding-right: 15px;'><md-block>". $notesvalue ."</md-block></p></div></div>";
+	// Do nothing, this gets handled in JS client-side.
 	break;
 
 case "HTMLEmbed":

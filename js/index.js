@@ -261,6 +261,26 @@ function editwidget(RecID) {
 				CountdownDate.value = formattedDate;
 				
 				break;
+			case "CountUp_Hours":
+				// txtWidgetDisplayText , datepicker
+				let CountUpTitle = document.getElementById('txtWidgetDisplayText');
+				CountUpTitle.value = result2.BookmarkDisplayText;
+				let CountUpDate = document.getElementById('datepicker');
+				
+				// Original date string in MM/DD/YYYY format
+				var dateValue = result2.Notes;
+
+				// Split the dateValue string into parts
+				var parts = dateValue.split('/');
+				var month = parts[0];
+				var day = parts[1];
+				var year = parts[2];
+
+				// Create a new date string in YYYY-MM-DD format
+				var formattedDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+				CountUpDate.value = formattedDate;
+				
+				break;
 			case "IFrame":
 				//txtWidgetDisplayText , txtWidgetURL
 				let displayt = document.getElementById('txtWidgetDisplayText');
@@ -377,11 +397,34 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 			
 			//Redraw widget details, to add in custom widget class for styling later on...
 			
-			
-			
-	
-			
 			echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + days + " Days Remaining.</div></div></p></div>");
+				
+			break;
+		case "CountUp_Hours":
+		
+			stringValue = Notes;
+			
+			// Get title
+			title = BookmarkDisplayText;
+			
+			
+			// Calculate time from now until date value, in hours
+			let now2 = new Date();
+			// Convert to date format
+			let dateValue2 = new Date(stringValue);
+
+			// Calculate the difference in milliseconds
+			let intervalInMilliseconds = now2 - dateValue2;
+
+			// Convert milliseconds to hours
+			let intervalInHours = Math.floor(intervalInMilliseconds / (1000 * 60 * 60));
+
+			// Output the result
+			let hours = intervalInHours;
+
+			//Redraw widget details, to add in custom widget class for styling later on...
+					
+			echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + hours + " Hours.</div></div></p></div>");
 				
 			break;
 		case "IFrame":
@@ -603,64 +646,87 @@ function toggleEditMode() {
   
 	// Function to toggle edit mode
 	function toggleresize() {
-	  $(".resize").each(function() {
-
-		// Add the desired styles to the widget
-		$(this).css({
-			'resize': 'both',
-			'overflow': 'auto'
-		});
-
-		// Get the element you want to monitor for resize
-		var widget = $(this)[0];
-  
-		// Create a new MutationObserver
-		var observer = new MutationObserver(function(mutationsList) {
-		  for (var mutation of mutationsList) {
-			if (
-			  mutation.type === "attributes" &&
-			  (mutation.attributeName === "style" || mutation.attributeName === "class")
-			) {
-			  // Clear any previously set timeout
-			  clearTimeout(widget.resizeTimeout);
-  
-			  // Set a new timeout to send the API request after 500ms of inactivity
-			  widget.resizeTimeout = setTimeout(function() {
-				// Get the width and height of the resized widget
-				const width = widget.offsetWidth;
-				const height = widget.offsetHeight;
-  
-				// Get the ID of the element being resized
-				const id = widget.id;
-  
-				// Construct the URL with the parameters
-				const url = new URL(window.location.origin + "/Dashboardify/actions/move_resize_widget.php");
-				const params = new URLSearchParams();
-				params.append("action", "resize");
-				params.append("width", width);
-				params.append("height", height);
-				params.append("id", id);
-				url.search = params.toString();
-  
-				// Send a request to the API with the data in the URL
-				fetch(url, {
-				  method: "POST"
-				})
-				  .then(response => {
-					// Handle the API response here
-				  })
-				  .catch(error => {
-					console.error("Error:", error);
-				  });
-			  }, 500); // Adjust the delay as needed
+		$(".resize").each(function() {
+		  var $this = $(this);
+		  var widget = $this[0];
+		  var hasResizeStyles = $this.data("resize-enabled");
+	  
+		  if (hasResizeStyles) {
+			// Remove resizing styles and functionality
+			$this.css({
+			  'resize': '',
+			  'overflow': ''
+			});
+	  
+			// Stop observing the widget
+			if (widget._mutationObserver) {
+			  widget._mutationObserver.disconnect();
+			  widget._mutationObserver = null;
 			}
+	  
+			// Remove the flag indicating resizing is enabled
+			$this.removeData("resize-enabled");
+		  } else {
+			// Add resizing styles and functionality
+			$this.css({
+			  'resize': 'both',
+			  'overflow': 'auto'
+			});
+	  
+			// Create a new MutationObserver
+			var observer = new MutationObserver(function(mutationsList) {
+			  for (var mutation of mutationsList) {
+				if (
+				  mutation.type === "attributes" &&
+				  (mutation.attributeName === "style" || mutation.attributeName === "class")
+				) {
+				  // Clear any previously set timeout
+				  clearTimeout(widget.resizeTimeout);
+	  
+				  // Set a new timeout to send the API request after 500ms of inactivity
+				  widget.resizeTimeout = setTimeout(function() {
+					// Get the width and height of the resized widget
+					const width = widget.offsetWidth;
+					const height = widget.offsetHeight;
+	  
+					// Get the ID of the element being resized
+					const id = widget.id;
+	  
+					// Construct the URL with the parameters
+					const url = new URL(window.location.origin + "/Dashboardify/actions/move_resize_widget.php");
+					const params = new URLSearchParams();
+					params.append("action", "resize");
+					params.append("width", width);
+					params.append("height", height);
+					params.append("id", id);
+					url.search = params.toString();
+	  
+					// Send a request to the API with the data in the URL
+					fetch(url, {
+					  method: "POST"
+					})
+					  .then(response => {
+						// Handle the API response here
+					  })
+					  .catch(error => {
+						console.error("Error:", error);
+					  });
+				  }, 500); // Adjust the delay as needed
+				}
+			  }
+			});
+	  
+			// Start observing the widget for attribute changes
+			observer.observe(widget, { attributes: true });
+	  
+			// Store the observer in the widget element
+			widget._mutationObserver = observer;
+	  
+			// Set a flag indicating resizing is enabled
+			$this.data("resize-enabled", true);
 		  }
 		});
-  
-		// Start observing the widget for attribute changes
-		observer.observe(widget, { attributes: true });
-	  });
-	}
+	  }	  
   });
 
 function openeditdialog() {
@@ -897,6 +963,13 @@ function drawNewWidgetBasedOnType() {
 		
 	case "Countdown":
 		var x = "<hr></span><label>Countdown Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
+		var y = "<input type=\"date\" id=\"datepicker\" name=\"Notes\"> <br/>";
+		//Fill content to the dialog
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x + y;
+		
+		break;
+	case "CountUp_Hours":
+		var x = "<hr></span><label>Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
 		var y = "<input type=\"date\" id=\"datepicker\" name=\"Notes\"> <br/>";
 		//Fill content to the dialog
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x + y;
