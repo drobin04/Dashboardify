@@ -1,3 +1,36 @@
+function calculateHoursSinceEvent(eventDate) {
+    // Create a Date object for the event time (assuming it's in local time)
+    const eventTime = new Date(eventDate);
+
+    // Get the current time
+    const now = new Date();
+
+    // Calculate the difference in milliseconds
+    const diffMs = now.getTime() - eventTime.getTime();
+
+    // Get the local timezone offset in minutes (positive if behind UTC, negative if ahead of UTC)
+    const localOffsetMinutes = now.getTimezoneOffset(); // Local offset from UTC in minutes
+
+    // Convert local offset to milliseconds
+    const localOffsetMs = localOffsetMinutes * 60 * 1000;
+
+    // Adjust the difference by subtracting the local timezone offset
+    const adjustedDiffMs = diffMs - localOffsetMs; // Subtract the offset to account for local time
+
+    // Convert milliseconds to hours
+    const hoursDiff = Math.floor(adjustedDiffMs / (1000 * 60 * 60));
+
+    // Debug output
+    console.log("Event Time (Local):", eventTime.toString());
+    console.log("Current Time (Local):", now.toString());
+    console.log("Local Offset (minutes):", localOffsetMinutes);
+    console.log("Local Offset (milliseconds):", localOffsetMs);
+    console.log("Adjusted Difference (milliseconds):", adjustedDiffMs);
+    console.log("Hours Difference:", hoursDiff);
+
+    return hoursDiff;
+}
+
 async function populateEditRecID(recid) {
   console.log("About to get edit details...");
 	const url9 = getrooturlpath() + '/api/editwidget.php?EditRecID=' + recid;
@@ -103,7 +136,6 @@ async function populateEditRecID(recid) {
     console.log('Error:', error);
   }
 }
-
 
 async function getWidgetsForDashboard(dashboardID) {
 	document.cookie = "dashboardid=" + dashboardID;
@@ -402,29 +434,17 @@ ${dashboardid}'>${imgstylecss}${siteurl}/icons/edit.png'></img></a>${deletebutto
 			break;
 		case "CountUp_Hours":
 		
-			stringValue = Notes;
-			
+			//stringValue = Notes; // Example: "2024-09-08T15:00:00"
+			stringValue = "2024-09-08T14:00";
 			// Get title
 			title = BookmarkDisplayText;
+			// Example usage
+			const hoursPassed = calculateHoursSinceEvent(stringValue);
+			console.log(`Hours passed since ${stringValue}:`, hoursPassed);
 			
-			
-			// Calculate time from now until date value, in hours
-			let now2 = new Date();
-			// Convert to date format
-			let dateValue2 = new Date(stringValue);
-
-			// Calculate the difference in milliseconds
-			let intervalInMilliseconds = now2 - dateValue2;
-
-			// Convert milliseconds to hours
-			let intervalInHours = Math.floor(intervalInMilliseconds / (1000 * 60 * 60));
-
-			// Output the result
-			let hours = intervalInHours;
-
 			//Redraw widget details, to add in custom widget class for styling later on...
 					
-			echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + hours + " Hours.</div></div></p></div>");
+			echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + hoursPassed + " Hours." + stringValue + "</div></div></p></div>");
 				
 			break;
 		case "IFrame":
@@ -555,48 +575,11 @@ $( function() {
 	  // Call the toggleEditMode function
 	  toggleEditMode();
 	});
+
+
 });
-	// Track the state of the 'x' key
-//        let xPressed = false;
-
-//        function updateWidgets() {
-//            const widgets = document.querySelectorAll('.widget');
-//            widgets.forEach(el => {
-//                if (xPressed) {
-//                    el.classList.add('repositioning_widget');
-//                } else {
-//                    el.classList.remove('repositioning_widget');
-//                }
-//            });
-//        }
-
-//       function handleKeyDown(event) {
-//            // Check if the pressed key is 'x' (key code 88) or 'X'
-//            if (event.key === 'x' || event.key === 'X') {
-//                xPressed = true;
-//                console.log("X Key Pressed!");
-//                updateWidgets();
-//                toggleEditMode();
-//            }
-//        }
-
-//        function handleKeyUp(event) {
-            // Check if the released key is 'x' (key code 88) or 'X'
-//            if (event.key === 'x' || event.key === 'X') {
-//                xPressed = false;
-//                updateWidgets();
-//                toggleEditMode();
-//            }
-//        }
-
-        // Add event listeners for key down and key up
-//        document.addEventListener('keydown', handleKeyDown);
-//        document.addEventListener('keyup', handleKeyUp);
-
-	
 	// Function to toggle edit mode
 var isEditMode = false; // This flag will help track the state
-
 function toggleEditMode() {
     isEditMode = !isEditMode; // Toggle the state
 
@@ -970,7 +953,7 @@ function drawNewWidgetBasedOnType() {
 		break;
 	case "CountUp_Hours":
 		var x = "<hr></span><label>Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
-		var y = "<input type=\"date\" id=\"datepicker\" name=\"Notes\"> <br/>";
+		var y = "<input type=\"datetime-local\" id=\"datepicker\" name=\"Notes\"> <br/>";
 		//Fill content to the dialog
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x + y;
 		

@@ -33,6 +33,8 @@ Removed following options from New_Widget_Dropdown_Options:
 <script type="module" src="js/md-block.js"></script>
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript" src="js/settings_flyout.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
 <title>Dashboardify</title><link type="text/css" rel="stylesheet" href="css/index.css">
     <style>
 		/*.repositioning_widget {
