@@ -17,11 +17,16 @@
 	
         <div>
 			<!--Buttons at top left-->
+			<div>
             <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog2').style.display='block';">New Widget</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light2').style.display='block';">Edit CSS</button>
             <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
-            <div id='widgetcontainer'>
+			<button><a id="changepassword" class="menubar nodeco" href="actions/change_password.php">Change Password</a></button>
+			
+			<br />
+		</div>
+			<div id='widgetcontainer'>
             <!-- Need ways to populate / render the New Widget dialog boxes, New Dashboard edit box, Edit Dashboard edit box, Edit CSS dialog,  -->
             
             <!-- Widgets will go here. 

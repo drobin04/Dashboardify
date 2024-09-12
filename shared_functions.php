@@ -59,6 +59,7 @@ function getCurrentUserFolder() {
 
 function breakifnotadmin() {
 if (!AmIAdmin()) {
+	// this must depend on the checkadmin.php script. It's not defined here.
 	echo "you are not permitted to perform this operation.";
 	exit();	
 }

@@ -1,3 +1,36 @@
+// Function to add options to the select element
+function addOptionsToSelect() {
+    const selectElement = document.getElementById('ddlWidgetType2');
+
+    if (selectElement) {
+        const optionValues = [
+            { value: 'SQLServerScalarQuery', text: 'SQLServerScalarQuery' },
+            { value: 'SQLiteResultsList', text: 'SQLiteResultsList' },
+            { value: 'SQLite Chart (PHPGD)', text: 'SQLite Chart (PHPGD)' }
+        ];
+
+        optionValues.forEach(option => {
+            const newOption = document.createElement('option');
+            newOption.value = option.value;
+            newOption.textContent = option.text;
+            selectElement.appendChild(newOption);
+        });
+    } else {
+        console.error('Select element with id "ddlWidgetType2" not found.');
+    }
+}
+
+// this function runs when the DOM has fully loaded:
+function main() {
+    const cookies = document.cookie.split('; ');
+    const isAdminCookie = cookies.find(cookie => cookie.startsWith('isAdmin='));
+    if (isAdminCookie && isAdminCookie.split('=')[1] === 'true') {
+        addOptionsToSelect();
+    }
+
+
+}
+
 function calculateHoursSinceEvent(eventDate) {
     // Create a Date object for the event time (assuming it's in local time)
     const eventTime = new Date(eventDate);
@@ -576,7 +609,7 @@ $( function() {
 	  toggleEditMode();
 	});
 
-
+	main();
 });
 	// Function to toggle edit mode
 var isEditMode = false; // This flag will help track the state

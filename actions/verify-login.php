@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 //to-do - Fix bug where it seems like people entering user/pw for account doesn't exist are getting logged in. It's acting as if 'none' auth is still allowed,
 // even when it's not.
 // -- ^^ Tested 8/30/24 and issue was not reproduced. 
-
+	include("../config/check_admin.php");
     include_once('../shared_functions.php');
     $sessionid = "";
     $userid = "";
@@ -333,6 +333,14 @@ function failed_auth() {
             // HASH THE USERID BEFORE SENDING IT OUT - HASH IS IMPORTANT SO WE DONT REVEAL THE USERID TO THE END USER.
             $hasheduid = hash('sha256',$uid);
             setcookie("successful_auth_for_id", $hasheduid, 2147483640, "/");
+			// If user is admin, send cookie stating so, for javascript to key off of later
+
+			// Check if this userid is an admin or not. 
+			if (isAdmin($uid)) {
+				setcookie("isAdmin", "true", 2147483640, "/");
+			}
+
+
             // To rate limit logins for users that haven't signed in before, 
             // We gonna set a cookie holding a hash of the last successfully auth'd username. 
 
