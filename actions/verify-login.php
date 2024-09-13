@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 //to-do - Fix bug where it seems like people entering user/pw for account doesn't exist are getting logged in. It's acting as if 'none' auth is still allowed,
 // even when it's not.
 // -- ^^ Tested 8/30/24 and issue was not reproduced. 
-	include("../config/check_admin.php");
+	//include("../config/check_admin.php"); DO NOT ACTUALLY ENABLE THIS, it will cause bugs. Copy functions locally.
     include_once('../shared_functions.php');
     $sessionid = "";
     $userid = "";
@@ -336,7 +336,7 @@ function failed_auth() {
 			// If user is admin, send cookie stating so, for javascript to key off of later
 
 			// Check if this userid is an admin or not. 
-			if (isAdmin($uid)) {
+			if (IsAdmin_local($uid)) {
 				setcookie("isAdmin", "true", 2147483640, "/");
 			}
 
@@ -386,4 +386,23 @@ function failed_auth() {
    	   
    	   setcookie("SessionID", $sessionid, $cookie_expiry, "/");
    }
+
+//Including this here so we don't have to reference check_admin, because that has a reference to logoutredirect,
+// which would then cause an issue on logins because it would redirect because sessionID hadn't been set yet.
+
+   function IsAdmin_local($userID) {
+    
+    $query = "Select Admin From Users Where RecID = '" . $userID . "'";
+    $results = queryDB($query);
+    debuglog_admin($results, "Admin_check_Results");
+    $countofadminusersSQL = "Select Count(*) As Count From Users Where Admin = 1";
+    $adminusercountresults = querydb($countofadminusersSQL)[0]["Count"];
+
+    If (($results[0]["Admin"] == "1") or $adminusercountresults == 0) {
+        return true;
+    } else {
+        return false;
+    }
+    //return $results;
+}
 ?>
