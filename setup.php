@@ -1,7 +1,7 @@
 <?php
 
 if (!extension_loaded('sqlite3')) {
-    echo "The SQLite extension is missing. <br /> Please install it and then return here. <br /> If you're on an Ubuntu-based server, you can run ' sudo apt install php-sqlite3 '.";
+    echo "The SQLite3 extension is missing. <br /> Please install it and then return here. <br /> If you're on an Ubuntu-based server, you can run ' sudo apt install php-sqlite3 '.";
     exit();
 } else {
     // SQLite extension is installed
@@ -52,7 +52,7 @@ error_reporting(E_ALL);
             
         </style>
         <!-- Google Config Start -->
-        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <!--<script src="https://apis.google.com/js/platform.js" async defer></script>-->
         <meta name="google-signin-client_id" content="814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com">
         <!-- Google Config End ^^^ For Google signin for Email Configuration. Yuck, I know. Google. I don't know why people use it. -->
         </head>
@@ -78,6 +78,10 @@ error_reporting(E_ALL);
 					$action = $_GET["action"];
 					//echo "Action to run: " . $action ;
 					switch ($action) {
+						case "RemoveUnusedUserAccounts":
+							execquery("Delete From Users Where (EmailConfirmed = 0 Or EmailConfirmed Is Null) And ConfirmationCode Not Null");
+							echo "<br />Removed Unused User Accounts.";
+							break;
 						case "ClearExistingSessionTokens":
 							execquery("delete from sessions");
 							break;
@@ -531,6 +535,12 @@ error_reporting(E_ALL);
 					<h3>Clear Existing Session Tokens / Log Everyone Out</h3>
 					<p>This will log out everyone from the system and force them to get new session tokens.</p>
 					<a href="setup.php?action=ClearExistingSessionTokens">Clear Existing Session Tokens</a>
+					<br />
+					<br />
+					<h3>Clear Unused User Accounts</h3>
+					<p>This will remove user accounts that were 'registered' but never finished the sign-up process.
+					If a lot of user accounts are being generated as a result of website scraping, this feature will remove them.</p>
+					<a href="setup.php?action=RemoveUnusedUserAccounts">Remove Unused User Accounts</a>
 				</div>
 			<br />
 			</div><!-- End of Maintennace Panel -->

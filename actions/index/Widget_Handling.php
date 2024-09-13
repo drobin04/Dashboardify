@@ -1,8 +1,8 @@
 <?php
+$recid1 = $row["RecID"];
+$editbuttonscss = "<a class='editbuttons' onclick='editwidget(" . $recid1 . ")' style='display:none;height:24px; width:24px;' hrefOLD='";
 
-$editbuttonscss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' href='";
-
-$deletebuttonOnClick = "deleteWidget(" . $row["RecID"] . ",)";
+$deletebuttonOnClick = "deleteWidget(" . $recid1 . ",)";
 $deletebuttoncss = "<a class='editbuttons' style='display:none;height:24px; width:24px;' onclick='" . $deletebuttonOnClick . "'";
 
 $imgstylecss = "<img style='height:24px; width:24px;' src='";

@@ -18,12 +18,6 @@ $New_Widget_Dropdown_Options = "
 <option value='CountUp_Days'>Count Up- Days Since Last</option>
 "
 ?>
-<!--
-Removed following options from New_Widget_Dropdown_Options: 
-<option value='SQLServerScalarQuery'>SQLServerScalarQuery</option>
-<option value='SQLiteResultsList'>SQLiteResultsList</option>
-<option value='SQLite Chart (PHPGD)'>SQLite Chart (PHPGD)</option>
--->
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

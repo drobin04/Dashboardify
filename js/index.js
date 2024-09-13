@@ -20,11 +20,22 @@ function addOptionsToSelect() {
     }
 }
 
+function isAdmin() {
+	const cookies = document.cookie.split('; ');
+    const isAdminCookie = cookies.find(cookie => cookie.startsWith('isAdmin='));
+    if (isAdminCookie && isAdminCookie.split('=')[1] === 'true') {
+        return true;
+    } else {
+		return false;
+	}
+
+}
+
 // this function runs when the DOM has fully loaded:
 function main() {
     const cookies = document.cookie.split('; ');
     const isAdminCookie = cookies.find(cookie => cookie.startsWith('isAdmin='));
-    if (isAdminCookie && isAdminCookie.split('=')[1] === 'true') {
+    if (isAdmin()) {
         addOptionsToSelect();
     }
 
@@ -352,12 +363,21 @@ function editwidget(RecID) {
 				displayt.value = result2.BookmarkDisplayText;
 				let URL2 = document.getElementById('txtWidgetURL');
 				URL2.value = result2.WidgetURL;
+				break;
 			case "Collapseable IFrame":
 				//txtWidgetDisplayText , txtWidgetURL
 				let displayt2 = document.getElementById('txtWidgetDisplayText');
 				displayt2.value = result2.BookmarkDisplayText;
 				let URL = document.getElementById('txtWidgetURL');
 				URL.value = result2.WidgetURL;
+				break;
+			case "SQLiteResultsList":
+				let dbname = document.getElementById('SQLDBName');
+				dbname.value = result2.sqldbname;
+				let sqlquery = document.getElementById('sqlquery');
+				sqlquery.value = result2.sqlquery;
+				break;
+
 			default: ;
 			
 				

@@ -23,7 +23,7 @@
             <button type="button" style="float: left !important;" onclick="document.getElementById('light3').style.display='block';">New Dashboard</button>
             <button type="button" style="float: left !important;" onclick="var all = document.getElementsByClassName('editbuttons'); for (var i = 0; i < all.length; i++) {all[i].style.display = 'initial';}">Edit Widgets</button>
 			<button><a id="changepassword" class="menubar nodeco" href="actions/change_password.php">Change Password</a></button>
-			
+
 			<br />
 		</div>
 			<div id='widgetcontainer'>
@@ -31,8 +31,17 @@
             
             <!-- Widgets will go here. 
             Script will check whether a hash for a stored computed set of widgets matches the hash on the server.
-            If not, / if it's updated, or if we don't have the hash locally, we should pull an update from the server and then display it here , and dump it into localstorage for future reference too. -->
+            If not, / if it's updated, or if we don't have the hash locally, we should pull an update from the server and then display it here , and dump it into localstorage for future reference too. 
 			
+			Currently, widgets are able to load properly. 
+			Need to have ability to render the list of dashboards available for the current user, and populate the dropdown based on this.
+			
+			
+			-->
+			
+
+
+
             <!-- For initial prototyping- Hard-coded to default dashboard... --> 
             <script>
             getWidgetsForDashboard("74641D45-2148-4D29-B1F6-3204300D234C");
