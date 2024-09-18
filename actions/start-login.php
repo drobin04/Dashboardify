@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head >
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
+	<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
 	<meta name="google-signin-client_id" content="814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com">
     <title>Dashboardify</title>
 	<link rel="stylesheet" href="../css/start-login.css">
@@ -35,7 +36,8 @@
 					if (doesDatabaseExist()){
 					$authmode = scalarquery("Select Value From Settings Where Name = 'AuthMode'", "Value");
 					if ($authmode == "Password") {
-					echo "<input id='password' type='password' class='login__input' placeholder='Password' name='password'></input>";
+					echo "<input id='password' type='password' class='login__input' placeholder='Password' name='password'></input>
+					<div class='h-captcha' data-sitekey='ec7229da-bc88-4ed0-b3c2-0ba63dbe814e'></div>";
 					echo "<script src='https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js'></script>
 					<script>
 			  document.getElementById('loginForm').addEventListener('submit', function(event) {

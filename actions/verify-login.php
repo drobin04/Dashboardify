@@ -36,7 +36,32 @@ error_reporting(E_ALL);
         $password = hash('sha256', $inputpassword);
         //setcookie("inputpw", $inputpassword, 2147483640, "/"); //DEBUG ONLY, DO NOT ENABLE THIS ON A LIVE SERVER FOR ANY PURPOSE
         //setcookie("hashed", $password, 2147483640, "/"); //DEBUG ONLY, DO NOT ENABLE THIS ON A LIVE SERVER FOR ANY PURPOSE
-    }
+    
+	//HCAPTCHA SHIT
+
+		// Your hCAPTCHA secret key
+		$secret = 'ES_6fbbee23e1f84ab381624ec760f47bbc';
+	
+		// Collect hCAPTCHA response token from the POST request
+		$hcaptchaResponse = $_POST['h-captcha-response'] ?? '';
+	
+		// Verify hCAPTCHA
+		$verifyUrl = 'https://hcaptcha.com/siteverify';
+		$response = file_get_contents($verifyUrl . '?secret=' . urlencode($secret) . '&response=' . urlencode($hcaptchaResponse));
+		$responseKeys = json_decode($response, true);
+	
+		if ($responseKeys['success']) {
+			// hCAPTCHA validation successful
+			// Your existing form processing code here
+			setcookie("hCAPTCHA_Success", "true", 2147483640, "/");
+		} else {
+			// hCAPTCHA validation failed
+			echo 'hCAPTCHA validation failed. Please try again.';
+			exit();
+		}
+
+	
+	}
     $action = "";
     if (isset($_GET["action"])) { // This gets used when passing from 'Register'. 
         // TODO - I feel like this section could be spoofed... Double check that the username doesn't exist yet, and that the email/password aren't empty
@@ -394,7 +419,6 @@ function failed_auth() {
     
     $query = "Select Admin From Users Where RecID = '" . $userID . "'";
     $results = queryDB($query);
-    debuglog_admin($results, "Admin_check_Results");
     $countofadminusersSQL = "Select Count(*) As Count From Users Where Admin = 1";
     $adminusercountresults = querydb($countofadminusersSQL)[0]["Count"];
 
@@ -404,5 +428,14 @@ function failed_auth() {
         return false;
     }
     //return $results;
+}
+function queryDB($sql) {
+    //$db_file = new PDO('sqlite:../Dashboardify/Dashboardify.s3db');
+    $rootPath = $_SERVER['DOCUMENT_ROOT'];
+    $dbpath = 'sqlite:' . $rootPath . '/Dashboardify/Dashboardify.s3db';
+    $db_file = new PDO($dbpath);
+    $stmt1 = $db_file->prepare($sql);
+    $stmt1->execute();
+    return $stmt1->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
