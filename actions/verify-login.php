@@ -36,9 +36,10 @@ error_reporting(E_ALL);
         $password = hash('sha256', $inputpassword);
         //setcookie("inputpw", $inputpassword, 2147483640, "/"); //DEBUG ONLY, DO NOT ENABLE THIS ON A LIVE SERVER FOR ANY PURPOSE
         //setcookie("hashed", $password, 2147483640, "/"); //DEBUG ONLY, DO NOT ENABLE THIS ON A LIVE SERVER FOR ANY PURPOSE
-    
-	//HCAPTCHA SHIT
+	}
 
+	// HCAPTCHA CHECK- Check if the action is 'register' or if it's empty
+	if (!isset($_GET['action']) || $_GET['action'] === 'register') {
 		// Your hCAPTCHA secret key
 		$secret = 'ES_6fbbee23e1f84ab381624ec760f47bbc';
 	
@@ -54,20 +55,18 @@ error_reporting(E_ALL);
 			// hCAPTCHA validation successful
 			// Your existing form processing code here
 			setcookie("hCAPTCHA_Success", "true", 2147483640, "/");
+			$hcaptcha_success = true;
 		} else {
 			// hCAPTCHA validation failed
 			echo 'hCAPTCHA validation failed. Please try again.';
 			exit();
-		}
+	}}
 
-	
-	}
     $action = "";
     if (isset($_GET["action"])) { // This gets used when passing from 'Register'. 
         // TODO - I feel like this section could be spoofed... Double check that the username doesn't exist yet, and that the email/password aren't empty
 
         $action = $_GET["action"];
-        
         switch ($action) {
         	
         case "login-with-google":

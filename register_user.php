@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head >
     <title>Dashboardify</title>
-	
+	<script src="https://js.hcaptcha.com/1/api.js" async defer></script>
     <style>
         html, body {
 			height: 100%;
@@ -202,7 +202,8 @@
 					<input type="text" class="login__input" required placeholder="Email / Username" name="email"></input>
 					<input type="password" id="password" class="login__input" required placeholder="Password" name="password"></input>
                     <input type="password" class="login__input" required placeholder="Confirm Your Password" name="password_confirmation"></input>
-				</div>
+                    <div class='h-captcha' data-sitekey='ec7229da-bc88-4ed0-b3c2-0ba63dbe814e'></div>"
+                </div>
 				
 				<button class="button login__submit">
 					<span class="button__text">Complete Registration</span>
