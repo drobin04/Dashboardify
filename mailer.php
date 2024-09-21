@@ -52,14 +52,13 @@ function mailAuthenticationCode($userEmail, $confirmationCode) {
 		//echo " Email: " . $username . " , PW: " . $password . " , SMTPSecure: " . $smtpSecure . " , Port: " . $smtpPort; // DONT EVER UNCOMMENT THIS ON A LIVE SYSTEM
 		//Content
 		$mail->isHTML(true);
-		$mail->Subject = 'New User Confirmation Code for Dashboardify.App: ' . $confirmationCode;
-		$mail->Body = "Your email confirmation code is: " 
+		$mail->Subject = 'New User Confirmation Code for Dashboardify: ' . $confirmationCode;
+		$mail->Body = "Your Dashboardify sign up confirmation code is: " 
 		. $confirmationCode . " . 
 		
-This code is used to confirm a new email registration at the URL https://dashboardify.app/Dashboardify/ 
+This code is used to confirm a new user registration at Dashboardify. If you did not sign up for an account at Dashboardify, please ignore this email.
 
-This email is being sent to the email address: " . $userEmail . " because an account was created for this address at https://dashboardify.app .
-To unsubscribe, simply respond with 'unsubscribe'.";
+If you would like to stop receiving any mail from this address, please respond with 'unsubscribe'.";
 	
 		$mail->send();
 		echo 'Email has been sent';
