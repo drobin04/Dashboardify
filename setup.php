@@ -541,6 +541,10 @@ error_reporting(E_ALL);
 					<p>This will remove user accounts that were 'registered' but never finished the sign-up process.
 					If a lot of user accounts are being generated as a result of website scraping, this feature will remove them.</p>
 					<a href="setup.php?action=RemoveUnusedUserAccounts">Remove Unused User Accounts</a>
+					<br />
+					<br />
+					<h3>Download Database File</h3>
+					<a href="config/download_db.php">Click here to Download Database File</a>
 				</div>
 			<br />
 			</div><!-- End of Maintennace Panel -->
