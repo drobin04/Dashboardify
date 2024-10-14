@@ -33,6 +33,14 @@ Try { // Load Dashboard list
         if (isset($_COOKIE['lastselecteddashboardid'])) {
         	$last_dashboard_selected_cookie_found = TRUE;
         	$last_dashboard_id = $_COOKIE['lastselecteddashboardid'];
+
+            //Check if dashboard still exists. If we just deleted it, ignore that it's in the cookie.
+            // If it is found, this if statement doesn't do anything and we continue on as usual.
+            if (!DoIOwnThisDashboard($_GET["SelectDashboardID"])) {
+                $last_dashboard_selected_cookie_found = FALSE;
+                $last_dashboard_id = "";
+                $matcheddashboardid = -1; // Undoes the part earlier where it sets this to _GET value.
+            }
         }
         
         $debugdata = " Last Dashboard ID Readin: " . ($last_dashboard_selected_cookie_found ? 'true' : 'false') . ", Last Dashboard ID: " . $_COOKIE['lastselecteddashboardid'];
@@ -58,6 +66,7 @@ Try { // Load Dashboard list
                 echo "<option value='" . $row["DashboardID"] . "'";
                 If ($recid == $matcheddashboardid || ($last_dashboard_selected_cookie_found && $recid == $last_dashboard_id && !isset($_GET['SelectDashboardID'])))
                 {
+                    // If Recid = matcheddashboard ID, OR (Previous dashboardcookie found AND recid for this option matches last dash id AND we don't have a selection in URL) then
                 	echo "selected='selected'";
                 	$dashboardphotourl = $row["BackgroundPhotoURL"];
                 	$usercss = $row["CustomCSS"];
@@ -78,7 +87,10 @@ Try { // Load Dashboard list
         }
         
         If ($matcheddashboardid == -1 && isset($_COOKIE['lastselecteddashboardid'])) { 
-        	$dashboardid = $_COOKIE['lastselecteddashboardid'];
+            // Updating this to only proceed if the dashboard actually exists, because this broke when we tested deleting dashboards.
+            If (DoIOwnThisDashboard($_COOKIE['lastselecteddashboardid'])) {
+        	    $dashboardid = $_COOKIE['lastselecteddashboardid'];
+            }
         }
         echo "</select><br />";
 

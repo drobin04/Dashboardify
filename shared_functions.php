@@ -1,4 +1,7 @@
 <?php 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 function serializeWidgetsForDashboard($dashboardid) {
 	// Assume this runs for the current user, should never need to run this for anyone else other than current....
@@ -41,6 +44,18 @@ function rootdir() { // Added for testing evaluation of __DIR__ when referenced 
 	// Seems to work properly and always returns this file's root location and not the referencing file's location
 	
 return __DIR__;	
+}
+
+function DoIOwnThisDashboard($dashboardrecid) {
+	$userid = getCurrentUserID();
+	$q = "select count(d.recid) as matches from dashboards d
+	where d.userid = '" . $userid . "'
+	and d.DashboardID = '" . $dashboardrecid . "'";
+	if (scalarquery($q, "matches") != 0) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 function getCurrentUserFolder() {

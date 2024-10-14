@@ -152,6 +152,7 @@ $New_Widget_Dropdown_Options = "
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
 		</div>
 		</form>
+		<!--Edit Existing Dashboard Dialog-->
 		<form id="EditDashboard" method="POST" action="actions/Edit_Dashboard.php?DashboardID=<?php echo $dashboardid; ?>">
 		<div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:450px; height: 300px;">
 			
@@ -162,6 +163,7 @@ $New_Widget_Dropdown_Options = "
 				<input ID="Embeddable" type="checkbox" name="embeddable" <?php if($embeddable == "1") {echo "checked='true'";} ?> value="1"><label for="Embeddable">Embeddable? This will make this dashboard publicly accessible via the following URL:</label><br />
 				<p><?php echo $siteurl . "api/embed_dashboard.php?DashboardID=" . $dashboardid; ?></p> 
 				<button ID="btnSubmitDashboard">Save Dashboard</button>
+				<a ID="btnDeleteDashboard" href="actions/deletedashboard.php?recid=<?php echo $dashboardid ?>">DELETE DASHBOARD - NO CONFIRMATION CHECK WHEN CLICKED</button>
 		</div>
 		</form>
 		<script>localStorage.setItem("dashboardcontent",document.getElementById("dashboardcontent").innerHTML)</script>
