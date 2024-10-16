@@ -71,8 +71,15 @@
 				data-client_id="814465180043-ir2l2aejp965j0eug05kfi51clid8f7a.apps.googleusercontent.com"
 				data-callback="handleCredentialResponse">
 			</div>
-				<div class="g_id_signin" data-type="standard"></div>
+			<div class="g_id_signin" data-type="standard"></div>
+			
+			<div>
+				<a href="mslogin.php" style="color: white;">Log In With Microsoft</a>
 			</div>
+			
+			
+			</div><!--End of sign in card here-->
+			
 		
 		<div class="screen__background">
 			<span class="screen__background__shape screen__background__shape4"></span>

@@ -1,6 +1,7 @@
 <?php
 require '../vendor/autoload.php'; // Load Composer's autoloader for Google API client
 use Google\Client as Google_Client;
+use League\OAuth2\Client\Provider\GenericProvider;
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -22,6 +23,75 @@ error_reporting(E_ALL);
     $prior_auth_cookie_matches = false;
     $Email = "";
     
+	// CATCH FOR MS AUTH
+	if (isset($_GET["code"]) && isset($_GET["state"])) {
+		// If both of these are here, it's a MS login callback
+
+		$provider = new GenericProvider([
+			'clientId'                => '0daa48bb-1104-4b72-a3ae-04978b3e6a96',
+			'clientSecret'            => 'yKI8Q~RDq33LmTSPoQgbT9WOhfWhICaDkRKRYbFg',
+			'redirectUri'             => 'https://dashboardify.app/Dashboardify/actions/verify-login.php',
+			'urlAuthorize'            => 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
+			'urlAccessToken'          => 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
+			'urlResourceOwnerDetails' => 'https://graph.microsoft.com/v1.0/me',
+			'scopes'                  => 'openid profile'
+		]);
+		try {
+			// Get the access token
+			$accessToken = $provider->getAccessToken('authorization_code', [
+				'code' => $_GET['code']
+			]);
+		
+			// Decode the ID token to extract user information
+			$idToken = $accessToken->getValues()['id_token'];
+			$payload = explode('.', $idToken)[1];
+			$userData = json_decode(base64_decode($payload), true);
+		
+			// Extract the unique user ID
+			$uniqueId = $userData['sub']; // Unique identifier
+		
+			// Store the unique ID in the session
+			//$_SESSION['user_id'] = $uniqueId;
+		
+			// Successful login! Complete login flow
+			//echo "SUCCESS! " . $uniqueId;
+			// Check if user is already present in users table
+			$sql1 = "Select Count(Email) As Number From Users Where Email = '" . $uniqueId . "'";
+			$UserAlreadyExistsBool = scalarquery($sql1, "Number");
+			if ($UserAlreadyExistsBool == "1") {
+				// We do nothing
+				//echo "<br />User already exists!";
+				// Continue to logging them in / establishing a session and redirecting them....
+				$userid = GetUserIDFromEmail($uniqueId);
+				complete_login($userid);
+			}
+			if ($UserAlreadyExistsBool == "0") {
+				// We create the user. 
+				//echo "<br />User does not exist yet!";
+				CreateUserIDForEmail($uniqueId, "MSAuth");
+				$userid = GetUserIDFromEmail($uniqueId);
+				complete_login($userid);
+			}
+	
+			// THOUGHTS:
+			// It feels like it'd be insecure to throw this ID into a cookie and retrieve it on the verify login page
+			// because then it could be manipulated by the user.
+			// Instead, I think we should store this temporarily in a table in SQL, and give the user a reference number for it,
+			// and then have them return to the next page with THAT in their cookies
+			// Once we get them on the next page, we consume it, and remove it from the table, so there's never dangling values there that can be 
+			// manipulated. 
+			exit;
+		
+		} catch (\Exception $e) {
+			exit('Error retrieving access token: ' . $e->getMessage());
+		}
+
+
+
+
+		exit();
+	}
+
     if (isset($_POST["email"])) {
     $Email = $_POST["email"];
     }
