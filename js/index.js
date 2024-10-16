@@ -535,37 +535,53 @@ function clearWidgetContainer() {
 }
 
 function editExistingNote(RecID) {
-	// Get note contents from API call
-	// Construct the URL with the parameters
-	var NotesData = "";
-	var requesturl = getrooturlpath() + '/api/getnotesforwidget.php';
-	const url = new URL(requesturl);
-	const params = new URLSearchParams();
-	params.append('RecID', RecID);
-	url.search = params.toString();
-	fetch(url)
-	  .then(response => response.text())  // Update to handle response as text
-	  .then(data => {
-		// Save the response to a variable here
-		const apiResponse = data;
-		NotesData = apiResponse;
-		// Now you can use the apiResponse variable to work with the API response
-		var y = document.getElementById(RecID + '_note');
-		y.innerHTML = "<form style='height: 100%;width:100%;' method='POST' id='notes_submission' action='" + getrooturlpath() + "/api/updatenoteswidget.php?RecID=" + RecID + "'><textarea name='Notes' style='width: 95%; height: 90%;'>" + NotesData + "</textarea><br /><button>Save</button></form>";
-	  })
-	  .catch(error => {
-		// Handle any errors here
-		console.error('Error:', error);
-	  });
-	
-	
-	// After we get note contents, blank the content already in the note widget
-	
-	// Then, display text box with the API content ready for editing, and a text box / HTML form that submits the edit? 
-	
-	// Probably want the saved content to trigger a postback / page refresh, unless we can trigger md-block to render content in realtime, in which case we would just want it to be javascript... but html form would be easier.
-	
+    // Get note contents from API call
+    var NotesData = "";
+    var requesturl = getrooturlpath() + '/api/getnotesforwidget.php';
+    const url = new URL(requesturl);
+    const params = new URLSearchParams();
+    params.append('RecID', RecID);
+    url.search = params.toString();
+
+    fetch(url)
+        .then(response => response.text()) // Update to handle response as text
+        .then(data => {
+            // Save the response to a variable here
+            const apiResponse = data;
+            NotesData = apiResponse;
+
+            var y = document.getElementById(RecID + '_note');
+            // Save the current inner HTML to an attribute for later use
+            y.setAttribute('data-original-html', y.innerHTML);
+            
+            // Create form with textarea, Save, and Cancel buttons
+            y.innerHTML = `
+                <form style='height: 100%; width:100%;' method='POST' id='notes_submission' action='${getrooturlpath()}/api/updatenoteswidget.php?RecID=${RecID}' onsubmit="return false;">
+                    <textarea name='Notes' style='width: 95%; height: 90%;'>${NotesData}</textarea><br />
+                    <button type="submit">Save</button>
+                    <button type="button" id="cancelButton">Cancel</button>
+                </form>
+            `;
+
+            // Add event listener for the Cancel button
+            document.getElementById('cancelButton').addEventListener('click', function() {
+                // Restore the original inner HTML
+                y.innerHTML = y.getAttribute('data-original-html');
+            });
+
+            // Optional: Add event listener for form submission if you want to handle the submission manually
+            document.getElementById('notes_submission').onsubmit = function() {
+                // Handle your form submission logic here
+                // You can use fetch to submit the form data or any other method
+                console.log('Form submitted');
+            };
+        })
+        .catch(error => {
+            // Handle any errors here
+            console.error('Error:', error);
+        });
 }
+
 
 // Listen for shift-click on any notes widgets.
 document.addEventListener('DOMContentLoaded', function() {
