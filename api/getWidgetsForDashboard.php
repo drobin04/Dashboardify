@@ -9,7 +9,7 @@ $dashboardwidgetdata = serializeWidgetsForDashboard($dashboardid);
 $dashboardhash = hash('md5', $dashboardwidgetdata);
 
 // Update dashboard record with hash. 
-execquery_bind2("Update Dashboards Set HashedWidgetValue = ? Where DashboardID = ?", $dashboardhash, $dashboardid);
+//execquery_bind2("Update Dashboards Set HashedWidgetValue = ? Where DashboardID = ?", $dashboardhash, $dashboardid);
 
 
 setcookie('hash_' . $dashboardid, $dashboardhash,  2147483640 ,'/');

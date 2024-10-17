@@ -7,10 +7,13 @@ function serializeWidgetsForDashboard($dashboardid) {
 	// Assume this runs for the current user, should never need to run this for anyone else other than current....
 	
 	//Get list of widgets for this dashboard
-	// Filter by current user!
-	$sql = "Select BookmarkDisplayText, WidgetURL, WidgetCSSClass, Notes, PositionX, PositionY,SizeX,SizeY,RecID, DashboardRecID, WidgetType,Notes From v_Widgets Where DashboardRecID = ? and UserRecID = ?";
+	// Filter by current user OR Dashboards current user has access to via organization membership.
 	$currentuserid = getCurrentUserID();
-	$data = selectquery_bind2($sql,$dashboardid,$currentuserid); 
+	
+	$sql = "Select BookmarkDisplayText, WidgetURL, WidgetCSSClass, Notes, PositionX, PositionY,SizeX,SizeY,w.RecID, w.DashboardRecID, WidgetType,Notes From v_Widgets w Left Join Dashboards D On D.DashboardID = w.DashboardRecID Where DashboardRecID = ? and (w.UserRecID = ? Or D.OrgRecID In (Select OrgRecID From OrgMemberships Where OrgMemberships.UserRecID = ?))";
+	//setcookie('sqlquerydebuginfo',$sql2,0);
+	$data = selectquery_bind3($sql,$dashboardid, $currentuserid, $currentuserid); 
+	//$data = selectquery($sql2); 
 	// Serialize $data variable into JSON format
 	$jsonData = json_encode($data);
 	return $jsonData;
@@ -143,6 +146,17 @@ function selectquery_bind2($sql,$param1, $param2) {
 	$stmt = $db_file->prepare($sql);
 	$stmt->bindParam(1,$param1,PDO::PARAM_STR);
 	$stmt->bindParam(2,$param2,PDO::PARAM_STR);
+	$stmt->execute();
+	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	return $results;
+}
+function selectquery_bind3($sql,$param1, $param2,$param3) {
+	$dbpath = 'sqlite:' . rootdir() . '/Dashboardify.s3db';
+	$db_file = new PDO($dbpath);
+	$stmt = $db_file->prepare($sql);
+	$stmt->bindParam(1,$param1,PDO::PARAM_STR);
+	$stmt->bindParam(2,$param2,PDO::PARAM_STR);
+	$stmt->bindParam(3,$param3,PDO::PARAM_STR);
 	$stmt->execute();
 	$results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	return $results;

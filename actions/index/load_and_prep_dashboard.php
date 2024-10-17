@@ -1,8 +1,8 @@
 <?php //Prior to reaching this point, the DB is loaded into $db_file and an admin check is done 
 // to see if we should populate the setup button or not. 
 // for reference, check 'loaddb_checkadmin_populate-setup-button.php' under actions/index.
-echo "<script>localStorage.setItem('userID', '$userid');</script>";
-$dashboards = selectquery("Select * From Dashboards Where UserID = '" . $userid . "'"); // Query for dashboards for user. 
+echo "<script>localStorage.setItem('userID', '$userid');</script>"; //Not sure if this is still needed, think leftover debugging item.
+$dashboards = selectquery("Select * From Dashboards Where (UserID = '" . $userid . "') Or (Dashboards.OrgRecID In (Select OrgRecID From OrgMemberships Where UserRecID = '" . $userid ."'))"); // Query for dashboards for user or user's org's. 
 $dashboardname = "";
 $dashboardid = "";
 $embeddable = "";
