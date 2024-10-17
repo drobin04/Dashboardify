@@ -60,6 +60,17 @@ function DoIOwnThisDashboard($dashboardrecid) {
 		return false;
 	}
 }
+function DoIHaveAccessToThisDashboard($dashboardrecid) {
+	$userid = getCurrentUserID();
+	$q = "select count(d.recid) as matches from dashboards d
+	where (d.userid = '" . $userid . "' Or d.OrgRecID In (Select OrgRecID From OrgMemberships where UserRecID = '" . $userid . "'))
+	and d.DashboardID = '" . $dashboardrecid . "'";
+	if (scalarquery($q, "matches") != 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
 
 function getCurrentUserFolder() {
 	$myuserid = getCurrentUserID();

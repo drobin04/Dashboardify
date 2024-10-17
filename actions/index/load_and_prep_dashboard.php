@@ -36,7 +36,8 @@ Try { // Load Dashboard list
 
             //Check if dashboard still exists. If we just deleted it, ignore that it's in the cookie.
             // If it is found, this if statement doesn't do anything and we continue on as usual.
-            if (!DoIOwnThisDashboard($_GET["SelectDashboardID"])) {
+            // Need to update in case of a dashboard that currentuser doesn't directly own, but is owned by the org. 
+            if (!DoIHaveAccessToThisDashboard($_GET["SelectDashboardID"])) {
                 $last_dashboard_selected_cookie_found = FALSE;
                 $last_dashboard_id = "";
                 $matcheddashboardid = -1; // Undoes the part earlier where it sets this to _GET value.
@@ -88,7 +89,7 @@ Try { // Load Dashboard list
         
         If ($matcheddashboardid == -1 && isset($_COOKIE['lastselecteddashboardid'])) { 
             // Updating this to only proceed if the dashboard actually exists, because this broke when we tested deleting dashboards.
-            If (DoIOwnThisDashboard($_COOKIE['lastselecteddashboardid'])) {
+            If (DoIHaveAccessToThisDashboard($_COOKIE['lastselecteddashboardid'])) {
         	    $dashboardid = $_COOKIE['lastselecteddashboardid'];
             }
         }
