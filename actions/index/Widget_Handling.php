@@ -67,7 +67,7 @@ case "Notes":
 
 case "HTMLEmbed":
 	echo $combined . $row["Notes"] ."</div>";
-	
+	// Do nothing, this gets handled in JS client-side.
 	break;
 	
 case "SQLiteResultsList":

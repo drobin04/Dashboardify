@@ -152,7 +152,7 @@ error_reporting(E_ALL);
 							$defaultdashimg = $_POST["defaultdashimage"];
 					
 							// Open the file in write mode
-							$file = fopen('defaultdashboardurl.txt', 'w');
+							$file = fopen('config/defaultdashboardurl.txt', 'w');
 					
 							// Write the value to the file
 							fwrite($file, $defaultdashimg);

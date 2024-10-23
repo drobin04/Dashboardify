@@ -10,7 +10,8 @@ $dashboardphotourl = ""; // Used later at end of script to pre-populate value in
 Try { // Load Dashboard list
     $count = count($dashboards);
     debuglog($count, "Count variable");
-    if ((int)$count == 1) { // If there's only one dashboard for the user
+    if ((int)$count == 1) 
+    { // If there's only one dashboard for the user
         foreach($dashboards as $row) {
             debuglog($dashboards, "Dashboards Array - Single Result"); 
             $dashboardid = $dashboards[0]["DashboardID"]; 
@@ -101,78 +102,14 @@ Try { // Load Dashboard list
         	setcookie('lastselecteddashboardid', $dashboardid, 0, '/');
         }
 
-    } else { // If dash not found, create one
-        $dashboardid = GUID(); 
-        $defaultdashimage = "";
-        if (file_exists('config/defaultdashboardurl.txt')) {
-            $defaultdashimage = file_get_contents('config/defaultdashboardurl.txt');
-            $dashboardphotourl = $defaultdashimage;
-        }
-        $sql1 = "INSERT INTO Dashboards (DashboardID, UserID, DefaultDB, Name, BackgroundPhotoURL) VALUES ('" . $dashboardid . "', '" . $userid 
-        . "', 'Y', 'Main', '" . $defaultdashimage . "')";
-        debuglog($sql1,"SQL Dashboard Insert Query"); 
-        execquery($sql1); //Create Dashboard // THIS ONE SHOULD BE FINE TO NOT REPLACE FOR SQL INJECTION, NO USER SUPPLIED INPUT.... RIGHT???
-        $dashboardname = "Main";
-        $embeddable = "";
-        // First / Newly Created Dashboard; Populate Global/Default Widgets
+    } else { 
+        // If dash not found, create one
+        include('create_first_dashboard.php');
+    }
 
-        // Query for Global widgets
-        $globalwidgets = selectquery("Select * From Widgets Where Global = '1'");
-        debuglog($globalwidgets, "Global Widgets List");
-        foreach($globalwidgets as $w) {
-            
-            //Prepare Variables
-            $sep = "','"; // Seperator
-            $sqlserveraddress = $w["sqlserveraddress"];
-            $sqldbname = $w["sqldbname"];
-            $sqlusername = $w["sqluser"];
-            $sqlpass = $w["sqlpass"];
-            $sqlquery = $w["sqlquery"];
-            $globaldefault = "0";
-            $notesvalue = str_replace("'", "''",$w["Notes"]);
-                                
-            // Prepare INSERT statement.
-            $select = "INSERT INTO Widgets (WidgetType,BookmarkDisplayText,PositionX,PositionY,SizeX,SizeY,WidgetURL,WidgetCSSClass,Notes,DashboardRecID
-            ,sqlserveraddress,sqldbname,sqluser,sqlpass,sqlquery, Global) 
-            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            
-            //$old = "
-            //('" 
-            //. $w["WidgetType"] . $sep . $w["BookmarkDisplayText"] . $sep . $w["PositionX"] 
-            //. $sep . $w["PositionY"] . $sep . $w["SizeX"] . $sep . $w["SizeY"] . $sep . $w["WidgetURL"] 
-            //. $sep . $w["WidgetCSSClass"] . $sep . str_replace("'", "''",$w["Notes"]) . $sep . $dashboardid . $sep 
-            //.$sqlserveraddress . $sep . $sqldbname . $sep . $sqlusername . $sep . $sqlpass . $sep . $sqlquery .
-            //$sep . $globaldefault . "')";
-            //debuglog($select, "Query for inserting global widget");
-            
-            $localdb = getPDO_DBFile();
-			$stmt1 = $localdb->prepare($select);
-			$stmt1->bindParam(1, $w["WidgetType"], PDO::PARAM_STR);
-			$stmt1->bindParam(2, $w["BookmarkDisplayText"], PDO::PARAM_STR);
-			$stmt1->bindParam(3, $w["PositionX"], PDO::PARAM_STR);
-			$stmt1->bindParam(4, $w["PositionY"], PDO::PARAM_STR);
-			$stmt1->bindParam(5, $w["SizeX"], PDO::PARAM_STR);
-			$stmt1->bindParam(6, $w["SizeY"], PDO::PARAM_STR);
-			$stmt1->bindParam(7, $w["WidgetURL"], PDO::PARAM_STR);
-			$stmt1->bindParam(8, $w["WidgetCSSClass"], PDO::PARAM_STR);
-			$stmt1->bindParam(9, $notesvalue, PDO::PARAM_STR);
-			$stmt1->bindParam(10, $dashboardid, PDO::PARAM_STR);
-			$stmt1->bindParam(11, $sqlserveraddress, PDO::PARAM_STR);
-			$stmt1->bindParam(12, $sqldbname, PDO::PARAM_STR);
-			$stmt1->bindParam(13, $sqlusername, PDO::PARAM_STR);
-			$stmt1->bindParam(14, $sqlpass, PDO::PARAM_STR);
-			$stmt1->bindParam(15, $sqlquery, PDO::PARAM_STR);
-			$stmt1->bindParam(16, $globaldefault, PDO::PARAM_STR);
-			
-			$stmt1->execute();
-            
-            
-            // Reload dashboard
-            echo "<script>location.reload();</script>";
-        }
-
-    } 
-} catch (exception $ex) {echo $ex;debuglog($ex,"Exception found during dashboard checks");
+     
+} catch (exception $ex) {
+    echo $ex;debuglog($ex,"Exception found during dashboard checks");
     debuglog($ex); echo $ex;
 } 
 //Try to set background photo and CSS for dashboard
