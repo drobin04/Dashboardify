@@ -2,6 +2,7 @@
 include_once('../shared_functions.php');
 setcookie("SessionID", "/", time() - 3600, "/");
 setcookie("SessionID", "", time() - 3600); // Expire cookie by setting it to an hour ago.
+setcookie("lastselecteddashboardid", "", time() - 3600, "/");
 redirect("start-login.php");
 ?>
 <!DOCTYPE html>

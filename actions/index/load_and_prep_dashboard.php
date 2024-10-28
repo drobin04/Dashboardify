@@ -38,10 +38,12 @@ Try { // Load Dashboard list
             //Check if dashboard still exists. If we just deleted it, ignore that it's in the cookie.
             // If it is found, this if statement doesn't do anything and we continue on as usual.
             // Need to update in case of a dashboard that currentuser doesn't directly own, but is owned by the org. 
-            if (!DoIHaveAccessToThisDashboard($_GET["SelectDashboardID"])) {
-                $last_dashboard_selected_cookie_found = FALSE;
-                $last_dashboard_id = "";
-                $matcheddashboardid = -1; // Undoes the part earlier where it sets this to _GET value.
+            if (isset($_GET["SelectDashboardID"])){
+                if (!DoIHaveAccessToThisDashboard($_GET["SelectDashboardID"])) {
+                    $last_dashboard_selected_cookie_found = FALSE;
+                    $last_dashboard_id = "";
+                    $matcheddashboardid = -1; // Undoes the part earlier where it sets this to _GET value.
+                }
             }
         }
         
@@ -61,15 +63,32 @@ Try { // Load Dashboard list
                 // If value exists, we need to select THAT dashboard in the dropdown instead of the default 
                 // 
                 echo "<option value='" . $row["DashboardID"] . "'";
-                If ($recid == $matcheddashboardid){echo "selected='selected'";} elseif ($matcheddashboardid <> -1 || $last_dashboard_selected_cookie_found) {} else {echo "selected='selected'";}
+                If ($recid == $matcheddashboardid)
+                {echo "selected='selected'";} 
+                elseif ($matcheddashboardid <> -1 || $last_dashboard_selected_cookie_found) 
+                {} else 
+                { // What on earth conditions is this triggering for? 
+                    // This triggers if recid is not 'matched dashboard id', which would be matched by URL selector for dashboard ID...
+                    // Also if matcheddashboardID is NOT SET, AND the 'last dashboard selected cookie' is NOT found...
+                    // So... Is this supposed to select a dashboard if we aren't selecting a dashboard manually, and aren't selecting the 'last' dashboard we were using?
+                    // If so, we need to figure out a way to check that we don't inadvertently mark this for 'shared' dashboards, as there's a bug with that. 
+                    echo "selected='selected' x_data_1='x'";
+                    // So 'Home' (Default dashboard) is confirmed getting selected by this one.
+                    // Looks like the shared DB is ALSO getting marked by this one.
+                    // I suspect maybe this is happening when I test, because perhaps the 'last dashboard selected cookie found' is still holding my previous dashboard ID 
+                    // And maybe it's not getting cleared on logout.
+                    // Confirmed - Need to clear that cookie on logout.
+                }
                 echo ">" . $row["Name"] . "</option>";
 
             } else {
+                //If not 'DefaultDB'
                 echo "<option value='" . $row["DashboardID"] . "'";
                 If ($recid == $matcheddashboardid || ($last_dashboard_selected_cookie_found && $recid == $last_dashboard_id && !isset($_GET['SelectDashboardID'])))
                 {
-                    // If Recid = matcheddashboard ID, OR (Previous dashboardcookie found AND recid for this option matches last dash id AND we don't have a selection in URL) then
-                	echo "selected='selected'";
+                    // If Recid = matcheddashboard ID, OR (Previous dashboardcookie found 
+                    // AND recid for this option matches last dash id AND we don't have a selection in URL) then
+                	echo "selected='selected' x_data_1='y'"; // Some extra junk added just so i can 'see' which code path is being used to mark selected.
                 	$dashboardphotourl = $row["BackgroundPhotoURL"];
                 	$usercss = $row["CustomCSS"];
                 }
