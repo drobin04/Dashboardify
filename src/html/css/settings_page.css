@@ -1,0 +1,22 @@
+
+body {
+    background-color: lightblue;
+    }
+        .MainPanel {
+            max-width: 800px !important;
+            margin: 40px auto;
+        border-color: black;
+        border: 1px solid black;
+        background-color: white;
+        padding: 30px;
+        border-radius: 25px;
+        overflow: auto;
+        height: auto;
+        width: auto;
+        }
+        
+
+        .MainPanel input, .MainPanel textarea, .MainPanel select {
+            border-left-width: inherit;
+        }
+        
