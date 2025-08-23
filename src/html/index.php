@@ -157,12 +157,16 @@ $New_Widget_Dropdown_Options = "
 		</form>
 		<!--Edit Existing Dashboard Dialog-->
 		<form id="EditDashboard" method="POST" action="actions/Edit_Dashboard.php?DashboardID=<?php echo $dashboardid; ?>">
-		<div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:450px; height: 300px;">
+		<div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:450px; height: 350px;">
 			
 				<header >Edit Current Dashboard<hr /></header>
 				<br />
 				<label>Dashboard Name:</label><br />
 				<input ID="dashboardname" name="dashboardname" value="<?php echo $dashboardname ?>"></input><br />
+				<br />
+				<label>Background Image URL:</label><br />
+				<input ID="backgroundurl" name="backgroundurl" value="<?php echo $dashboardphotourl ?>" style="width: 100%;"></input><br />
+				<br />
 				<input ID="Embeddable" type="checkbox" name="embeddable" <?php if($embeddable == "1") {echo "checked='true'";} ?> value="1"><label for="Embeddable">Embeddable? This will make this dashboard publicly accessible via the following URL:</label><br />
 				<p><?php echo $siteurl . "api/embed_dashboard.php?DashboardID=" . $dashboardid; ?></p> 
 				<button ID="btnSubmitDashboard">Save Dashboard</button>

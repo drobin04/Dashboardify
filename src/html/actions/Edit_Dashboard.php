@@ -9,18 +9,20 @@
     $dashboardname = $_POST["dashboardname"];
     $dashboardid = $_GET["DashboardID"];
     $embeddable = $_POST["embeddable"];
+    $backgroundurl = $_POST["backgroundurl"];
     $sessionid = $_COOKIE["SessionID"];
 
 	//$select = "Update Dashboards Set Name = '" . $dashboardname . "', Embeddable = '" . $embeddable . "' Where DashboardID = '" . $dashboardid . "'";
 	
 	
-	$sql = "Update Dashboards Set Name = ?, Embeddable = ? Where DashboardID = ?";
+	$sql = "Update Dashboards Set Name = ?, Embeddable = ?, BackgroundPhotoURL = ? Where DashboardID = ?";
 	
 	$localdb = getPDO_DBFile();
 	$stmt1 = $localdb->prepare($sql);
 	$stmt1->bindParam(1, $dashboardname, PDO::PARAM_STR);
 	$stmt1->bindParam(2,$embeddable,PDO::PARAM_BOOL);
-	$stmt1->bindParam(3,$dashboardid,PDO::PARAM_STR);
+	$stmt1->bindParam(3,$backgroundurl,PDO::PARAM_STR);
+	$stmt1->bindParam(4,$dashboardid,PDO::PARAM_STR);
 	$stmt1->execute();
 
 	redirect("../index.php");
