@@ -4,10 +4,24 @@ import {
   hasValidPersistedOAuthSession
 } from "./google-auth.js";
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   const errEl = document.getElementById("loginError");
   const btn = document.getElementById("btnGoogleSignIn");
   const continueRow = document.getElementById("continueSessionRow");
+
+  if (!hasValidPersistedOAuthSession()) {
+    try {
+      const silentAuth = new GoogleAuthProvider(dashboardifyCloudConfig);
+      await silentAuth.init();
+      if (await silentAuth.restoreSessionOrSilentRefresh()) {
+        window.location.replace("cloud.html");
+        return;
+      }
+    } catch {
+      /* stay on login */
+    }
+  }
+
   if (continueRow && hasValidPersistedOAuthSession()) {
     continueRow.style.display = "block";
     document.getElementById("btnContinueDashboards").addEventListener("click", () => {

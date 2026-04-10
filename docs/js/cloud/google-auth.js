@@ -53,13 +53,17 @@ export class GoogleAuthProvider {
   constructor(config) {
     this.config = config;
     this.accessToken = "";
+    /** Wall-clock expiry for in-memory token (same as persisted `expiresAtMs`). */
+    this.tokenExpiresAtMs = 0;
     this.tokenClient = null;
   }
 
   _persistFromResponse(response) {
-    if (!response || !response.access_token || !response.expires_in) return;
-    const expiresAtMs =
-      Date.now() + (Number(response.expires_in) - 120) * 1000;
+    if (!response || !response.access_token) return;
+    const expiresInSec = Number(response.expires_in);
+    const expiresIn = Number.isFinite(expiresInSec) && expiresInSec > 0 ? expiresInSec : 3600;
+    const expiresAtMs = Date.now() + (expiresIn - 120) * 1000;
+    this.tokenExpiresAtMs = expiresAtMs;
     writePersistedOAuthRaw(
       JSON.stringify({
         accessToken: response.access_token,
@@ -79,12 +83,34 @@ export class GoogleAuthProvider {
         Date.now() >= data.expiresAtMs
       ) {
         removePersistedOAuth();
+        this.tokenExpiresAtMs = 0;
         return false;
       }
       this.accessToken = data.accessToken;
+      this.tokenExpiresAtMs = data.expiresAtMs;
       return true;
     } catch {
       removePersistedOAuth();
+      this.tokenExpiresAtMs = 0;
+      return false;
+    }
+  }
+
+  /**
+   * Use a valid stored access token, or obtain a new one without prompting if Google still
+   * has consent and an active session (typical multi-day browser login to Google).
+   */
+  async restoreSessionOrSilentRefresh() {
+    if (this.restoreSessionIfValid()) {
+      return true;
+    }
+    try {
+      await this.getAccessToken(false);
+      return Boolean(this.accessToken);
+    } catch {
+      removePersistedOAuth();
+      this.accessToken = "";
+      this.tokenExpiresAtMs = 0;
       return false;
     }
   }
@@ -92,6 +118,7 @@ export class GoogleAuthProvider {
   clearPersistedSession() {
     removePersistedOAuth();
     this.accessToken = "";
+    this.tokenExpiresAtMs = 0;
   }
 
   async init() {
@@ -121,8 +148,16 @@ export class GoogleAuthProvider {
   }
 
   async getAccessToken(forcePrompt = false) {
-    if (this.accessToken && !forcePrompt) {
+    const cachedOk =
+      this.accessToken &&
+      !forcePrompt &&
+      this.tokenExpiresAtMs > 0 &&
+      Date.now() < this.tokenExpiresAtMs;
+    if (cachedOk) {
       return this.accessToken;
+    }
+    if (!forcePrompt) {
+      this.accessToken = "";
     }
 
     return new Promise((resolve, reject) => {

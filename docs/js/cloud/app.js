@@ -293,7 +293,7 @@ async function boot() {
     googleAuth = new GoogleAuthProvider(dashboardifyCloudConfig);
     await googleAuth.init();
 
-    if (!googleAuth.restoreSessionIfValid()) {
+    if (!(await googleAuth.restoreSessionOrSilentRefresh())) {
       window.location.href = "cloud-login.html";
       return false;
     }
