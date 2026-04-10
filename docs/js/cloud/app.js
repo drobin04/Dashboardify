@@ -1,11 +1,17 @@
 import { dashboardifyCloudConfig } from "./config.js";
 import { GoogleAuthProvider } from "./google-auth.js";
 import { GoogleDriveAppDataClient } from "./google-drive-client.js";
-import { CloudStorageAdapter } from "./storage-adapter.js";
+import {
+  CloudStorageAdapter,
+  readCloudDataCacheFromLocalStorage,
+  writeCloudDataCacheToLocalStorage
+} from "./storage-adapter.js";
+import { defaultPreferences } from "./schema.js";
 
 let adapter = null;
 let currentDashboardId = "";
 let googleAuth = null;
+let writeAccessInFlight = null;
 
 const DEFAULT_WIDGET_TYPES = [
   "Bookmark",
@@ -180,7 +186,45 @@ async function persistLastDashboardPreferenceIfNeeded() {
   if (!adapter || !currentDashboardId) return;
   const cur = adapter.dataCache?.preferences?.lastSelectedDashboardId;
   if (String(cur || "") === String(currentDashboardId)) return;
-  await adapter.updatePreferences({ lastSelectedDashboardId: currentDashboardId });
+  if (adapter.driveClient) {
+    await adapter.updatePreferences({ lastSelectedDashboardId: currentDashboardId });
+    return;
+  }
+  if (adapter.dataCache) {
+    adapter.dataCache.preferences = {
+      ...defaultPreferences(),
+      ...(adapter.dataCache.preferences || {}),
+      lastSelectedDashboardId: currentDashboardId
+    };
+    writeCloudDataCacheToLocalStorage(adapter.dataCache);
+  }
+}
+
+async function ensureCloudWriteAccess() {
+  if (!adapter) return false;
+  if (adapter.driveClient) return true;
+  if (writeAccessInFlight) return writeAccessInFlight;
+  writeAccessInFlight = (async () => {
+    try {
+      if (!(await googleAuth.restoreSessionOrSilentRefresh())) {
+        window.location.href = "cloud-login.html";
+        return false;
+      }
+      adapter.driveClient = new GoogleDriveAppDataClient(googleAuth);
+      await adapter.loadAppData();
+      syncUserDataChrome();
+      await refreshDashboards();
+      setStatus("Signed in");
+      return true;
+    } catch (e) {
+      console.error(e);
+      window.location.href = "cloud-login.html";
+      return false;
+    } finally {
+      writeAccessInFlight = null;
+    }
+  })();
+  return writeAccessInFlight;
 }
 
 function populateUserPreferencesForm() {
@@ -246,6 +290,10 @@ async function refreshDashboards() {
   });
 
   if (!dashboards.length) {
+    if (!adapter.driveClient) {
+      setStatus("No dashboards in saved copy.", true);
+      return;
+    }
     currentDashboardId = await adapter.createDashboard("Default Dashboard");
     return refreshDashboards();
   }
@@ -293,14 +341,28 @@ async function boot() {
     googleAuth = new GoogleAuthProvider(dashboardifyCloudConfig);
     await googleAuth.init();
 
-    if (!(await googleAuth.restoreSessionOrSilentRefresh())) {
-      window.location.href = "cloud-login.html";
-      return false;
+    const signedIn = await googleAuth.restoreSessionOrSilentRefresh();
+    if (signedIn) {
+      adapter = new CloudStorageAdapter(
+        new GoogleDriveAppDataClient(googleAuth)
+      );
+      await adapter.loadAppData();
+      setStatus("Signed in");
+    } else {
+      const cached = readCloudDataCacheFromLocalStorage();
+      if (!cached) {
+        window.location.href = "cloud-login.html";
+        return false;
+      }
+      adapter = new CloudStorageAdapter(null);
+      adapter.hydrateFromLocalCacheModel(cached);
+      setStatus(
+        "Viewing saved dashboards — sign in when you add or change anything."
+      );
     }
 
-    const drive = new GoogleDriveAppDataClient(googleAuth);
-    adapter = new CloudStorageAdapter(drive);
     window.DashboardifyDataAdapter = adapter;
+    window.DashboardifyEnsureCloudWriteAccess = ensureCloudWriteAccess;
 
     window.editwidget = async function (recID) {
       if (!adapter) return;
@@ -319,10 +381,8 @@ async function boot() {
       }
     };
 
-    await adapter.loadAppData();
     syncUserDataChrome();
     await refreshDashboards();
-    setStatus("Signed in");
     return true;
   } catch (err) {
     console.error(err);
@@ -355,6 +415,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   byId("btnSubmitNewWidget").addEventListener("click", async () => {
     if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
     const payload = collectWidgetPayloadFromForm();
     await adapter.upsertWidget(payload);
     byId("NewWidgetDialog2").style.display = "none";
@@ -363,6 +424,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   byId("btnSaveCloudCss").addEventListener("click", async () => {
     if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
     await adapter.updateDashboard(currentDashboardId, {
       CustomCSS: byId("txtCSS").value,
       BackgroundPhotoURL: byId("cssEditorBackgroundUrl").value
@@ -373,6 +435,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   byId("btnCloudSaveNewDashboard").addEventListener("click", async () => {
     if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
     const name = (byId("newDashboardName").value || "").trim();
     if (!name) {
       alert("Enter a dashboard name.");
@@ -386,6 +449,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   byId("btnCloudSaveEditDashboard").addEventListener("click", async () => {
     if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
     await adapter.updateDashboard(currentDashboardId, {
       Name: byId("editDashboardName").value,
       BackgroundPhotoURL: byId("editDashboardBackground").value,
@@ -397,6 +461,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   byId("btnCloudDeleteDashboard").addEventListener("click", async () => {
     if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
     const dashboards = await adapter.getDashboards();
     if (dashboards.length <= 1) {
       alert("Cannot delete the last dashboard.");
@@ -426,6 +491,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   byId("btnSaveUserPreferences").addEventListener("click", async () => {
     if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
     let providers;
     let styles;
     try {

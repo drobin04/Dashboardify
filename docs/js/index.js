@@ -524,8 +524,14 @@ function editExistingNote(RecID) {
 		y.innerHTML = y.getAttribute("data-original-html");
 	});
 	var form = document.getElementById("notes_submission");
-	form.onsubmit = function (ev) {
+	form.onsubmit = async function (ev) {
 		ev.preventDefault();
+		if (
+			typeof window.DashboardifyEnsureCloudWriteAccess === "function" &&
+			!(await window.DashboardifyEnsureCloudWriteAccess())
+		) {
+			return;
+		}
 		var ta = form.querySelector('textarea[name="Notes"]');
 		var text = ta ? ta.value : "";
 		void adapter.patchWidget(RecID, { Notes: text }).then(function () {
@@ -562,8 +568,14 @@ function getrooturlpath() {
   return apiURL;
 }
 
-function deleteWidget(recID) {
+async function deleteWidget(recID) {
   if (window.DashboardifyDataAdapter && typeof window.DashboardifyDataAdapter.deleteWidget === "function") {
+	if (
+	  typeof window.DashboardifyEnsureCloudWriteAccess === "function" &&
+	  !(await window.DashboardifyEnsureCloudWriteAccess())
+	) {
+	  return;
+	}
 	const x2 = document.getElementById(recID);
 	if (x2) {
 	  x2.remove();
@@ -601,7 +613,7 @@ function toggleEditMode() {
     if (isEditMode) {
         // Enable draggable functionality
         $(".widget").draggable({
-            stop: function(event, ui) {
+            stop: async function(event, ui) {
                 // Get the current position of the widget element
                 var x = ui.position.left;
                 var y = ui.position.top;
@@ -610,6 +622,12 @@ function toggleEditMode() {
                 var widgetId = $(this).attr("id");
                 var adapter = window.DashboardifyDataAdapter;
                 if (adapter && typeof adapter.patchWidget === "function") {
+                    if (
+                      typeof window.DashboardifyEnsureCloudWriteAccess === "function" &&
+                      !(await window.DashboardifyEnsureCloudWriteAccess())
+                    ) {
+                      return;
+                    }
                     void adapter
                         .patchWidget(widgetId, {
                             PositionX: String(Math.round(x)),
@@ -678,7 +696,7 @@ function toggleEditMode() {
 				  clearTimeout(widget.resizeTimeout);
 	  
 				  // Set a new timeout to send the API request after 500ms of inactivity
-				  widget.resizeTimeout = setTimeout(function() {
+				  widget.resizeTimeout = setTimeout(async function() {
 					// Get the width and height of the resized widget
 					const width = widget.offsetWidth;
 					const height = widget.offsetHeight;
@@ -687,6 +705,12 @@ function toggleEditMode() {
 					const id = widget.id;
 					const adapter = window.DashboardifyDataAdapter;
 					if (adapter && typeof adapter.patchWidget === "function") {
+					  if (
+						typeof window.DashboardifyEnsureCloudWriteAccess === "function" &&
+						!(await window.DashboardifyEnsureCloudWriteAccess())
+					  ) {
+						return;
+					  }
 					  void adapter
 						.patchWidget(id, {
 						  SizeX: String(Math.round(width)),

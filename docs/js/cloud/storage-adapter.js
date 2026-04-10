@@ -4,20 +4,69 @@ import {
   ensureDataModelShape
 } from "./schema.js";
 
+export const DASHBOARDIFY_CLOUD_DATA_CACHE_KEY = "dashboardify_cloud_data_snapshot";
+
+export function readCloudDataCacheFromLocalStorage() {
+  try {
+    const raw = localStorage.getItem(DASHBOARDIFY_CLOUD_DATA_CACHE_KEY);
+    if (!raw) return null;
+    return ensureDataModelShape(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+
+export function writeCloudDataCacheToLocalStorage(data) {
+  try {
+    const normalized = ensureDataModelShape(data);
+    localStorage.setItem(
+      DASHBOARDIFY_CLOUD_DATA_CACHE_KEY,
+      JSON.stringify(normalized)
+    );
+  } catch {
+    /* quota / private mode */
+  }
+}
+
+export function clearCloudDataCacheFromLocalStorage() {
+  try {
+    localStorage.removeItem(DASHBOARDIFY_CLOUD_DATA_CACHE_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 export class CloudStorageAdapter {
+  /** @param {object | null} driveClient GoogleDriveAppDataClient instance, or null for view-only cached data. */
   constructor(driveClient) {
     this.driveClient = driveClient;
     this.fileMeta = null;
     this.dataCache = null;
   }
 
+  /** Load dashboards/widgets from a previously saved local snapshot (no network). */
+  hydrateFromLocalCacheModel(model) {
+    this.dataCache = ensureDataModelShape(model);
+    this.fileMeta = null;
+  }
+
   async loadAppData() {
+    if (!this.driveClient) {
+      if (!this.dataCache) {
+        throw new Error("No cached app data.");
+      }
+      return this.dataCache;
+    }
+
     const existing = await this.driveClient.findDataFile();
     if (!existing) {
       const initial = createEmptyDataModel();
-      const created = await this.driveClient.createDataFile(JSON.stringify(initial, null, 2));
+      const created = await this.driveClient.createDataFile(
+        JSON.stringify(initial, null, 2)
+      );
       this.fileMeta = created;
       this.dataCache = initial;
+      writeCloudDataCacheToLocalStorage(this.dataCache);
       return initial;
     }
 
@@ -25,17 +74,25 @@ export class CloudStorageAdapter {
     const raw = await this.driveClient.readFileContent(existing.id);
     const parsed = raw ? JSON.parse(raw) : createEmptyDataModel();
     this.dataCache = ensureDataModelShape(parsed);
+    writeCloudDataCacheToLocalStorage(this.dataCache);
     return this.dataCache;
   }
 
   async saveAppData(data) {
+    if (!this.driveClient) {
+      throw new Error("Sign in to save changes to Google Drive.");
+    }
     if (!this.fileMeta || !this.fileMeta.id) {
       await this.loadAppData();
     }
     const normalized = ensureDataModelShape(data);
-    const updated = await this.driveClient.updateFileContent(this.fileMeta.id, JSON.stringify(normalized, null, 2));
+    const updated = await this.driveClient.updateFileContent(
+      this.fileMeta.id,
+      JSON.stringify(normalized, null, 2)
+    );
     this.fileMeta = updated;
     this.dataCache = normalized;
+    writeCloudDataCacheToLocalStorage(this.dataCache);
     return normalized;
   }
 
