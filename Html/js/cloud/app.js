@@ -1,0 +1,459 @@
+import { dashboardifyCloudConfig } from "./config.js";
+import { GoogleAuthProvider } from "./google-auth.js";
+import { GoogleDriveAppDataClient } from "./google-drive-client.js";
+import { CloudStorageAdapter } from "./storage-adapter.js";
+
+let adapter = null;
+let currentDashboardId = "";
+let googleAuth = null;
+
+const DEFAULT_WIDGET_TYPES = [
+  "Bookmark",
+  "IFrame",
+  "Collapseable IFrame",
+  "Notes",
+  "HTMLEmbed",
+  "Countdown",
+  "CountUp_Hours",
+  "CountUp_Days"
+];
+
+const SQL_WIDGET_TYPES = [
+  "SQLServerScalarQuery",
+  "SQLiteResultsList",
+  "SQLite Chart (PHPGD)"
+];
+
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function setStatus(message, isError = false) {
+  const el = byId("statusText");
+  if (!el) return;
+  el.textContent = message;
+  el.title = message;
+  el.style.color = isError ? "#a00" : "#333";
+}
+
+function applyDashboardPresentation() {
+  if (!adapter || !adapter.dataCache) return;
+
+  const data = adapter.dataCache;
+  const userEl = byId("dashboard-user-css");
+  if (userEl) {
+    userEl.textContent = data.userCss || "";
+  }
+
+  const dashEl = byId("dashboard-per-dashboard-css");
+  if (!dashEl || !currentDashboardId) {
+    return;
+  }
+
+  const dash = data.dashboards.find(
+    (d) => String(d.DashboardID) === String(currentDashboardId)
+  );
+  const bg =
+    dash && dash.BackgroundPhotoURL
+      ? String(dash.BackgroundPhotoURL).trim()
+      : "";
+  const custom = dash && dash.CustomCSS ? String(dash.CustomCSS) : "";
+
+  let block = "";
+  if (bg) {
+    block += `body#dashboardcontent { background-image: url(${JSON.stringify(
+      bg
+    )}); background-size: cover; }\n`;
+  } else {
+    block += `body#dashboardcontent { background-image: none; }\n`;
+  }
+  block += custom;
+  dashEl.textContent = block;
+}
+
+function populateCssEditor() {
+  if (!adapter || !adapter.dataCache) return;
+  const dash = adapter.dataCache.dashboards.find(
+    (d) => String(d.DashboardID) === String(currentDashboardId)
+  );
+  if (!dash) return;
+  byId("txtCSS").value = dash.CustomCSS || "";
+  byId("cssEditorBackgroundUrl").value = dash.BackgroundPhotoURL || "";
+}
+
+function populateEditDashboardDialog() {
+  if (!adapter || !adapter.dataCache) return;
+  const dash = adapter.dataCache.dashboards.find(
+    (d) => String(d.DashboardID) === String(currentDashboardId)
+  );
+  if (!dash) return;
+  byId("editDashboardName").value = dash.Name || "";
+  byId("editDashboardBackground").value = dash.BackgroundPhotoURL || "";
+  byId("editDashboardEmbeddable").checked =
+    String(dash.Embeddable) === "1" || dash.Embeddable === 1;
+  const base = (adapter.dataCache.preferences?.siteBaseUrl || "").trim();
+  const note = byId("editEmbedNote");
+  if (note) {
+    note.textContent = base
+      ? `If you add a public embed page, it might live under: ${base.replace(
+          /\/$/,
+          ""
+        )}/…`
+      : "Set “Public site base URL” in User data & preferences if you use fixed links to this app.";
+  }
+}
+
+function injectUserWidgetStyles() {
+  if (!adapter?.dataCache) return;
+  const styles = adapter.dataCache.widgetStyles || [];
+  let el = document.getElementById("dashboardify-user-widget-styles");
+  if (!el) {
+    el = document.createElement("style");
+    el.id = "dashboardify-user-widget-styles";
+    document.head.appendChild(el);
+  }
+  if (!styles.length) {
+    el.textContent = "";
+    return;
+  }
+  const parts = [];
+  for (const s of styles) {
+    const css = (s.CSS || "").trim();
+    const cn = (s.ClassName || "").trim();
+    if (cn && /^[a-zA-Z0-9_-]+$/.test(cn) && css) {
+      parts.push(`.${cn} { ${css} }`);
+    } else if (css) {
+      parts.push(css);
+    }
+  }
+  el.textContent = parts.join("\n");
+}
+
+function rebuildWidgetTypeDropdown() {
+  const sel = byId("ddlWidgetType2");
+  if (!sel || !adapter?.dataCache) return;
+  const preserve = sel.value;
+  sel.innerHTML = "";
+  const appendOpt = (value) => {
+    const o = document.createElement("option");
+    o.value = value;
+    o.textContent = value;
+    sel.appendChild(o);
+  };
+  DEFAULT_WIDGET_TYPES.forEach(appendOpt);
+  const seen = new Set(DEFAULT_WIDGET_TYPES);
+  for (const p of adapter.dataCache.customWidgetProviders || []) {
+    const n = p && p.WidgetProviderName;
+    if (n && !seen.has(String(n))) {
+      seen.add(String(n));
+      appendOpt(String(n));
+    }
+  }
+  if (window.DashboardifyShowSqlWidgets) {
+    for (const t of SQL_WIDGET_TYPES) {
+      if (!seen.has(t)) {
+        seen.add(t);
+        appendOpt(t);
+      }
+    }
+  }
+  if ([...sel.options].some((o) => o.value === preserve)) {
+    sel.value = preserve;
+  }
+}
+
+function syncUserDataChrome() {
+  if (!adapter?.dataCache) return;
+  const pref = adapter.dataCache.preferences || {};
+  window.DashboardifySiteBaseUrl = String(pref.siteBaseUrl || "").trim();
+  window.DashboardifyShowSqlWidgets = !!pref.showSqlWidgetFields;
+  window.DashboardifyWidgetTypesManagedByCloud = true;
+  window.findCustomWidgetProvider = (name) =>
+    (adapter.dataCache.customWidgetProviders || []).find(
+      (x) => String(x.WidgetProviderName) === String(name)
+    );
+  injectUserWidgetStyles();
+  rebuildWidgetTypeDropdown();
+}
+
+async function persistLastDashboardPreferenceIfNeeded() {
+  if (!adapter || !currentDashboardId) return;
+  const cur = adapter.dataCache?.preferences?.lastSelectedDashboardId;
+  if (String(cur || "") === String(currentDashboardId)) return;
+  await adapter.updatePreferences({ lastSelectedDashboardId: currentDashboardId });
+}
+
+function populateUserPreferencesForm() {
+  if (!adapter?.dataCache) return;
+  const p = adapter.dataCache.preferences || {};
+  byId("prefSiteBaseUrl").value = p.siteBaseUrl || "";
+  byId("prefShowSqlWidgets").checked = !!p.showSqlWidgetFields;
+  byId("prefCustomProvidersJson").value = JSON.stringify(
+    adapter.dataCache.customWidgetProviders || [],
+    null,
+    2
+  );
+  byId("prefWidgetStylesJson").value = JSON.stringify(
+    adapter.dataCache.widgetStyles || [],
+    null,
+    2
+  );
+}
+
+function collectWidgetPayloadFromForm() {
+  const get = (id) => {
+    const el = document.getElementById(id);
+    return el ? el.value : "";
+  };
+  const widgetType = get("ddlWidgetType2");
+  let notes = get("txtNotes");
+  const dateEl = document.getElementById("datepicker");
+  if (
+    dateEl &&
+    (widgetType === "Countdown" || widgetType === "CountUp_Hours")
+  ) {
+    notes = dateEl.value || notes;
+  }
+  return {
+    RecID: get("txtWidgetID") || undefined,
+    DashboardRecID: currentDashboardId,
+    WidgetType: widgetType,
+    BookmarkDisplayText: get("txtWidgetDisplayText"),
+    WidgetURL: get("txtWidgetURL"),
+    WidgetCSSClass: get("txtCSSClass"),
+    Notes: notes,
+    PositionX: get("txtpositionx2") || "0",
+    PositionY: get("txtpositiony2") || "0",
+    SizeX: get("txtsizeX2") || "300",
+    SizeY: get("txtsizeY2") || "200",
+    sqlserveraddress: get("SQLServerAddressName"),
+    sqldbname: get("SQLDBName"),
+    sqluser: get("sqluser"),
+    sqlpass: get("sqlpass"),
+    sqlquery: get("sqlquery")
+  };
+}
+
+async function refreshDashboards() {
+  const dashboards = await adapter.getDashboards();
+  const ddl = byId("dashboardSelect");
+  ddl.innerHTML = "";
+  dashboards.forEach((d) => {
+    const opt = document.createElement("option");
+    opt.value = d.DashboardID;
+    opt.textContent = d.Name || d.DashboardID;
+    ddl.appendChild(opt);
+  });
+
+  if (!dashboards.length) {
+    currentDashboardId = await adapter.createDashboard("Default Dashboard");
+    return refreshDashboards();
+  }
+
+  const lastPref = adapter.dataCache?.preferences?.lastSelectedDashboardId;
+  let resolved = currentDashboardId;
+  if (
+    lastPref &&
+    dashboards.some((d) => String(d.DashboardID) === String(lastPref))
+  ) {
+    resolved = lastPref;
+  } else if (
+    !resolved ||
+    !dashboards.some((d) => String(d.DashboardID) === String(resolved))
+  ) {
+    resolved = dashboards[0].DashboardID;
+  }
+  currentDashboardId = resolved;
+
+  ddl.value = currentDashboardId;
+
+  const hid = byId("txtDashboardID");
+  if (hid) hid.value = currentDashboardId;
+
+  await persistLastDashboardPreferenceIfNeeded();
+  await refreshWidgets();
+}
+
+async function refreshWidgets() {
+  applyDashboardPresentation();
+  const widgets = await adapter.getWidgetsForDashboard(currentDashboardId);
+  if (typeof window.clearWidgetContainer === "function") {
+    window.clearWidgetContainer();
+  } else {
+    const c = byId("widgetcontainer");
+    if (c) c.innerHTML = "";
+  }
+  if (typeof window.renderwidgetsfromjson === "function") {
+    window.renderwidgetsfromjson(widgets || []);
+  }
+}
+
+async function boot() {
+  try {
+    googleAuth = new GoogleAuthProvider(dashboardifyCloudConfig);
+    await googleAuth.init();
+
+    if (!googleAuth.restoreSessionIfValid()) {
+      window.location.href = "cloud-login.html";
+      return false;
+    }
+
+    const drive = new GoogleDriveAppDataClient(googleAuth);
+    adapter = new CloudStorageAdapter(drive);
+    window.DashboardifyDataAdapter = adapter;
+
+    window.editwidget = async function (recID) {
+      if (!adapter) return;
+      const list = await adapter.getWidgetsForDashboard(currentDashboardId);
+      const w = list.find((x) => String(x.RecID) === String(recID));
+      if (!w) return;
+      const hid = byId("txtDashboardID");
+      if (hid) hid.value = currentDashboardId;
+      if (typeof window.fillEditWidgetFormFromRecord === "function") {
+        fillEditWidgetFormFromRecord(w, recID);
+      }
+      if (typeof window.toggleDisplay === "function") {
+        toggleDisplay("NewWidgetDialog2");
+      } else {
+        byId("NewWidgetDialog2").style.display = "block";
+      }
+    };
+
+    await adapter.loadAppData();
+    syncUserDataChrome();
+    await refreshDashboards();
+    setStatus("Signed in");
+    return true;
+  } catch (err) {
+    console.error(err);
+    googleAuth?.clearPersistedSession();
+    window.location.href = "cloud-login.html";
+    return false;
+  }
+}
+
+window.addEventListener("DOMContentLoaded", async () => {
+  const ready = await boot();
+  if (!ready) return;
+
+  byId("dashboardSelect").addEventListener("change", async (e) => {
+    currentDashboardId = e.target.value;
+    const hid = byId("txtDashboardID");
+    if (hid) hid.value = currentDashboardId;
+    await persistLastDashboardPreferenceIfNeeded();
+    await refreshWidgets();
+  });
+
+  byId("btnOpenNewWidget").addEventListener("click", () => {
+    byId("txtDashboardID").value = currentDashboardId;
+    byId("txtWidgetID").value = "";
+    if (typeof drawNewWidgetBasedOnType === "function") {
+      drawNewWidgetBasedOnType();
+    }
+    toggleDisplay("NewWidgetDialog2");
+  });
+
+  byId("btnSubmitNewWidget").addEventListener("click", async () => {
+    if (!adapter) return;
+    const payload = collectWidgetPayloadFromForm();
+    await adapter.upsertWidget(payload);
+    byId("NewWidgetDialog2").style.display = "none";
+    await refreshWidgets();
+  });
+
+  byId("btnSaveCloudCss").addEventListener("click", async () => {
+    if (!adapter) return;
+    await adapter.updateDashboard(currentDashboardId, {
+      CustomCSS: byId("txtCSS").value,
+      BackgroundPhotoURL: byId("cssEditorBackgroundUrl").value
+    });
+    byId("cssEditorBox").style.display = "none";
+    await refreshWidgets();
+  });
+
+  byId("btnCloudSaveNewDashboard").addEventListener("click", async () => {
+    if (!adapter) return;
+    const name = (byId("newDashboardName").value || "").trim();
+    if (!name) {
+      alert("Enter a dashboard name.");
+      return;
+    }
+    currentDashboardId = await adapter.createDashboard(name);
+    byId("newDashboardName").value = "";
+    byId("NewDashboardDialog").style.display = "none";
+    await refreshDashboards();
+  });
+
+  byId("btnCloudSaveEditDashboard").addEventListener("click", async () => {
+    if (!adapter) return;
+    await adapter.updateDashboard(currentDashboardId, {
+      Name: byId("editDashboardName").value,
+      BackgroundPhotoURL: byId("editDashboardBackground").value,
+      Embeddable: byId("editDashboardEmbeddable").checked ? "1" : "0"
+    });
+    byId("EditDashboardDialog").style.display = "none";
+    await refreshDashboards();
+  });
+
+  byId("btnCloudDeleteDashboard").addEventListener("click", async () => {
+    if (!adapter) return;
+    const dashboards = await adapter.getDashboards();
+    if (dashboards.length <= 1) {
+      alert("Cannot delete the last dashboard.");
+      return;
+    }
+    if (!confirm("Delete this dashboard and all its widgets?")) return;
+    await adapter.deleteDashboard(currentDashboardId);
+    currentDashboardId = "";
+    byId("EditDashboardDialog").style.display = "none";
+    await refreshDashboards();
+  });
+
+  byId("btnSettingsEditCss").addEventListener("click", () => {
+    populateCssEditor();
+    toggleDisplay("cssEditorBox");
+  });
+
+  byId("btnSettingsEditDashboard").addEventListener("click", () => {
+    populateEditDashboardDialog();
+    toggleDisplay("EditDashboardDialog");
+  });
+
+  byId("btnSettingsUserData").addEventListener("click", () => {
+    populateUserPreferencesForm();
+    toggleDisplay("UserPreferencesDialog");
+  });
+
+  byId("btnSaveUserPreferences").addEventListener("click", async () => {
+    if (!adapter) return;
+    let providers;
+    let styles;
+    try {
+      providers = JSON.parse(byId("prefCustomProvidersJson").value || "[]");
+      styles = JSON.parse(byId("prefWidgetStylesJson").value || "[]");
+    } catch (e) {
+      alert("Invalid JSON: " + (e.message || e));
+      return;
+    }
+    if (!Array.isArray(providers) || !Array.isArray(styles)) {
+      alert("Custom providers and widget styles must be JSON arrays.");
+      return;
+    }
+    await adapter.updatePreferences({
+      siteBaseUrl: byId("prefSiteBaseUrl").value.trim(),
+      showSqlWidgetFields: byId("prefShowSqlWidgets").checked
+    });
+    await adapter.setCustomWidgetProviders(providers);
+    await adapter.setWidgetStyles(styles);
+    syncUserDataChrome();
+    byId("UserPreferencesDialog").style.display = "none";
+    await refreshWidgets();
+    setStatus("Saved user preferences to Google.");
+  });
+
+  byId("cloudSignOutBtn").addEventListener("click", () => {
+    googleAuth?.clearPersistedSession();
+    window.location.href = "cloud-login.html";
+  });
+
+});

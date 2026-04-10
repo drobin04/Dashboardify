@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboardify</title>
+  <link rel="stylesheet" href="config/globalcss.css">
+  <link rel="stylesheet" href="css/index.css">
+  <link rel="stylesheet" href="css/settings_flyout.css">
+  <link rel="stylesheet" href="css/cloud-shell.css">
+  <style id="dashboard-user-css"></style>
+  <style id="dashboard-per-dashboard-css"></style>
+  <style>
+    md-block:not([rendered]) { display: none; }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+  <script type="module" src="js/md-block.js"></script>
+  <script src="js/index.js"></script>
+  <script src="js/settings_flyout.js"></script>
+  <script type="module" src="js/cloud/app.js"></script>
+</head>
+<body id="dashboardcontent">
+  <div>
+    <div class="cloud-menubar-wrap">
+      <div class="menubar-left">
+        <button type="button" class="menubar" id="btnOpenNewWidget">New Widget</button>
+        <button type="button" class="menubar" onclick="toggleDisplayByClass('editbuttons');">Edit Widgets</button>
+        <button type="button" class="menubar" onclick="toggleDisplay('NewDashboardDialog');">New Dashboard</button>
+        <span class="dash-picker">
+          <label for="dashboardSelect">Dashboard:</label>
+          <select id="dashboardSelect"></select>
+        </span>
+        <span id="statusText" class="cloud-status-inline" title=""></span>
+      </div>
+      <div class="cloud-menubar-spacer"></div>
+    </div>
+
+    <button id="settingsLink"><a href="#" id="settingsLink2">Settings</a></button>
+    <div id="settingsMenu" class="hidden">
+      <button><a id="editmode" class="menubar nodeco">Move Widgets</a></button>
+      <button><a id="resizewidgets" class="menubar nodeco">Resize Widgets</a></button>
+      <button type="button" class="menubar" id="btnSettingsEditCss">Edit CSS</button>
+      <button type="button" class="menubar" id="btnSettingsEditDashboard">Edit Dashboard</button>
+      <button type="button" class="menubar" id="btnSettingsUserData">User data &amp; preferences…</button>
+      <button type="button" class="menubar" id="cloudSignOutBtn">Sign out (Google)</button>
+    </div>
+
+    <div id="widgetcontainer"></div>
+
+    <!-- New / edit widget (same structure as classic index for drawWidget / drawNewWidgetBasedOnType) -->
+    <div id="NewWidgetDialog2" class="white_content">
+      <form id="form_ExperimentalNewWidgetDialog" onsubmit="return false;">
+        <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog2').style.display='none';">Close</button>
+        <button type="button" id="btnSubmitNewWidget">Submit</button>
+        <br />
+        <header>New Widget<hr /></header>
+        <label>Widget Type: </label>
+        <div class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
+          <select id="ddlWidgetType2" name="WidgetType" onchange="drawNewWidgetBasedOnType()">
+            <option value="Bookmark">Bookmark</option>
+            <option value="IFrame">IFrame</option>
+            <option value="Collapseable IFrame">Collapseable IFrame</option>
+            <option value="Notes">Notes</option>
+            <option value="HTMLEmbed">HTMLEmbed</option>
+            <option value="Countdown">Countdown</option>
+            <option value="CountUp_Hours">Count Up- Hours Since Last</option>
+            <option value="CountUp_Days">Count Up- Days Since Last</option>
+          </select><br />
+          <div id="NewWidget_Form"></div>
+          <span id="WidgetAndDashboardIDSpan" style="display: none;">
+            Edit Widget ID: <input id="txtWidgetID" name="ID"><br />
+            Dashboard ID: <input id="txtDashboardID" name="dashboardID" value="">
+          </span><br />
+        </div>
+      </form>
+    </div>
+
+    <div id="cssEditorBox" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
+      <button type="button" style="float: left !important;" onclick="document.getElementById('cssEditorBox').style.display='none';">Close</button><br />
+      <div id="columnd" class="column" style="width: 85% !important; height:100% !important; clear: both; margin: 0 auto;">
+        <header>Dashboard-Specific CSS<hr /></header>
+        <button type="button" id="btnSaveCloudCss">Save CSS</button><br />
+        <textarea id="txtCSS" name="txtCSS" cols="40" rows="5" style="width:100%; height:50%;"></textarea><br />
+        Background Image URL: <input id="cssEditorBackgroundUrl" type="text" style="width:100%;"><br />
+      </div>
+    </div>
+
+    <div id="NewDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:220px !important; height:160px;">
+      <button type="button" style="float: left !important;" onclick="document.getElementById('NewDashboardDialog').style.display='none';">Close</button>
+      <header>New Dashboard<hr /></header>
+      <br />
+      <input id="newDashboardName" placeholder="Name"><br /><br />
+      <button type="button" class="menubar" id="btnCloudSaveNewDashboard">Save Dashboard</button>
+    </div>
+
+    <div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:450px; min-height: 280px;">
+      <button type="button" style="float: left !important;" onclick="document.getElementById('EditDashboardDialog').style.display='none';">Close</button>
+      <header>Edit Current Dashboard<hr /></header>
+      <br />
+      <label>Dashboard Name:</label><br />
+      <input id="editDashboardName" style="width: 100%;"><br /><br />
+      <label>Background Image URL:</label><br />
+      <input id="editDashboardBackground" style="width: 100%;"><br /><br />
+      <label><input id="editDashboardEmbeddable" type="checkbox" value="1"> Embeddable (reserved for future public embed)</label>
+      <p id="editEmbedNote" style="font-size: 12px; margin-top: 8px;">Embeddable is stored with your dashboard data for future use.</p>
+      <br />
+      <button type="button" class="menubar" id="btnCloudSaveEditDashboard">Save Dashboard</button>
+      <button type="button" class="menubar" id="btnCloudDeleteDashboard" style="margin-top:8px;">Delete dashboard</button>
+    </div>
+
+    <div id="UserPreferencesDialog" class="white_content" style="width: 480px; max-height: 90%; overflow: auto;">
+      <button type="button" style="float: left !important;" onclick="document.getElementById('UserPreferencesDialog').style.display='none';">Close</button>
+      <header>User data &amp; preferences<hr /></header>
+      <p style="font-size: 12px; margin: 8px 0;">Stored in your Google Drive app data with dashboards and widgets.</p>
+      <label><b>Public site base URL</b> (optional, for embed links / bookmarks)</label><br />
+      <input id="prefSiteBaseUrl" type="text" style="width: 100%; box-sizing: border-box;" placeholder="https://yoursite.github.io/Dashboardify/"><br /><br />
+      <label><input type="checkbox" id="prefShowSqlWidgets"> Show SQL / chart widget types in the New Widget list</label><br /><br />
+      <label><b>Custom widget providers</b> (JSON array — fields: WidgetProviderName, CSS_Styling, HTML_Content, PHP_To_Run)</label><br />
+      <textarea id="prefCustomProvidersJson" rows="6" style="width: 100%; box-sizing: border-box; font-family: monospace; font-size: 11px;" placeholder='[{"WidgetProviderName":"MyWidget","HTML_Content":"<p>Hello</p>"}]'></textarea><br /><br />
+      <label><b>Widget styles</b> (JSON array — Name, WidgetType, ClassName, CSS, Description)</label><br />
+      <textarea id="prefWidgetStylesJson" rows="6" style="width: 100%; box-sizing: border-box; font-family: monospace; font-size: 11px;" placeholder='[{"ClassName":"myclass","CSS":"color:navy;"}]'></textarea><br /><br />
+      <button type="button" class="menubar" id="btnSaveUserPreferences">Save to Google</button>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboardify — Cloud sign-in</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/start-login.css">
+  <link rel="stylesheet" href="css/cloud-login-extra.css">
+</head>
+<body>
+  <div class="screen">
+    <div class="screen__content">
+      <div class="login cloud-login-card">
+        <div class="login__field" style="padding-top: 20px;">
+          <h1 style="color: #fff; text-align: center; font-size: 22px; margin-bottom: 8px;">Dashboardify</h1>
+          <p class="cloud-login-subtitle" style="padding-top: 0;">
+            Cloud dashboards are stored in your Google account (Drive app data). Sign in to continue.
+          </p>
+        </div>
+        <div id="loginError" class="cloud-login-error"></div>
+        <div class="cloud-login-actions">
+          <button type="button" id="btnGoogleSignIn" class="cloud-google-btn">
+            <i class="fab fa-google" style="margin-right: 8px;"></i>Continue with Google
+          </button>
+        </div>
+        <div id="continueSessionRow" class="cloud-continue-row" style="display: none;">
+          <p style="color: rgba(255,255,255,0.9); text-align: center; font-size: 13px; margin: 12px 0 6px;">You still have an active Google session.</p>
+          <button type="button" id="btnContinueDashboards" class="cloud-google-btn" style="max-width: 280px;">Go to dashboards</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Must be a sibling of .screen__content (not inside it), same as classic start-login — otherwise shapes paint over the form. -->
+    <div class="screen__background">
+      <span class="screen__background__shape screen__background__shape4"></span>
+      <span class="screen__background__shape screen__background__shape3"></span>
+      <span class="screen__background__shape screen__background__shape2"></span>
+      <span class="screen__background__shape screen__background__shape1"></span>
+    </div>
+  </div>
+  <script type="module" src="js/cloud/cloud-login.js"></script>
+</body>
+</html>
