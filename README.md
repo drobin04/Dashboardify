@@ -1,4 +1,4 @@
-# Setup
+# Legacy PHP Site Setup
 
 If you're not familiar with docker, download and install Docker Desktop, and then open this directory in a terminal and run 'docker build .' , and then wait for it to complete the build process to build an image in docker.
 
