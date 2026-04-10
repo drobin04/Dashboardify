@@ -1,5 +1,54 @@
 export const GOOGLE_OAUTH_SESSION_KEY = "dashboardify_google_oauth";
 
+/** Read persisted OAuth payload; prefers localStorage (shared across tabs), migrates legacy sessionStorage. */
+function readPersistedOAuthRaw() {
+  try {
+    const fromLocal = localStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
+    if (fromLocal) return fromLocal;
+    const fromSession = sessionStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
+    if (fromSession) {
+      localStorage.setItem(GOOGLE_OAUTH_SESSION_KEY, fromSession);
+      sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+      return fromSession;
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
+
+function writePersistedOAuthRaw(json) {
+  try {
+    localStorage.setItem(GOOGLE_OAUTH_SESSION_KEY, json);
+    sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+function removePersistedOAuth() {
+  try {
+    localStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+    sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
+/** True if localStorage (or legacy sessionStorage) has a non-expired OAuth payload. */
+export function hasValidPersistedOAuthSession() {
+  try {
+    const raw = readPersistedOAuthRaw();
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    return Boolean(
+      data.accessToken && data.expiresAtMs && Date.now() < data.expiresAtMs
+    );
+  } catch {
+    return false;
+  }
+}
+
 export class GoogleAuthProvider {
   constructor(config) {
     this.config = config;
@@ -11,22 +60,17 @@ export class GoogleAuthProvider {
     if (!response || !response.access_token || !response.expires_in) return;
     const expiresAtMs =
       Date.now() + (Number(response.expires_in) - 120) * 1000;
-    try {
-      sessionStorage.setItem(
-        GOOGLE_OAUTH_SESSION_KEY,
-        JSON.stringify({
-          accessToken: response.access_token,
-          expiresAtMs
-        })
-      );
-    } catch {
-      /* ignore quota / private mode */
-    }
+    writePersistedOAuthRaw(
+      JSON.stringify({
+        accessToken: response.access_token,
+        expiresAtMs
+      })
+    );
   }
 
   restoreSessionIfValid() {
     try {
-      const raw = sessionStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
+      const raw = readPersistedOAuthRaw();
       if (!raw) return false;
       const data = JSON.parse(raw);
       if (
@@ -34,23 +78,19 @@ export class GoogleAuthProvider {
         !data.expiresAtMs ||
         Date.now() >= data.expiresAtMs
       ) {
-        sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+        removePersistedOAuth();
         return false;
       }
       this.accessToken = data.accessToken;
       return true;
     } catch {
-      sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+      removePersistedOAuth();
       return false;
     }
   }
 
   clearPersistedSession() {
-    try {
-      sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
-    } catch {
-      /* ignore */
-    }
+    removePersistedOAuth();
     this.accessToken = "";
   }
 

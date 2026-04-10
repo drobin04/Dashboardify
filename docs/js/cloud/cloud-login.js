@@ -1,24 +1,14 @@
 import { dashboardifyCloudConfig } from "./config.js";
-import { GoogleAuthProvider, GOOGLE_OAUTH_SESSION_KEY } from "./google-auth.js";
-
-function hasValidStoredSession() {
-  try {
-    const raw = sessionStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
-    if (!raw) return false;
-    const data = JSON.parse(raw);
-    return Boolean(
-      data.accessToken && data.expiresAtMs && Date.now() < data.expiresAtMs
-    );
-  } catch {
-    return false;
-  }
-}
+import {
+  GoogleAuthProvider,
+  hasValidPersistedOAuthSession
+} from "./google-auth.js";
 
 window.addEventListener("DOMContentLoaded", () => {
   const errEl = document.getElementById("loginError");
   const btn = document.getElementById("btnGoogleSignIn");
   const continueRow = document.getElementById("continueSessionRow");
-  if (continueRow && hasValidStoredSession()) {
+  if (continueRow && hasValidPersistedOAuthSession()) {
     continueRow.style.display = "block";
     document.getElementById("btnContinueDashboards").addEventListener("click", () => {
       window.location.href = "cloud.html";
