@@ -3,23 +3,24 @@ import {
   GoogleAuthProvider,
   hasValidPersistedOAuthSession
 } from "./google-auth.js";
+import { readCloudDataCacheFromLocalStorage } from "./storage-adapter.js";
 
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("DOMContentLoaded", () => {
   const errEl = document.getElementById("loginError");
   const btn = document.getElementById("btnGoogleSignIn");
   const continueRow = document.getElementById("continueSessionRow");
 
-  if (!hasValidPersistedOAuthSession()) {
-    try {
-      const silentAuth = new GoogleAuthProvider(dashboardifyCloudConfig);
-      await silentAuth.init();
-      if (await silentAuth.restoreSessionOrSilentRefresh()) {
-        window.location.replace("cloud.html");
-        return;
-      }
-    } catch {
-      /* stay on login */
-    }
+  const actions = document.querySelector(".cloud-login-actions");
+  if (actions && readCloudDataCacheFromLocalStorage()) {
+    const wrap = document.createElement("div");
+    wrap.className = "cloud-continue-row";
+    wrap.innerHTML =
+      "<p style=\"color: rgba(255,255,255,0.9); text-align: center; font-size: 13px; margin: 12px 0 6px;\">A saved copy of your dashboards is on this device.</p>" +
+      "<button type=\"button\" id=\"btnOfflineDashboards\" class=\"cloud-google-btn\" style=\"max-width: 280px;\">Open saved dashboards</button>";
+    actions.after(wrap);
+    wrap.querySelector("#btnOfflineDashboards").addEventListener("click", () => {
+      window.location.href = "cloud.html";
+    });
   }
 
   if (continueRow && hasValidPersistedOAuthSession()) {

@@ -56,6 +56,17 @@ export class GoogleAuthProvider {
     /** Wall-clock expiry for in-memory token (same as persisted `expiresAtMs`). */
     this.tokenExpiresAtMs = 0;
     this.tokenClient = null;
+    /** @type {Promise<void> | null} */
+    this._initPromise = null;
+  }
+
+  /** Load the Google Identity Services script and create the token client (no token request yet). */
+  async ensureInitialized() {
+    if (this.tokenClient) return;
+    this._initPromise ??= this.init().finally(() => {
+      this._initPromise = null;
+    });
+    await this._initPromise;
   }
 
   _persistFromResponse(response) {
@@ -101,6 +112,7 @@ export class GoogleAuthProvider {
    * has consent and an active session (typical multi-day browser login to Google).
    */
   async restoreSessionOrSilentRefresh() {
+    await this.ensureInitialized();
     if (this.restoreSessionIfValid()) {
       return true;
     }
@@ -148,6 +160,7 @@ export class GoogleAuthProvider {
   }
 
   async getAccessToken(forcePrompt = false) {
+    await this.ensureInitialized();
     const cachedOk =
       this.accessToken &&
       !forcePrompt &&

@@ -1,5 +1,8 @@
 import { dashboardifyCloudConfig } from "./config.js";
-import { GoogleAuthProvider } from "./google-auth.js";
+import {
+  GoogleAuthProvider,
+  hasValidPersistedOAuthSession
+} from "./google-auth.js";
 import { GoogleDriveAppDataClient } from "./google-drive-client.js";
 import {
   CloudStorageAdapter,
@@ -200,6 +203,40 @@ async function persistLastDashboardPreferenceIfNeeded() {
   }
 }
 
+function scheduleBackgroundOnlineIfTokenValid() {
+  const run = () => void tryBackgroundReattachDriveWhenTokenValid();
+  if (typeof requestIdleCallback === "function") {
+    requestIdleCallback(run, { timeout: 5000 });
+  } else {
+    setTimeout(run, 2000);
+  }
+}
+
+/**
+ * If a non-expired token is already in localStorage, attach Drive and refresh data — no
+ * requestAccessToken call, so no account popup.
+ */
+async function tryBackgroundReattachDriveWhenTokenValid() {
+  if (!adapter || adapter.driveClient) return;
+  if (!hasValidPersistedOAuthSession()) return;
+  const backup = adapter.dataCache;
+  try {
+    await googleAuth.ensureInitialized();
+    if (!googleAuth.restoreSessionIfValid()) return;
+    adapter.driveClient = new GoogleDriveAppDataClient(googleAuth);
+    await adapter.loadAppData();
+    syncUserDataChrome();
+    await refreshDashboards();
+    setStatus("Signed in");
+  } catch (e) {
+    console.warn("Background Drive sync skipped:", e);
+    adapter.driveClient = null;
+    if (backup) {
+      adapter.hydrateFromLocalCacheModel(backup);
+    }
+  }
+}
+
 async function ensureCloudWriteAccess() {
   if (!adapter) return false;
   if (adapter.driveClient) return true;
@@ -339,26 +376,26 @@ async function refreshWidgets() {
 async function boot() {
   try {
     googleAuth = new GoogleAuthProvider(dashboardifyCloudConfig);
-    await googleAuth.init();
+    const cached = readCloudDataCacheFromLocalStorage();
 
-    const signedIn = await googleAuth.restoreSessionOrSilentRefresh();
-    if (signedIn) {
-      adapter = new CloudStorageAdapter(
-        new GoogleDriveAppDataClient(googleAuth)
-      );
-      await adapter.loadAppData();
-      setStatus("Signed in");
-    } else {
-      const cached = readCloudDataCacheFromLocalStorage();
-      if (!cached) {
-        window.location.href = "cloud-login.html";
-        return false;
-      }
+    if (cached) {
       adapter = new CloudStorageAdapter(null);
       adapter.hydrateFromLocalCacheModel(cached);
       setStatus(
         "Viewing saved dashboards — sign in when you add or change anything."
       );
+      scheduleBackgroundOnlineIfTokenValid();
+    } else {
+      const signedIn = await googleAuth.restoreSessionOrSilentRefresh();
+      if (!signedIn) {
+        window.location.href = "cloud-login.html";
+        return false;
+      }
+      adapter = new CloudStorageAdapter(
+        new GoogleDriveAppDataClient(googleAuth)
+      );
+      await adapter.loadAppData();
+      setStatus("Signed in");
     }
 
     window.DashboardifyDataAdapter = adapter;
@@ -386,7 +423,9 @@ async function boot() {
     return true;
   } catch (err) {
     console.error(err);
-    googleAuth?.clearPersistedSession();
+    if (adapter?.driveClient) {
+      googleAuth?.clearPersistedSession();
+    }
     window.location.href = "cloud-login.html";
     return false;
   }
