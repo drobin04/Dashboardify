@@ -291,8 +291,18 @@ function drawWidget(widget) {
 	  
 	  switch (WidgetType) {
 	  	case "Bookmark":
-	  			  		
-	  		if (PositionX != "") {
+	  		{
+	  			var sx = PositionX == null ? "" : String(PositionX).trim();
+	  			var sy = PositionY == null ? "" : String(PositionY).trim();
+	  			var bx = parseFloat(sx);
+	  			var by = parseFloat(sy);
+	  			var bookmarkAutoTile =
+	  				(sx === "" && sy === "") ||
+	  				(Number.isFinite(bx) &&
+	  					Number.isFinite(by) &&
+	  					bx === 0 &&
+	  					by === 0);
+	  			if (!bookmarkAutoTile) {
 	  			var floatingbookmark =
 	  				"<div id='" +
 	  				RecID +
@@ -320,8 +330,7 @@ function drawWidget(widget) {
 	  				"</a></div></div>";
 				var y = document.getElementById("widgetcontainer");
 				y.innerHTML += floatingbookmark;
-			}
-	  		if (PositionX == "") {
+			} else {
 	  			let x =
 	  				"<div id='" +
 	  				RecID +
@@ -344,6 +353,7 @@ function drawWidget(widget) {
 	  				"icons/cancel.png'></img></a></div>";
 	  			let yb = document.getElementById("widgetcontainer");
 				yb.innerHTML += x;
+	  		}
 	  		}
 	  		break;
 	  	case "Notes":

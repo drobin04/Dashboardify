@@ -295,6 +295,26 @@ function collectWidgetPayloadFromForm() {
   ) {
     notes = dateEl.value || notes;
   }
+
+  let positionX = get("txtpositionx2") || "0";
+  let positionY = get("txtpositiony2") || "0";
+  if (widgetType === "Bookmark") {
+    const sx = String(get("txtpositionx2") || "").trim();
+    const sy = String(get("txtpositiony2") || "").trim();
+    const x = parseFloat(sx);
+    const y = parseFloat(sy);
+    const autoTile =
+      (sx === "" && sy === "") ||
+      (Number.isFinite(x) && Number.isFinite(y) && x === 0 && y === 0);
+    if (autoTile) {
+      positionX = "";
+      positionY = "";
+    } else {
+      positionX = sx || "0";
+      positionY = sy || "0";
+    }
+  }
+
   return {
     RecID: get("txtWidgetID") || undefined,
     DashboardRecID: currentDashboardId,
@@ -303,8 +323,8 @@ function collectWidgetPayloadFromForm() {
     WidgetURL: get("txtWidgetURL"),
     WidgetCSSClass: get("txtCSSClass"),
     Notes: notes,
-    PositionX: get("txtpositionx2") || "0",
-    PositionY: get("txtpositiony2") || "0",
+    PositionX: positionX,
+    PositionY: positionY,
     SizeX: get("txtsizeX2") || "300",
     SizeY: get("txtsizeY2") || "200",
     sqlserveraddress: get("SQLServerAddressName"),
