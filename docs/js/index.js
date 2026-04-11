@@ -160,9 +160,17 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 	var CSSClass = document.getElementById("txtCSSClass");
 	if (CSSClass) CSSClass.value = result2.WidgetCSSClass || "";
 	var elPX = document.getElementById("txtpositionx2");
-	if (elPX) elPX.value = result2.PositionX;
+	if (elPX) {
+		var px = result2.PositionX;
+		elPX.value =
+			px != null && String(px).trim() !== "" ? px : "";
+	}
 	var elPY = document.getElementById("txtpositiony2");
-	if (elPY) elPY.value = result2.PositionY;
+	if (elPY) {
+		var py = result2.PositionY;
+		elPY.value =
+			py != null && String(py).trim() !== "" ? py : "";
+	}
 	var elSX = document.getElementById("txtsizeX2");
 	if (elSX) elSX.value = result2.SizeX;
 	var elSY = document.getElementById("txtsizeY2");
@@ -267,6 +275,8 @@ function drawWidget(widget) {
 		DashboardRecID,
 		WidgetType
 	  } = widget;
+
+	  const widgetTypeNorm = String(WidgetType || "").trim();
 	  
 		// Variable Declarations to be shared between widget types: 
 		let siteurl = getrooturlpath();
@@ -289,7 +299,7 @@ function drawWidget(widget) {
 		combined = "<div id='" + RecID + "' style='margin:15px; position:absolute; background-color: white;  border: 1px solid black;" + PositionAndCSSClass + editbuttonscss + ">" + imgstylecss + siteurl + "icons/edit.png'></img></a>" + deletebuttoncss + ">" + imgstylecss + siteurl + "icons/cancel.png'></img></a>";
 	  
 	  
-	  switch (WidgetType) {
+	  switch (widgetTypeNorm) {
 	  	case "Bookmark":
 	  		{
 	  			var sx = PositionX == null ? "" : String(PositionX).trim();
@@ -972,7 +982,7 @@ function drawNewWidgetBasedOnType() {
 	
 	var ddl = document.getElementById('ddlWidgetType2');
 	var ddlValue = ddl.value;
-	var SizeAndCSSClassMarkup = "<hr><button type=\"button\" style=\"margin-left:5px\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set Position & Size</button><br /><label id='sizelabel'></label><div style='display:none;'><label>PositionX: </label><input ID=\"txtpositionx2\" Text=\"0\" name=\"PositionX\"></input><br /><label>PositionY: </label><input ID=\"txtpositiony2\" Text=\"0\" name=\"PositionY\"></input><br /><label>SizeX: </label><input ID=\"txtsizeX2\" Text=\"0\" name=\"SizeX\"></input><br /><label>SizeY: </label><input onchange='UpdateSizeCalcs();' ID=\"txtsizeY2\" Text=\"0\" name=\"SizeY\"></input></div><br /><label>CSS Class: </label><input ID=\"txtCSSClass\" name=\"CSSClass\"></input><br />";
+	var SizeAndCSSClassMarkup = "<hr><button type=\"button\" style=\"margin-left:5px\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set Position & Size</button><br /><label id='sizelabel'></label><div style='display:none;'><label>PositionX: </label><input id=\"txtpositionx2\" value=\"\" autocomplete=\"off\" name=\"PositionX\"><br /><label>PositionY: </label><input id=\"txtpositiony2\" value=\"\" autocomplete=\"off\" name=\"PositionY\"><br /><label>SizeX: </label><input id=\"txtsizeX2\" value=\"\" autocomplete=\"off\" name=\"SizeX\"><br /><label>SizeY: </label><input onchange='UpdateSizeCalcs();' id=\"txtsizeY2\" value=\"\" autocomplete=\"off\" name=\"SizeY\"></div><br /><label>CSS Class: </label><input id=\"txtCSSClass\" name=\"CSSClass\"><br />";
 	
 	switch (ddlValue) {
 		

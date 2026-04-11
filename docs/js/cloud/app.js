@@ -286,7 +286,7 @@ function collectWidgetPayloadFromForm() {
     const el = document.getElementById(id);
     return el ? el.value : "";
   };
-  const widgetType = get("ddlWidgetType2");
+  const widgetType = (get("ddlWidgetType2") || "").trim();
   let notes = get("txtNotes");
   const dateEl = document.getElementById("datepicker");
   if (

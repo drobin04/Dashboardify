@@ -1,7 +1,8 @@
 import {
   createEmptyDataModel,
   defaultPreferences,
-  ensureDataModelShape
+  ensureDataModelShape,
+  normalizeBookmarkWidgetPosition
 } from "./schema.js";
 
 export const DASHBOARDIFY_CLOUD_DATA_CACHE_KEY = "dashboardify_cloud_data_snapshot";
@@ -189,9 +190,10 @@ export class CloudStorageAdapter {
       DashboardRecID: widget.DashboardRecID,
       WidgetType: "Bookmark"
     };
-    const merged = prior
+    let merged = prior
       ? { ...prior, ...widget, RecID: recId }
       : { ...defaults, ...widget, RecID: recId };
+    merged = normalizeBookmarkWidgetPosition(merged);
     if (idx >= 0) {
       data.widgets[idx] = merged;
     } else {

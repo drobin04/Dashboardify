@@ -29,9 +29,32 @@ export function createEmptyDataModel() {
   };
 }
 
+/** Bookmark: empty or 0,0 means flow layout (auto column), not absolute top-left. */
+export function normalizeBookmarkWidgetPosition(w) {
+  if (!w || typeof w !== "object") {
+    return w;
+  }
+  if (String(w.WidgetType || "").trim() !== "Bookmark") {
+    return w;
+  }
+  const sx = w.PositionX == null ? "" : String(w.PositionX).trim();
+  const sy = w.PositionY == null ? "" : String(w.PositionY).trim();
+  const x = parseFloat(sx);
+  const y = parseFloat(sy);
+  const autoTile =
+    (sx === "" && sy === "") ||
+    (Number.isFinite(x) && Number.isFinite(y) && x === 0 && y === 0);
+  if (!autoTile) {
+    return w;
+  }
+  return { ...w, PositionX: "", PositionY: "" };
+}
+
 export function ensureDataModelShape(input) {
   const base = createEmptyDataModel();
   const data = input && typeof input === "object" ? input : {};
+
+  const rawWidgets = Array.isArray(data.widgets) ? data.widgets : [];
 
   const normalized = {
     version: Number.isInteger(data.version) ? data.version : base.version,
@@ -52,7 +75,7 @@ export function ensureDataModelShape(input) {
     widgetStyles: Array.isArray(data.widgetStyles) ? data.widgetStyles : [],
     storedWidgets: Array.isArray(data.storedWidgets) ? data.storedWidgets : [],
     dashboards: Array.isArray(data.dashboards) ? data.dashboards : [],
-    widgets: Array.isArray(data.widgets) ? data.widgets : []
+    widgets: rawWidgets.map((w) => normalizeBookmarkWidgetPosition(w))
   };
 
   normalized.meta.lastUpdatedUtc = new Date().toISOString();
