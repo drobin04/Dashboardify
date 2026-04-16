@@ -1,0 +1,10 @@
+---
+description: Dashboardify — work in docs (GitHub Pages app), not legacy src PHP
+alwaysApply: true
+---
+
+# Dashboardify layout
+
+- **This folder (`docs/`)** is the current **HTML / CSS / JavaScript** app (e.g. GitHub Pages): `cloud.html`, `cloud-login.html`, `js/`, `css/`, and `js/cloud/` for Drive-backed storage.
+- **`src/`** at the **monorepo root** (outside or beside `docs/`) is an **older PHP** implementation. **Ignore it** for new features, widget types, and UI unless the user explicitly asks to change that tree.
+- When adding widget types, editors, or persistence, extend **`docs/js/index.js`**, **`docs/js/cloud/`**, and related **`docs/*.html`** files.

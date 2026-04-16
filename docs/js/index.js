@@ -218,6 +218,15 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			var URL2 = document.getElementById("txtWidgetURL");
 			if (URL2) URL2.value = result2.WidgetURL || "";
 			break;
+		case "Image":
+			var imgUrl = document.getElementById("txtWidgetURL");
+			if (imgUrl) imgUrl.value = result2.WidgetURL || "";
+			var fitSel = document.getElementById("ddlImageObjectFit");
+			if (fitSel) {
+				var v = dashboardifyImageObjectFitFromNotes(result2.Notes);
+				fitSel.value = v;
+			}
+			break;
 		case "SQLiteResultsList":
 		case "SQLServerScalarQuery":
 		case "SQLite Chart (PHPGD)":
@@ -257,6 +266,23 @@ function editwidget(RecID) {
 		return;
 	}
 	fillEditWidgetFormFromRecord(result2, RecID);
+}
+
+/** Stored in widget Notes; maps to CSS object-fit. */
+function dashboardifyImageObjectFitFromNotes(notes) {
+	var allowed = ["contain", "cover", "fill", "none", "scale-down"];
+	var s = String(notes || "").trim();
+	if (allowed.indexOf(s) !== -1) {
+		return s;
+	}
+	return "contain";
+}
+
+function escapeHtmlAttr(s) {
+	return String(s)
+		.replace(/&/g, "&amp;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#39;");
 }
 
 function drawWidget(widget) {
@@ -441,6 +467,21 @@ function drawWidget(widget) {
 		case "IFrame":
 			echo(combined + "<iframe style='height:100%;width:100%' src='" + WidgetURL + "'></iframe></a></div>");
 			break;
+		case "Image": {
+			var objectFit = dashboardifyImageObjectFitFromNotes(Notes);
+			var srcAttr = escapeHtmlAttr(WidgetURL || "");
+			echo(
+				combined +
+					"<div class='image-widget-body' style='width:100%;height:100%;overflow:hidden;box-sizing:border-box;'>" +
+					"<img alt='' loading='lazy' decoding='async' referrerpolicy='no-referrer' style='width:100%;height:100%;display:block;object-fit:" +
+					objectFit +
+					";' src='" +
+					srcAttr +
+					"'>" +
+					"</div></div>"
+			);
+			break;
+		}
 		case "Collapseable IFrame":
 			let combined2 =
 				"<div id='" +
@@ -1037,6 +1078,20 @@ function drawNewWidgetBasedOnType() {
 		var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
 		//Fill content to the dialog
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
+		break;
+	case "Image":
+		var imgFields =
+			"<hr><span id='widgetURL'><label>Image URL: </label><input id='txtWidgetURL' name='URL' type='text' placeholder='https://…'></input><br /></span>" +
+			"<label>Sizing: </label>" +
+			"<select id='ddlImageObjectFit' name='Notes'>" +
+			"<option value='contain'>Fit — show whole image (contain)</option>" +
+			"<option value='cover'>Fill — cover box, may crop (cover)</option>" +
+			"<option value='fill'>Stretch — distort to fill (fill)</option>" +
+			"<option value='none'>Original pixels (none)</option>" +
+			"<option value='scale-down'>Smaller of none or contain (scale-down)</option>" +
+			"</select><br />";
+		document.getElementById("NewWidget_Form").innerHTML =
+			SizeAndCSSClassMarkup + imgFields;
 		break;
 	case "SQLServerScalarQuery":
 		//Position, Sizine, HTML fields needed

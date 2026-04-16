@@ -22,6 +22,7 @@ const DEFAULT_WIDGET_TYPES = [
   "Collapseable IFrame",
   "Notes",
   "HTMLEmbed",
+  "Image",
   "Countdown",
   "CountUp_Hours",
   "CountUp_Days"
@@ -294,6 +295,10 @@ function collectWidgetPayloadFromForm() {
     (widgetType === "Countdown" || widgetType === "CountUp_Hours")
   ) {
     notes = dateEl.value || notes;
+  }
+  if (widgetType === "Image") {
+    const fitEl = document.getElementById("ddlImageObjectFit");
+    notes = fitEl ? String(fitEl.value || "").trim() : "";
   }
 
   let positionX = get("txtpositionx2") || "0";
