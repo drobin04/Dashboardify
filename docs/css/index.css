@@ -80,3 +80,13 @@ html, body{
     background-color: white;
     text-decoration: none;
 }
+
+/* Image widgets: no card-style frame; show only the picture (edit icons still overlay in edit mode). */
+.dashboardify-image-widget {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.dashboardify-image-widget .image-widget-body {
+    background: transparent;
+}

@@ -470,12 +470,31 @@ function drawWidget(widget) {
 		case "Image": {
 			var objectFit = dashboardifyImageObjectFitFromNotes(Notes);
 			var srcAttr = escapeHtmlAttr(WidgetURL || "");
+			var imgClass = String(WidgetCSSClass || "").replace(/"/g, "");
+			var imageOuter =
+				"<div id='" +
+				RecID +
+				"' style='margin:0;position:absolute;background:transparent;border:none;outline:none;box-shadow:none;" +
+				PositionAndSize +
+				"class='widget resize " +
+				imgClass +
+				" dashboardify-image-widget'>" +
+				editbuttonscss +
+				">" +
+				imgstylecss +
+				siteurl +
+				"icons/edit.png'></img></a>" +
+				deletebuttoncss +
+				">" +
+				imgstylecss +
+				siteurl +
+				"icons/cancel.png'></img></a>";
 			echo(
-				combined +
-					"<div class='image-widget-body' style='width:100%;height:100%;overflow:hidden;box-sizing:border-box;'>" +
+				imageOuter +
+					"<div class='image-widget-body' style='width:100%;height:100%;overflow:hidden;box-sizing:border-box;background:transparent;'>" +
 					"<img alt='' loading='lazy' decoding='async' referrerpolicy='no-referrer' style='width:100%;height:100%;display:block;object-fit:" +
 					objectFit +
-					";' src='" +
+					";background:transparent;' src='" +
 					srcAttr +
 					"'>" +
 					"</div></div>"
