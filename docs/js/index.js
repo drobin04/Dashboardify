@@ -501,20 +501,20 @@ function drawWidget(widget) {
 			);
 			break;
 		}
-		case "Collapseable IFrame":
-			let combined2 =
-				"<div id='" +
-				RecID +
-				"' style='display:none; position:absolute; background-color: white;  border: 1px solid black;" +
-				"width: " +
+		case "Collapseable IFrame": {
+			var collapseTitle = String(BookmarkDisplayText || "")
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;");
+			var collapseOuter =
+				"<div class='collapse collapseable-iframe-wrap' style='position:absolute;left:" +
+				PositionX +
+				"px;top:" +
+				PositionY +
+				"px;width:" +
 				SizeX +
-				"px; height: " +
-				SizeY +
-				"px; width: " +
-				SizeX +
-				"px;' class='widget resize " +
-				WidgetCSSClass +
-				"'>" +
+				"px;box-sizing:border-box;'>" +
+				"<div class='collapse-iframe-header' style='display:flex;align-items:center;gap:4px;min-height:24px;width:100%;box-sizing:border-box;border:1px solid black;background-color:white;padding:2px 4px;'>" +
 				editbuttonscss +
 				">" +
 				imgstylecss +
@@ -524,14 +524,27 @@ function drawWidget(widget) {
 				">" +
 				imgstylecss +
 				siteurl +
-				"icons/cancel.png'></img></a>";
-    
-			let hidden = "<div id='' class='collapse' style='" + "left: " + PositionX + "px; top: " + PositionY + "px; width: " + SizeX + "px; height: 20px; width: " + SizeX + "px;'" + "'>";
-			echo(hidden + "<a style='border: none !important;' class='collapse' onclick='opencollapsediframe(&quot;" + RecID + "&quot;)'>" + BookmarkDisplayText + "</a>");
-			echo(combined2 + "<iframe style='height:100%;width:100%;' id='" + RecID + "/iframe' src2='" + WidgetURL + "'></iframe></a></div>");
-			echo("</div>"); //this wraps combined variable, into a surrounding div.
-			
+				"icons/cancel.png'></img></a>" +
+				"<a class='collapse-iframe-title' onclick='opencollapsediframe(&quot;" +
+				RecID +
+				"&quot;)'>" +
+				collapseTitle +
+				"</a></div>" +
+				"<div id='" +
+				RecID +
+				"' style='display:none;box-sizing:border-box;width:100%;height:" +
+				SizeY +
+				"px;background-color:white;border:1px solid black;border-top:none;' class='widget resize " +
+				WidgetCSSClass +
+				"'>" +
+				"<iframe style='height:100%;width:100%;border:0;display:block;' id='" +
+				RecID +
+				"/iframe' src2=\"" +
+				escapeHtmlAttr(WidgetURL || "") +
+				"\"></iframe></div></div>";
+			echo(collapseOuter);
 			break;
+		}
 		case "HTMLEmbed":
 			//echo(combined + Notes+"</div>");
 			break;

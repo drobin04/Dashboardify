@@ -278,6 +278,23 @@ html, body{
     text-decoration: none;
 }
 
+.collapse-iframe-header .editbuttons {
+	flex-shrink: 0;
+}
+
+.collapse-iframe-title {
+	flex: 1 1 auto;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	border: none !important;
+	text-decoration: none;
+	color: inherit;
+	cursor: pointer;
+	background: transparent;
+}
+
 /* Image widgets: no card-style frame; show only the picture (edit icons still overlay in edit mode). */
 .dashboardify-image-widget {
     background: transparent !important;
