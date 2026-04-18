@@ -397,6 +397,15 @@ async function refreshDashboards() {
   if (hid) hid.value = currentDashboardId;
 
   await persistLastDashboardPreferenceIfNeeded();
+  if (
+    adapter.driveClient &&
+    typeof adapter.maybeSeedWelcomePack === "function"
+  ) {
+    const seeded = await adapter.maybeSeedWelcomePack(currentDashboardId);
+    if (seeded) {
+      setStatus("Added a few starter tips — edit or delete them anytime.");
+    }
+  }
   await refreshWidgets();
 }
 

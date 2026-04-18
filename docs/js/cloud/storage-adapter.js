@@ -4,6 +4,7 @@ import {
   ensureDataModelShape,
   normalizeBookmarkWidgetPosition
 } from "./schema.js";
+import { buildWelcomePackWidgets } from "./welcome-pack.js";
 
 export const DASHBOARDIFY_CLOUD_DATA_CACHE_KEY = "dashboardify_cloud_data_snapshot";
 
@@ -235,6 +236,37 @@ export class CloudStorageAdapter {
     const data = this.dataCache || (await this.loadAppData());
     data.widgets = data.widgets.filter((w) => String(w.RecID) !== String(recId));
     await this.saveAppData(data);
+  }
+
+  /**
+   * One-time starter tiles for brand-new app data (meta.nuxWelcomePackApplied === false).
+   * Legacy JSON without that meta key is treated as already completed during normalization.
+   * @returns {Promise<boolean>} true if widgets were written
+   */
+  async maybeSeedWelcomePack(dashboardRecId) {
+    if (!this.driveClient) {
+      return false;
+    }
+    const data = this.dataCache || (await this.loadAppData());
+    if (data.meta?.nuxWelcomePackApplied !== false) {
+      return false;
+    }
+    if ((data.widgets || []).length > 0) {
+      data.meta = { ...data.meta, nuxWelcomePackApplied: true };
+      await this.saveAppData(data);
+      return false;
+    }
+    const id = String(dashboardRecId || "").trim();
+    if (!id) {
+      return false;
+    }
+    const pack = buildWelcomePackWidgets(id);
+    for (const w of pack) {
+      data.widgets.push(w);
+    }
+    data.meta = { ...data.meta, nuxWelcomePackApplied: true };
+    await this.saveAppData(data);
+    return true;
   }
 
   async importLegacyData(legacyData, options = {}) {

@@ -17,7 +17,9 @@ export function createEmptyDataModel() {
       lastUpdatedUtc: new Date().toISOString(),
       importedFrom: null,
       importTimestampUtc: null,
-      sourceVersion: null
+      sourceVersion: null,
+      /** When false, cloud boot may seed starter Notes widgets once. Omitted in older files = skip NUX. */
+      nuxWelcomePackApplied: false
     },
     userCss: "",
     preferences: defaultPreferences(),
@@ -56,11 +58,22 @@ export function ensureDataModelShape(input) {
 
   const rawWidgets = Array.isArray(data.widgets) ? data.widgets : [];
 
+  const incomingMeta =
+    data.meta && typeof data.meta === "object" ? data.meta : {};
+  const hasNuxKey = Object.prototype.hasOwnProperty.call(
+    incomingMeta,
+    "nuxWelcomePackApplied"
+  );
+  const nuxWelcomePackApplied = hasNuxKey
+    ? Boolean(incomingMeta.nuxWelcomePackApplied)
+    : true;
+
   const normalized = {
     version: Number.isInteger(data.version) ? data.version : base.version,
     meta: {
       ...base.meta,
-      ...(data.meta && typeof data.meta === "object" ? data.meta : {})
+      ...incomingMeta,
+      nuxWelcomePackApplied
     },
     userCss: typeof data.userCss === "string" ? data.userCss : base.userCss,
     preferences: {
