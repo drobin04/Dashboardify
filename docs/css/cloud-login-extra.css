@@ -1,7 +1,42 @@
 /* Extra spacing for Google sign-in on the classic login card layout */
 
+/* Keep decorative shapes strictly behind content (mobile compositing) */
+.screen {
+  isolation: isolate;
+  width: min(360px, calc(100vw - 32px));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.screen__content {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+
+.screen__background {
+  z-index: 0;
+  pointer-events: none;
+}
+
 .cloud-login-card.login {
-  padding-top: 40px;
+  /* Original .login used ~156px top padding to clear the diagonal shape */
+  padding-top: 120px;
+  padding-bottom: 24px;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Pin “Open saved dashboards” to the lower part of the purple card */
+.cloud-login-card.login:has(.cloud-login-offline-cache) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
   padding-bottom: 20px;
 }
 
@@ -10,7 +45,15 @@
   text-align: center;
 }
 
-.cloud-login-actions .cloud-google-btn {
+.cloud-login-card.login:has(.cloud-login-offline-cache) .cloud-login-actions {
+  padding-bottom: 20px;
+}
+
+/* Buttons may live in .cloud-login-actions or .cloud-continue-row (see cloud-login.js) */
+.cloud-google-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 280px;
   margin: 0 auto;
@@ -21,25 +64,77 @@
   color: #4c489d;
   font-weight: 700;
   font-size: 14px;
+  font-family: inherit;
   cursor: pointer;
   box-shadow: 0 2px 2px #5c5696;
   transition: border-color 0.2s, transform 0.15s;
 }
 
-.cloud-login-actions .cloud-google-btn:hover {
+.cloud-google-btn:hover {
   border-color: #6a679e;
 }
 
-.cloud-login-actions .cloud-google-btn:active {
+.cloud-google-btn:active {
   transform: scale(0.98);
 }
 
-.cloud-login-subtitle {
-  color: rgba(255, 255, 255, 0.92);
+.cloud-google-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Tinted panel so copy never sits on the white decorative shape (white-on-white) */
+.cloud-login-intro {
+  padding: 18px 16px 20px;
+  margin-bottom: 10px;
+  border-radius: 18px;
+  background: linear-gradient(155deg, rgba(58, 48, 118, 0.96) 0%, rgba(42, 36, 92, 0.98) 55%, rgba(48, 42, 105, 0.97) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 10px 28px rgba(28, 22, 62, 0.35);
+}
+
+@supports (backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px)) {
+  .cloud-login-intro {
+    background: linear-gradient(155deg, rgba(58, 48, 118, 0.88) 0%, rgba(42, 36, 92, 0.9) 100%);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+.cloud-login-title {
+  margin: 0 0 8px;
+  color: #fff;
   text-align: center;
-  padding: 12px 24px 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.cloud-login-subtitle {
+  margin: 0;
+  padding: 8px 4px 0;
+  color: rgba(255, 255, 255, 0.96);
+  text-align: center;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.55;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+}
+
+.cloud-login-support-text {
+  margin: 12px 0 6px;
+  padding: 10px 12px;
+  max-width: 280px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.96);
+  border-radius: 14px;
+  background: linear-gradient(155deg, rgba(58, 48, 118, 0.94) 0%, rgba(42, 36, 92, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 18px rgba(28, 22, 62, 0.28);
 }
 
 .cloud-login-error {
@@ -63,4 +158,35 @@
 .cloud-continue-row {
   text-align: center;
   padding: 0 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cloud-login-offline-cache {
+  margin-top: auto;
+  padding-top: 8px;
+  padding-bottom: 0;
+}
+
+@media (max-width: 400px) {
+  .screen {
+    margin-top: 24px !important;
+  }
+
+  .cloud-login-card.login {
+    padding-top: 108px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .cloud-login-actions {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .cloud-continue-row {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
 }
