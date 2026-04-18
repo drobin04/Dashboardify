@@ -507,7 +507,11 @@ function drawWidget(widget) {
 				.replace(/</g, "&lt;")
 				.replace(/>/g, "&gt;");
 			var collapseOuter =
-				"<div class='collapse collapseable-iframe-wrap' style='position:absolute;left:" +
+				"<div id='" +
+				RecID +
+				"' class='collapse collapseable-iframe-wrap widget resize " +
+				WidgetCSSClass +
+				"' style='position:absolute;left:" +
 				PositionX +
 				"px;top:" +
 				PositionY +
@@ -530,13 +534,9 @@ function drawWidget(widget) {
 				"&quot;)'>" +
 				collapseTitle +
 				"</a></div>" +
-				"<div id='" +
-				RecID +
-				"' style='display:none;box-sizing:border-box;width:100%;height:" +
+				"<div class='collapse-iframe-panel' style='display:none;box-sizing:border-box;width:100%;height:" +
 				SizeY +
-				"px;background-color:white;border:1px solid black;border-top:none;' class='widget resize " +
-				WidgetCSSClass +
-				"'>" +
+				"px;background-color:white;border:1px solid black;border-top:none;'>" +
 				"<iframe style='height:100%;width:100%;border:0;display:block;' id='" +
 				RecID +
 				"/iframe' src2=\"" +
@@ -883,11 +883,14 @@ if (displayValue === "none") {
 }
 
 function opencollapsediframe(recid) {
-	//alert(recid);
-	document.getElementById(recid).style.display='block';
-	var iframeID = recid + '/iframe';
-	//alert(document.getElementById(iframeID).getAttribute('src2'));
-	document.getElementById(iframeID).setAttribute("src", document.getElementById(iframeID).getAttribute("src2"));
+	var root = document.getElementById(recid);
+	if (!root) return;
+	var panel = root.querySelector(".collapse-iframe-panel");
+	if (panel) panel.style.display = "block";
+	var iframeEl = root.querySelector("iframe");
+	if (!iframeEl) return;
+	var src2 = iframeEl.getAttribute("src2");
+	if (src2) iframeEl.setAttribute("src", src2);
 }
 
 		function loadselecteddashboard() {
