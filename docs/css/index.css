@@ -21,13 +21,210 @@ border-radius: 25px;
 			float: left !important;
 
 }
-#ddlWidgetType2 {
-	width: 160px;
+#NewWidgetDialog2 #ddlWidgetType2 {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
 }
-#NewWidgetDialog2 {
-width: 240px;
-overflow: auto;
-height: 500px;
+
+.white_content.cloud-dialog {
+	width: min(440px, calc(100vw - 24px));
+	max-width: calc(100vw - 24px);
+	max-height: min(580px, 88vh);
+	height: auto !important;
+	overflow-x: hidden;
+	overflow-y: auto;
+	box-sizing: border-box;
+	padding: 16px 18px 20px;
+	border-radius: 12px;
+	border: 1px solid rgba(0, 0, 0, 0.12);
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+.white_content.cloud-dialog.cloud-dialog--css {
+	width: min(560px, calc(100vw - 24px)) !important;
+	max-height: min(88vh, 720px);
+}
+
+.white_content.cloud-dialog.cloud-dialog--prefs {
+	width: min(520px, calc(100vw - 24px));
+	max-height: min(90vh, 760px);
+}
+
+.white_content.cloud-dialog.cloud-dialog--edit-dash {
+	width: min(480px, calc(100vw - 24px));
+}
+
+.cloud-dialog-muted {
+	font-size: 12px;
+	line-height: 1.45;
+	color: #444;
+	margin: 0 0 12px;
+}
+
+.cloud-dialog-section-heading {
+	font-size: 13px;
+	font-weight: 600;
+	margin: 0 0 6px;
+	color: #1a1d24;
+}
+
+.cloud-dialog-optional {
+	font-weight: 400;
+	color: #64748b;
+}
+
+.cloud-dialog-check-label {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	font-size: 13px;
+	margin: 12px 0 14px;
+	cursor: pointer;
+}
+
+.cloud-dialog-check-label input {
+	margin-top: 2px;
+}
+
+.cloud-dialog-button-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 10px;
+}
+
+.cloud-dialog-button-row .menubar {
+	float: none !important;
+}
+
+.cloud-dialog-danger {
+	margin-top: 20px;
+	padding: 12px 14px;
+	border-radius: 10px;
+	border: 1px solid #fecaca;
+	background: #fef2f2;
+}
+
+.cloud-dialog-danger .cloud-dialog-section-heading {
+	color: #991b1b;
+}
+
+.dialog-btn-danger {
+	color: #991b1b !important;
+	border-color: #fca5a5 !important;
+	background: #fff !important;
+}
+
+.dialog-btn-danger:hover {
+	background: #fee2e2 !important;
+}
+
+.new-widget-dialog-toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+	margin-bottom: 4px;
+}
+
+.new-widget-dialog-toolbar .menubar {
+	float: none;
+}
+
+.new-widget-dialog-title {
+	font-size: 1.2rem;
+	font-weight: 600;
+	margin: 0 0 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid #e2e4e8;
+	color: #1a1d24;
+}
+
+.new-widget-dialog-body {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.new-widget-field-label {
+	display: block;
+	font-size: 12px;
+	font-weight: 600;
+	color: #333;
+	margin: 10px 0 4px;
+}
+
+.new-widget-field-label:first-of-type {
+	margin-top: 0;
+}
+
+.new-widget-sizer-hint {
+	font-size: 12px;
+	line-height: 1.45;
+	color: #444;
+	margin: 8px 0 10px;
+}
+
+.new-widget-sizer-btn {
+	width: 100%;
+	margin: 0 0 8px;
+	text-align: center;
+}
+
+.dify-form-divider {
+	border: 0;
+	border-top: 1px solid #e2e4e8;
+	margin: 12px 0;
+}
+
+.new-widget-hidden-fields {
+	display: none !important;
+}
+
+#NewWidgetDialog2 .dify-field {
+	margin-top: 4px;
+}
+
+.white_content.cloud-dialog input:not([type="checkbox"]):not([type="radio"]),
+.white_content.cloud-dialog textarea,
+.white_content.cloud-dialog select {
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+}
+
+.white_content.cloud-dialog textarea {
+	min-height: 5rem;
+	resize: vertical;
+	font-family: inherit;
+	font-size: 13px;
+	line-height: 1.4;
+}
+
+.white_content.cloud-dialog.cloud-dialog--prefs textarea#prefCustomProvidersJson,
+.white_content.cloud-dialog.cloud-dialog--prefs textarea#prefWidgetStylesJson {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 11px;
+	min-height: 6rem;
+}
+
+.white_content.cloud-dialog.cloud-dialog--css textarea#txtCSS {
+	min-height: 240px;
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12px;
+	line-height: 1.35;
+}
+
+#NewWidgetDialog2 textarea {
+	min-height: 6.5rem;
+}
+
+.white_content.cloud-dialog .dialog-btn-ghost {
+	opacity: 0.92;
 }
 html, body{
     height: 100%;

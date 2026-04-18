@@ -97,6 +97,13 @@ export class CloudStorageAdapter {
     return normalized;
   }
 
+  /** Replace Drive app data with an empty model (all dashboards, widgets, prefs). */
+  async resetAppDataToEmpty() {
+    const empty = createEmptyDataModel();
+    await this.saveAppData(empty);
+    return empty;
+  }
+
   async getDashboards() {
     const data = this.dataCache || (await this.loadAppData());
     return data.dashboards;

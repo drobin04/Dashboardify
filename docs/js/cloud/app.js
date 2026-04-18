@@ -9,7 +9,7 @@ import {
   readCloudDataCacheFromLocalStorage,
   writeCloudDataCacheToLocalStorage
 } from "./storage-adapter.js";
-import { defaultPreferences } from "./schema.js";
+import { defaultPreferences, ensureDataModelShape } from "./schema.js";
 
 let adapter = null;
 let currentDashboardId = "";
@@ -37,6 +37,22 @@ const SQL_WIDGET_TYPES = [
 function byId(id) {
   return document.getElementById(id);
 }
+
+function downloadJson(filename, obj) {
+  const blob = new Blob([JSON.stringify(obj, null, 2)], {
+    type: "application/json"
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+let backupImportMode = "merge";
 
 function setStatus(message, isError = false) {
   const el = byId("statusText");
@@ -579,6 +595,128 @@ window.addEventListener("DOMContentLoaded", async () => {
     byId("UserPreferencesDialog").style.display = "none";
     await refreshWidgets();
     setStatus("Saved user preferences to Google.");
+  });
+
+  byId("btnExportDashboardifyData").addEventListener("click", () => {
+    if (!adapter?.dataCache) {
+      setStatus("Nothing to export.", true);
+      return;
+    }
+    const snap = ensureDataModelShape(adapter.dataCache);
+    const stamp = new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace("T", "_")
+      .replace(/:/g, "-");
+    downloadJson(`dashboardify-backup-${stamp}.json`, snap);
+    setStatus("Backup file downloaded.");
+  });
+
+  byId("btnImportDashboardifyMerge").addEventListener("click", () => {
+    backupImportMode = "merge";
+    byId("prefImportFile").click();
+  });
+
+  byId("btnImportDashboardifyReplace").addEventListener("click", () => {
+    backupImportMode = "replace";
+    byId("prefImportFile").click();
+  });
+
+  byId("prefImportFile").addEventListener("change", async (ev) => {
+    const input = ev.target;
+    const file = input.files && input.files[0];
+    input.value = "";
+    if (!file) return;
+    if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
+    let text;
+    try {
+      text = await file.text();
+    } catch {
+      alert("Could not read that file.");
+      return;
+    }
+    let parsed;
+    try {
+      parsed = JSON.parse(text);
+    } catch (e) {
+      alert("Invalid JSON: " + (e.message || e));
+      return;
+    }
+    const replaceAll = backupImportMode === "replace";
+    if (
+      replaceAll &&
+      !confirm(
+        "Replace ALL data on Google Drive with this backup? This cannot be undone."
+      )
+    ) {
+      return;
+    }
+    if (
+      !replaceAll &&
+      !confirm(
+        "Merge this backup into your current Drive data? Items that already exist (same dashboard or widget ID) are left unchanged."
+      )
+    ) {
+      return;
+    }
+    try {
+      const normalized = ensureDataModelShape(parsed);
+      if (
+        !Array.isArray(normalized.dashboards) ||
+        !Array.isArray(normalized.widgets)
+      ) {
+        alert("Backup must include dashboards and widgets arrays.");
+        return;
+      }
+      await adapter.importLegacyData(normalized, { replaceAll });
+      syncUserDataChrome();
+      populateUserPreferencesForm();
+      rebuildWidgetTypeDropdown();
+      injectUserWidgetStyles();
+      await refreshDashboards();
+      byId("UserPreferencesDialog").style.display = "none";
+      setStatus(
+        replaceAll
+          ? "Imported backup (replaced all data on Drive)."
+          : "Imported backup (merged with your Drive data)."
+      );
+    } catch (err) {
+      console.error(err);
+      alert("Import failed: " + (err.message || err));
+    }
+  });
+
+  byId("btnClearAllDriveData").addEventListener("click", async () => {
+    if (!adapter) return;
+    if (!(await ensureCloudWriteAccess())) return;
+    if (
+      !confirm(
+        "Erase ALL Dashboardify data from Google Drive? Every dashboard, widget, and preference in your app data file will be removed. This cannot be undone."
+      )
+    ) {
+      return;
+    }
+    if (
+      !confirm(
+        "Final confirmation: your Drive app data will be reset to empty. Continue?"
+      )
+    ) {
+      return;
+    }
+    try {
+      await adapter.resetAppDataToEmpty();
+      syncUserDataChrome();
+      populateUserPreferencesForm();
+      rebuildWidgetTypeDropdown();
+      injectUserWidgetStyles();
+      await refreshDashboards();
+      byId("UserPreferencesDialog").style.display = "none";
+      setStatus("All Dashboardify data erased on Google Drive.");
+    } catch (err) {
+      console.error(err);
+      alert("Could not clear data: " + (err.message || err));
+    }
   });
 
   byId("cloudSignOutBtn").addEventListener("click", () => {

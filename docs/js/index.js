@@ -670,7 +670,7 @@ async function deleteWidget(recID) {
 
 // Make Dialogs Draggable
 $( function() {
-    $( ".white_content" ).draggable();
+    $( ".white_content" ).draggable({ containment: "window", scroll: false });
   } );
 
 
@@ -1042,7 +1042,7 @@ function drawNewWidgetBasedOnType() {
 	
 	var ddl = document.getElementById('ddlWidgetType2');
 	var ddlValue = ddl.value;
-	var SizeAndCSSClassMarkup = "<hr><button type=\"button\" style=\"margin-left:5px\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set Position & Size</button><br /><label id='sizelabel'></label><div style='display:none;'><label>PositionX: </label><input id=\"txtpositionx2\" value=\"\" autocomplete=\"off\" name=\"PositionX\"><br /><label>PositionY: </label><input id=\"txtpositiony2\" value=\"\" autocomplete=\"off\" name=\"PositionY\"><br /><label>SizeX: </label><input id=\"txtsizeX2\" value=\"\" autocomplete=\"off\" name=\"SizeX\"><br /><label>SizeY: </label><input onchange='UpdateSizeCalcs();' id=\"txtsizeY2\" value=\"\" autocomplete=\"off\" name=\"SizeY\"></div><br /><label>CSS Class: </label><input id=\"txtCSSClass\" name=\"CSSClass\"><br />";
+	var SizeAndCSSClassMarkup = "<hr class=\"dify-form-divider\" /><p class=\"new-widget-sizer-hint\">Place on the canvas: click <strong>Set position &amp; size</strong>, then click and drag to draw the widget box.</p><button type=\"button\" class=\"menubar new-widget-sizer-btn\" onclick=\"Experimental_New_Widget_Form_Sizer_init()\">Set position &amp; size</button><br /><label id='sizelabel'></label><div class=\"new-widget-hidden-fields\"><label>PositionX: </label><input id=\"txtpositionx2\" value=\"\" autocomplete=\"off\" name=\"PositionX\"><br /><label>PositionY: </label><input id=\"txtpositiony2\" value=\"\" autocomplete=\"off\" name=\"PositionY\"><br /><label>SizeX: </label><input id=\"txtsizeX2\" value=\"\" autocomplete=\"off\" name=\"SizeX\"><br /><label>SizeY: </label><input onchange='UpdateSizeCalcs();' id=\"txtsizeY2\" value=\"\" autocomplete=\"off\" name=\"SizeY\"></div><label class=\"new-widget-field-label\" for=\"txtCSSClass\">CSS class</label><input id=\"txtCSSClass\" name=\"CSSClass\"><br />";
 	
 	switch (ddlValue) {
 		
@@ -1086,7 +1086,7 @@ function drawNewWidgetBasedOnType() {
 	case "Notes":
 		//Position, Sizine, Notes fields needed
 		//As well as position / size elements
-		var x = "<br />Notes:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		var x = "<div class=\"dify-field\"><label class=\"new-widget-field-label\" for=\"txtNotes\">Notes</label><textarea id=\"txtNotes\" rows=\"7\" name=\"Notes\"></textarea></div>";
 		//Fill content to the dialog
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
 		break;
@@ -1094,7 +1094,7 @@ function drawNewWidgetBasedOnType() {
 	case "HTMLEmbed":
 		//Position, Sizine, HTML fields needed
 		//As well as position / size elements
-		var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
+		var x = "<div class=\"dify-field\"><label class=\"new-widget-field-label\" for=\"txtNotes\">HTML</label><textarea id=\"txtNotes\" rows=\"7\" name=\"Notes\"></textarea></div>";
 		//Fill content to the dialog
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
 		break;

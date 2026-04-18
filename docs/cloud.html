@@ -28,17 +28,19 @@
         <button type="button" class="menubar" id="btnOpenNewWidget">New Widget</button>
         <button type="button" class="menubar" onclick="toggleDisplayByClass('editbuttons');">Edit Widgets</button>
         <button type="button" class="menubar" onclick="toggleDisplay('NewDashboardDialog');">New Dashboard</button>
-        <span class="dash-picker">
-          <label for="dashboardSelect">Dashboard:</label>
-          <select id="dashboardSelect"></select>
+        <span class="cloud-dash-status-panel">
+          <span class="dash-picker">
+            <label for="dashboardSelect">Dashboard:</label>
+            <select id="dashboardSelect"></select>
+          </span>
+          <span id="statusText" class="cloud-status-inline" title=""></span>
         </span>
-        <span id="statusText" class="cloud-status-inline" title=""></span>
       </div>
       <div class="cloud-menubar-spacer"></div>
     </div>
 
-    <button id="settingsLink"><a href="#" id="settingsLink2">Settings</a></button>
-    <div id="settingsMenu" class="hidden">
+    <button type="button" id="settingsLink" class="settings-toolbar-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="settingsMenu">Settings</button>
+    <div id="settingsMenu" class="hidden" role="menu" aria-label="Dashboard settings">
       <button><a id="editmode" class="menubar nodeco">Move Widgets</a></button>
       <button><a id="resizewidgets" class="menubar nodeco">Resize Widgets</a></button>
       <button type="button" class="menubar" id="btnSettingsEditCss">Edit CSS</button>
@@ -50,14 +52,15 @@
     <div id="widgetcontainer"></div>
 
     <!-- New / edit widget (same structure as classic index for drawWidget / drawNewWidgetBasedOnType) -->
-    <div id="NewWidgetDialog2" class="white_content">
+    <div id="NewWidgetDialog2" class="white_content cloud-dialog new-widget-dialog" role="dialog" aria-labelledby="newWidgetDialogTitle">
       <form id="form_ExperimentalNewWidgetDialog" onsubmit="return false;">
-        <button type="button" style="float: left !important;" onclick="document.getElementById('NewWidgetDialog2').style.display='none';">Close</button>
-        <button type="button" id="btnSubmitNewWidget">Submit</button>
-        <br />
-        <header>New Widget<hr /></header>
-        <label>Widget Type: </label>
-        <div class="column" style="width: 85% !important; clear: both; margin: 0 auto;">
+        <div class="new-widget-dialog-toolbar">
+          <button type="button" class="menubar dialog-btn-ghost" onclick="document.getElementById('NewWidgetDialog2').style.display='none';">Close</button>
+          <button type="button" class="menubar" id="btnSubmitNewWidget">Add widget</button>
+        </div>
+        <h2 id="newWidgetDialogTitle" class="new-widget-dialog-title">New widget</h2>
+        <div class="new-widget-dialog-body">
+          <label class="new-widget-field-label" for="ddlWidgetType2">Widget type</label>
           <select id="ddlWidgetType2" name="WidgetType" onchange="drawNewWidgetBasedOnType()">
             <option value="Bookmark">Bookmark</option>
             <option value="IFrame">IFrame</option>
@@ -73,56 +76,90 @@
           <span id="WidgetAndDashboardIDSpan" style="display: none;">
             Edit Widget ID: <input id="txtWidgetID" name="ID"><br />
             Dashboard ID: <input id="txtDashboardID" name="dashboardID" value="">
-          </span><br />
+          </span>
         </div>
       </form>
     </div>
 
-    <div id="cssEditorBox" class="white_content" style="right: initial !important; left:0 !important; width:400px !important;">
-      <button type="button" style="float: left !important;" onclick="document.getElementById('cssEditorBox').style.display='none';">Close</button><br />
-      <div id="columnd" class="column" style="width: 85% !important; height:100% !important; clear: both; margin: 0 auto;">
-        <header>Dashboard-Specific CSS<hr /></header>
-        <button type="button" id="btnSaveCloudCss">Save CSS</button><br />
-        <textarea id="txtCSS" name="txtCSS" cols="40" rows="5" style="width:100%; height:50%;"></textarea><br />
-        Background Image URL: <input id="cssEditorBackgroundUrl" type="text" style="width:100%;"><br />
+    <div id="cssEditorBox" class="white_content cloud-dialog cloud-dialog--css" role="dialog" aria-labelledby="cssEditorTitle" style="right: initial !important; left: 12px !important;">
+      <div class="new-widget-dialog-toolbar">
+        <button type="button" class="menubar dialog-btn-ghost" onclick="document.getElementById('cssEditorBox').style.display='none';">Close</button>
+        <button type="button" class="menubar" id="btnSaveCloudCss">Save CSS</button>
+      </div>
+      <h2 id="cssEditorTitle" class="new-widget-dialog-title">Dashboard CSS &amp; background</h2>
+      <div class="new-widget-dialog-body">
+        <p class="cloud-dialog-muted">Applies to the dashboard you have selected in the toolbar.</p>
+        <label class="new-widget-field-label" for="txtCSS">Custom CSS</label>
+        <textarea id="txtCSS" name="txtCSS" rows="12" spellcheck="false"></textarea>
+        <label class="new-widget-field-label" for="cssEditorBackgroundUrl">Background image URL</label>
+        <input id="cssEditorBackgroundUrl" type="text" placeholder="https://…" autocomplete="off">
       </div>
     </div>
 
-    <div id="NewDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:220px !important; height:160px;">
-      <button type="button" style="float: left !important;" onclick="document.getElementById('NewDashboardDialog').style.display='none';">Close</button>
-      <header>New Dashboard<hr /></header>
-      <br />
-      <input id="newDashboardName" placeholder="Name"><br /><br />
-      <button type="button" class="menubar" id="btnCloudSaveNewDashboard">Save Dashboard</button>
+    <div id="NewDashboardDialog" class="white_content cloud-dialog" role="dialog" aria-labelledby="newDashDialogTitle" style="right: initial !important; left: 12px !important;">
+      <div class="new-widget-dialog-toolbar">
+        <button type="button" class="menubar dialog-btn-ghost" onclick="document.getElementById('NewDashboardDialog').style.display='none';">Close</button>
+        <button type="button" class="menubar" id="btnCloudSaveNewDashboard">Create</button>
+      </div>
+      <h2 id="newDashDialogTitle" class="new-widget-dialog-title">New dashboard</h2>
+      <div class="new-widget-dialog-body">
+        <p class="cloud-dialog-muted">Creates an empty dashboard you can add widgets to.</p>
+        <label class="new-widget-field-label" for="newDashboardName">Dashboard name</label>
+        <input id="newDashboardName" type="text" placeholder="e.g. Home" autocomplete="off">
+      </div>
     </div>
 
-    <div id="EditDashboardDialog" class="white_content" style="right: initial !important; left:0 !important; width:450px; min-height: 280px;">
-      <button type="button" style="float: left !important;" onclick="document.getElementById('EditDashboardDialog').style.display='none';">Close</button>
-      <header>Edit Current Dashboard<hr /></header>
-      <br />
-      <label>Dashboard Name:</label><br />
-      <input id="editDashboardName" style="width: 100%;"><br /><br />
-      <label>Background Image URL:</label><br />
-      <input id="editDashboardBackground" style="width: 100%;"><br /><br />
-      <label><input id="editDashboardEmbeddable" type="checkbox" value="1"> Embeddable (reserved for future public embed)</label>
-      <p id="editEmbedNote" style="font-size: 12px; margin-top: 8px;">Embeddable is stored with your dashboard data for future use.</p>
-      <br />
-      <button type="button" class="menubar" id="btnCloudSaveEditDashboard">Save Dashboard</button>
-      <button type="button" class="menubar" id="btnCloudDeleteDashboard" style="margin-top:8px;">Delete dashboard</button>
+    <div id="EditDashboardDialog" class="white_content cloud-dialog cloud-dialog--edit-dash" role="dialog" aria-labelledby="editDashDialogTitle" style="right: initial !important; left: 12px !important;">
+      <div class="new-widget-dialog-toolbar">
+        <button type="button" class="menubar dialog-btn-ghost" onclick="document.getElementById('EditDashboardDialog').style.display='none';">Close</button>
+        <button type="button" class="menubar" id="btnCloudSaveEditDashboard">Save</button>
+      </div>
+      <h2 id="editDashDialogTitle" class="new-widget-dialog-title">Edit dashboard</h2>
+      <div class="new-widget-dialog-body">
+        <label class="new-widget-field-label" for="editDashboardName">Dashboard name</label>
+        <input id="editDashboardName" type="text" autocomplete="off">
+        <label class="new-widget-field-label" for="editDashboardBackground">Background image URL</label>
+        <input id="editDashboardBackground" type="text" placeholder="https://…" autocomplete="off">
+        <label class="cloud-dialog-check-label"><input id="editDashboardEmbeddable" type="checkbox" value="1"> Embeddable (reserved for future public embed)</label>
+        <p id="editEmbedNote" class="cloud-dialog-muted">Embeddable is stored with your dashboard data for future use.</p>
+        <div class="cloud-dialog-button-row">
+          <button type="button" class="menubar dialog-btn-danger" id="btnCloudDeleteDashboard">Delete dashboard</button>
+        </div>
+      </div>
     </div>
 
-    <div id="UserPreferencesDialog" class="white_content" style="width: 480px; max-height: 90%; overflow: auto;">
-      <button type="button" style="float: left !important;" onclick="document.getElementById('UserPreferencesDialog').style.display='none';">Close</button>
-      <header>User data &amp; preferences<hr /></header>
-      <p style="font-size: 12px; margin: 8px 0;">Stored in your Google Drive app data with dashboards and widgets.</p>
-      <label><b>Public site base URL</b> (optional, for embed links / bookmarks)</label><br />
-      <input id="prefSiteBaseUrl" type="text" style="width: 100%; box-sizing: border-box;" placeholder="https://yoursite.github.io/Dashboardify/"><br /><br />
-      <label><input type="checkbox" id="prefShowSqlWidgets"> Show SQL / chart widget types in the New Widget list</label><br /><br />
-      <label><b>Custom widget providers</b> (JSON array — fields: WidgetProviderName, CSS_Styling, HTML_Content, PHP_To_Run)</label><br />
-      <textarea id="prefCustomProvidersJson" rows="6" style="width: 100%; box-sizing: border-box; font-family: monospace; font-size: 11px;" placeholder='[{"WidgetProviderName":"MyWidget","HTML_Content":"<p>Hello</p>"}]'></textarea><br /><br />
-      <label><b>Widget styles</b> (JSON array — Name, WidgetType, ClassName, CSS, Description)</label><br />
-      <textarea id="prefWidgetStylesJson" rows="6" style="width: 100%; box-sizing: border-box; font-family: monospace; font-size: 11px;" placeholder='[{"ClassName":"myclass","CSS":"color:navy;"}]'></textarea><br /><br />
-      <button type="button" class="menubar" id="btnSaveUserPreferences">Save to Google</button>
+    <div id="UserPreferencesDialog" class="white_content cloud-dialog cloud-dialog--prefs" role="dialog" aria-labelledby="userPrefsDialogTitle">
+      <div class="new-widget-dialog-toolbar">
+        <button type="button" class="menubar dialog-btn-ghost" onclick="document.getElementById('UserPreferencesDialog').style.display='none';">Close</button>
+        <button type="button" class="menubar" id="btnSaveUserPreferences">Save to Google</button>
+      </div>
+      <h2 id="userPrefsDialogTitle" class="new-widget-dialog-title">User data &amp; preferences</h2>
+      <div class="new-widget-dialog-body">
+        <p class="cloud-dialog-muted">Stored in your Google Drive app data folder with dashboards and widgets.</p>
+        <label class="new-widget-field-label" for="prefSiteBaseUrl">Public site base URL <span class="cloud-dialog-optional">(optional)</span></label>
+        <input id="prefSiteBaseUrl" type="text" placeholder="https://yoursite.github.io/Dashboardify/" autocomplete="off">
+        <label class="cloud-dialog-check-label"><input type="checkbox" id="prefShowSqlWidgets"> Show SQL / chart widget types in the New Widget list</label>
+        <label class="new-widget-field-label" for="prefCustomProvidersJson">Custom widget providers <span class="cloud-dialog-optional">(JSON array)</span></label>
+        <textarea id="prefCustomProvidersJson" rows="5" spellcheck="false" placeholder='[{"WidgetProviderName":"MyWidget","HTML_Content":"<p>Hello</p>"}]'></textarea>
+        <label class="new-widget-field-label" for="prefWidgetStylesJson">Widget styles <span class="cloud-dialog-optional">(JSON array)</span></label>
+        <textarea id="prefWidgetStylesJson" rows="5" spellcheck="false" placeholder='[{"ClassName":"myclass","CSS":"color:navy;"}]'></textarea>
+
+        <hr class="dify-form-divider" />
+        <h3 class="cloud-dialog-section-heading">Backup &amp; restore</h3>
+        <p class="cloud-dialog-muted">Export everything to a JSON file, or import a backup. Merge keeps your current data and adds missing dashboards/widgets from the file. Replace overwrites the entire app data file on Google Drive.</p>
+        <div class="cloud-dialog-button-row">
+          <button type="button" class="menubar" id="btnExportDashboardifyData">Export backup…</button>
+          <button type="button" class="menubar" id="btnImportDashboardifyMerge">Import (merge)</button>
+          <button type="button" class="menubar dialog-btn-danger" id="btnImportDashboardifyReplace">Import (replace all)</button>
+        </div>
+        <input type="file" id="prefImportFile" accept="application/json,.json" hidden>
+
+        <div class="cloud-dialog-danger">
+          <h3 class="cloud-dialog-section-heading">Danger zone</h3>
+          <p class="cloud-dialog-muted">Removes every dashboard, widget, and preference from your Dashboardify data in Google Drive. This cannot be undone.</p>
+          <button type="button" class="menubar dialog-btn-danger" id="btnClearAllDriveData">Erase all data on Google…</button>
+        </div>
+      </div>
     </div>
 
   </div>
