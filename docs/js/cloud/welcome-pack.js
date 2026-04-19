@@ -58,6 +58,21 @@ Per-widget styling: when you add or edit a widget, set **CSS class** on the tile
 Click **New Dashboard** in the toolbar, enter a name, and **Create**. Switch boards with the **Dashboard** dropdown.
 
 Rename or remove a board from **Settings → Edit Dashboard** (you cannot delete the last dashboard). Each dashboard has its own widgets and CSS.`
+    }),
+    note({
+      PositionX: "166",
+      PositionY: "680",
+      SizeX: "784",
+      SizeY: "240",
+      Notes: `## Dashboardify as your new tab
+
+There's a browser extension that can set this page as your default 'new tab' page.
+
+Install **[Custom New Tab](https://dictanote.co/custom-new-tab/)**, then set the new-tab URL to:
+
+\`https://drobin04.github.io/Dashboardify/cloud.html\`
+
+After that, each **new tab** loads Dashboardify so your board is one click away.`
     })
   ];
 }
