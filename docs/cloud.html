@@ -68,6 +68,7 @@
             <option value="Notes">Notes</option>
             <option value="HTMLEmbed">HTMLEmbed</option>
             <option value="Image">Image</option>
+            <option value="Flash Cards">Flash Cards</option>
             <option value="Countdown">Countdown</option>
             <option value="CountUp_Hours">Count Up- Hours Since Last</option>
             <option value="CountUp_Days">Count Up- Days Since Last</option>
@@ -159,6 +160,49 @@
           <p class="cloud-dialog-muted">Removes every dashboard, widget, and preference from your Dashboardify data in Google Drive. This cannot be undone.</p>
           <button type="button" class="menubar dialog-btn-danger" id="btnClearAllDriveData">Erase all data on Google…</button>
         </div>
+      </div>
+    </div>
+
+    <div id="FlashCardsManagerDialog" class="white_content cloud-dialog cloud-dialog--prefs" role="dialog" aria-labelledby="flashCardsManagerTitle">
+      <div class="new-widget-dialog-toolbar">
+        <button type="button" class="menubar dialog-btn-ghost" onclick="dashboardifyCloseFlashCardsManager();">Close</button>
+        <button type="button" class="menubar" id="btnFlashCardsManagerSave">Save list</button>
+      </div>
+      <h2 id="flashCardsManagerTitle" class="new-widget-dialog-title">Edit flash cards</h2>
+      <div class="new-widget-dialog-body">
+        <p class="cloud-dialog-muted">Pick a card from the list, edit it, add new cards, or import/export CSV.</p>
+        <label class="new-widget-field-label" for="flashCardsManagerList">Cards</label>
+        <select id="flashCardsManagerList" size="10"></select>
+        <label class="new-widget-field-label" for="flashCardManagerQuestion">Question</label>
+        <textarea id="flashCardManagerQuestion" rows="3"></textarea>
+        <label class="new-widget-field-label" for="flashCardManagerAnswer">Answer</label>
+        <textarea id="flashCardManagerAnswer" rows="3"></textarea>
+        <div class="cloud-dialog-button-row">
+          <button type="button" class="menubar" id="btnFlashCardsManagerAdd">Add new</button>
+          <button type="button" class="menubar" id="btnFlashCardsManagerUpdate">Update selected</button>
+          <button type="button" class="menubar dialog-btn-danger" id="btnFlashCardsManagerDelete">Delete selected</button>
+        </div>
+        <hr class="dify-form-divider" />
+        <div class="cloud-dialog-button-row">
+          <button type="button" class="menubar" id="btnFlashCardsCsvExport">Export CSV</button>
+          <button type="button" class="menubar" id="btnFlashCardsCsvImportMerge">Import CSV (merge)</button>
+          <button type="button" class="menubar dialog-btn-danger" id="btnFlashCardsCsvImportReplace">Import CSV (replace)</button>
+        </div>
+        <input type="file" id="flashCardsCsvImportFile" accept=".csv,text/csv" hidden>
+      </div>
+    </div>
+
+    <div id="FlashCardsQuickAddDialog" class="white_content cloud-dialog" role="dialog" aria-labelledby="flashCardsQuickAddTitle">
+      <div class="new-widget-dialog-toolbar">
+        <button type="button" class="menubar dialog-btn-ghost" onclick="dashboardifyCloseFlashCardsQuickAdd();">Close</button>
+        <button type="button" class="menubar" id="btnFlashCardsQuickAddSave">Add question</button>
+      </div>
+      <h2 id="flashCardsQuickAddTitle" class="new-widget-dialog-title">Add flash card</h2>
+      <div class="new-widget-dialog-body">
+        <label class="new-widget-field-label" for="flashCardQuickAddQuestion">Question</label>
+        <textarea id="flashCardQuickAddQuestion" rows="3"></textarea>
+        <label class="new-widget-field-label" for="flashCardQuickAddAnswer">Answer</label>
+        <textarea id="flashCardQuickAddAnswer" rows="3"></textarea>
       </div>
     </div>
 

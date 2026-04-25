@@ -6,7 +6,8 @@ function addOptionsToSelect() {
         const optionValues = [
             { value: 'SQLServerScalarQuery', text: 'SQLServerScalarQuery' },
             { value: 'SQLiteResultsList', text: 'SQLiteResultsList' },
-            { value: 'SQLite Chart (PHPGD)', text: 'SQLite Chart (PHPGD)' }
+            { value: 'SQLite Chart (PHPGD)', text: 'SQLite Chart (PHPGD)' },
+            { value: 'Flash Cards', text: 'Flash Cards' }
         ];
 
         optionValues.forEach(option => {
@@ -235,6 +236,19 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			var sqlquery = document.getElementById("sqlquery");
 			if (sqlquery) sqlquery.value = result2.sqlquery || "";
 			break;
+		case "Flash Cards":
+			var flashModel = dashboardifyParseFlashCardsNotes(result2.Notes);
+			var flashSort = document.getElementById("flashSortMethod");
+			if (flashSort) flashSort.value = flashModel.sortMethod || "random";
+			var flashAuto = document.getElementById("flashAutoAdvanceEnabled");
+			if (flashAuto) flashAuto.checked = !!flashModel.autoAdvanceEnabled;
+			var flashAutoMs = document.getElementById("flashAutoAdvanceMs");
+			if (flashAutoMs) flashAutoMs.value = flashModel.autoAdvanceMs || 5000;
+			var flashData = document.getElementById("txtFlashCardsData");
+			if (flashData) flashData.value = JSON.stringify(flashModel.cards || []);
+			var flashHint = document.getElementById("flashCardsCountHint");
+			if (flashHint) flashHint.textContent = (flashModel.cards || []).length + " questions saved.";
+			break;
 		default:
 			break;
 	}
@@ -283,6 +297,69 @@ function escapeHtmlAttr(s) {
 		.replace(/&/g, "&amp;")
 		.replace(/"/g, "&quot;")
 		.replace(/'/g, "&#39;");
+}
+
+function dashboardifyEscapeHtmlText(s) {
+	return String(s || "")
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;");
+}
+
+function dashboardifyDefaultFlashCardsModel() {
+	return { sortMethod: "random", autoAdvanceEnabled: false, autoAdvanceMs: 5000, cards: [] };
+}
+
+function dashboardifyNormalizeFlashCard(card) {
+	if (!card || typeof card !== "object") return null;
+	var q = String(card.q || card.question || "").trim();
+	var a = String(card.a || card.answer || "").trim();
+	if (!q && !a) return null;
+	return { q: q, a: a };
+}
+
+function dashboardifyParseFlashCardsNotes(notes) {
+	var model = dashboardifyDefaultFlashCardsModel();
+	if (!notes) return model;
+	try {
+		var parsed = typeof notes === "string" ? JSON.parse(notes) : notes;
+		model.sortMethod = parsed.sortMethod === "forward" || parsed.sortMethod === "reverse" ? parsed.sortMethod : "random";
+		model.autoAdvanceEnabled = !!parsed.autoAdvanceEnabled;
+		var ms = Number(parsed.autoAdvanceMs);
+		model.autoAdvanceMs = Number.isFinite(ms) && ms > 0 ? Math.round(ms) : 5000;
+		model.cards = Array.isArray(parsed.cards)
+			? parsed.cards.map(dashboardifyNormalizeFlashCard).filter(function (x) { return !!x; })
+			: [];
+	} catch (e) {
+		model.cards = [];
+	}
+	return model;
+}
+
+function dashboardifySerializeFlashCardsModel(inputModel) {
+	var model = inputModel && typeof inputModel === "object" ? inputModel : {};
+	return JSON.stringify({
+		sortMethod: model.sortMethod === "forward" || model.sortMethod === "reverse" ? model.sortMethod : "random",
+		autoAdvanceEnabled: !!model.autoAdvanceEnabled,
+		autoAdvanceMs: Number.isFinite(Number(model.autoAdvanceMs)) && Number(model.autoAdvanceMs) > 0 ? Math.round(Number(model.autoAdvanceMs)) : 5000,
+		cards: Array.isArray(model.cards) ? model.cards.map(dashboardifyNormalizeFlashCard).filter(function (x) { return !!x; }) : []
+	});
+}
+
+window.dashboardifySerializeFlashCardsModel = dashboardifySerializeFlashCardsModel;
+
+function dashboardifyBuildFlashCardOrder(count, sortMethod) {
+	var order = [];
+	for (var i = 0; i < count; i++) order.push(i);
+	if (sortMethod === "reverse") return order.reverse();
+	if (sortMethod === "forward") return order;
+	for (var j = order.length - 1; j > 0; j--) {
+		var k = Math.floor(Math.random() * (j + 1));
+		var t = order[j];
+		order[j] = order[k];
+		order[k] = t;
+	}
+	return order;
 }
 
 function drawWidget(widget) {
@@ -548,6 +625,66 @@ function drawWidget(widget) {
 		case "HTMLEmbed":
 			//echo(combined + Notes+"</div>");
 			break;
+		case "Flash Cards": {
+			var flashModel = dashboardifyParseFlashCardsNotes(Notes);
+			var cards = flashModel.cards || [];
+			var firstQ = cards.length ? cards[0].q : "No questions yet.";
+			var firstA = cards.length ? cards[0].a : "Use edit mode to add your first card.";
+			var gearButton =
+				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsManager(\"" +
+				ridJs +
+				"\")' title='Manage questions'><span class='flashcards-edit-icon' aria-hidden='true'>&#9881;</span></a>";
+			var quickAddButton =
+				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsQuickAdd(\"" +
+				ridJs +
+				"\")' title='Add question'><span class='flashcards-edit-icon' aria-hidden='true'>+</span></a>";
+			var markup =
+				"<div id='" +
+				RecID +
+				"' style='margin:15px; position:absolute; background-color: white; border: 1px solid black;" +
+				PositionAndCSSClass +
+				editbuttonscss +
+				">" +
+				imgstylecss +
+				siteurl +
+				"icons/edit.png'></img></a>" +
+				gearButton +
+				quickAddButton +
+				deletebuttoncss +
+				">" +
+				imgstylecss +
+				siteurl +
+				"icons/cancel.png'></img></a>" +
+				"<div class='flashcards-body'>" +
+				"<div class='flashcards-question' id='flashcards-question-" +
+				ridJs +
+				"'>" +
+				dashboardifyEscapeHtmlText(firstQ) +
+				"</div>" +
+				"<div class='flashcards-answer' id='flashcards-answer-" +
+				ridJs +
+				"'>" +
+				dashboardifyEscapeHtmlText(firstA) +
+				"</div>" +
+				"<div class='flashcards-nav-row'>" +
+				"<button type='button' class='flashcards-nav-btn' onclick='dashboardifyFlashCardPrev(\"" +
+				ridJs +
+				"\")' aria-label='Previous question'>&uarr;</button>" +
+				"<button type='button' class='flashcards-nav-btn' onclick='dashboardifyFlashCardNext(\"" +
+				ridJs +
+				"\")' aria-label='Next question'>&darr;</button>" +
+				"</div></div></div>";
+			echo(markup);
+			window.DashboardifyFlashCardRuntime = window.DashboardifyFlashCardRuntime || {};
+			window.DashboardifyFlashCardRuntime[String(RecID)] = {
+				model: flashModel,
+				order: dashboardifyBuildFlashCardOrder(cards.length, flashModel.sortMethod),
+				index: 0,
+				timerId: null
+			};
+			dashboardifyRenderFlashCardState(String(RecID));
+			break;
+		}
 		default: 
 			if (typeof window.findCustomWidgetProvider === "function") {
 				var prov = window.findCustomWidgetProvider(WidgetType);
@@ -582,7 +719,61 @@ function echo(stringData) {
 function clearWidgetContainer() {
 	var container = document.getElementById('widgetcontainer');
 	container.innerHTML = "";
+	if (window.DashboardifyFlashCardRuntime) {
+		Object.keys(window.DashboardifyFlashCardRuntime).forEach(function (k) {
+			var st = window.DashboardifyFlashCardRuntime[k];
+			if (st && st.timerId) clearTimeout(st.timerId);
+		});
+	}
 }
+
+function dashboardifyRenderFlashCardState(recId) {
+	var runtime = window.DashboardifyFlashCardRuntime || {};
+	var st = runtime[String(recId)];
+	if (!st) return;
+	if (st.timerId) {
+		clearTimeout(st.timerId);
+		st.timerId = null;
+	}
+	var qEl = document.getElementById("flashcards-question-" + recId);
+	var aEl = document.getElementById("flashcards-answer-" + recId);
+	if (!qEl || !aEl) return;
+	var cards = (st.model && st.model.cards) || [];
+	if (!cards.length || !st.order.length) {
+		qEl.textContent = "No questions yet.";
+		aEl.textContent = "Use edit mode to add your first card.";
+		return;
+	}
+	if (st.index < 0) st.index = st.order.length - 1;
+	if (st.index >= st.order.length) st.index = 0;
+	var card = cards[st.order[st.index]] || { q: "", a: "" };
+	qEl.textContent = card.q || "";
+	aEl.textContent = card.a || "";
+	if (st.model.autoAdvanceEnabled && st.order.length > 1) {
+		var delay = Number(st.model.autoAdvanceMs);
+		var ms = Number.isFinite(delay) && delay > 0 ? delay : 5000;
+		st.timerId = setTimeout(function () {
+			dashboardifyFlashCardNext(recId);
+		}, ms);
+	}
+}
+
+function dashboardifyFlashCardNext(recId) {
+	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
+	if (!st || !st.order.length) return;
+	st.index = (st.index + 1) % st.order.length;
+	dashboardifyRenderFlashCardState(recId);
+}
+
+function dashboardifyFlashCardPrev(recId) {
+	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
+	if (!st || !st.order.length) return;
+	st.index = (st.index - 1 + st.order.length) % st.order.length;
+	dashboardifyRenderFlashCardState(recId);
+}
+
+window.dashboardifyFlashCardNext = dashboardifyFlashCardNext;
+window.dashboardifyFlashCardPrev = dashboardifyFlashCardPrev;
 
 function escapeHtmlForTextarea(s) {
 	return String(s)
@@ -1128,6 +1319,16 @@ function drawNewWidgetBasedOnType() {
 		document.getElementById("NewWidget_Form").innerHTML =
 			SizeAndCSSClassMarkup + imgFields;
 		break;
+	case "Flash Cards":
+		var flashFields =
+			"<hr><label>Widget Title: </label><input id='txtWidgetDisplayText' name='DisplayText'></input><br />" +
+			"<label>Sort Method: </label><select id='flashSortMethod'><option value='random' selected>Random</option><option value='forward'>Forward</option><option value='reverse'>Reverse</option></select><br />" +
+			"<label><input id='flashAutoAdvanceEnabled' type='checkbox' /> Auto advance cards</label><br />" +
+			"<label>Auto advance delay (ms): </label><input id='flashAutoAdvanceMs' type='number' min='50' step='50' value='5000'></input><br />" +
+			"<label id='flashCardsCountHint' class='cloud-dialog-muted'>0 questions saved.</label>" +
+			"<textarea id='txtFlashCardsData' style='display:none;'>[]</textarea>";
+		document.getElementById("NewWidget_Form").innerHTML = SizeAndCSSClassMarkup + flashFields;
+		break;
 	case "SQLServerScalarQuery":
 		//Position, Sizine, HTML fields needed
 		//As well as position / size elements
@@ -1250,3 +1451,273 @@ function Experimental_New_Widget_Form_Sizer_init() {
 			canvas.addEventListener('mousemove', mouseMove, false);
 
 		}
+
+function dashboardifyGetWidgetByRecId(recId) {
+	var adapter = window.DashboardifyDataAdapter;
+	var widgets = (adapter && adapter.dataCache && adapter.dataCache.widgets) || [];
+	return widgets.find(function (w) { return String(w.RecID) === String(recId); }) || null;
+}
+
+function dashboardifyFlashCardsCsvEscape(v) {
+	var s = String(v == null ? "" : v);
+	if (s.indexOf('"') !== -1) s = s.replace(/"/g, '""');
+	if (/[",\n\r]/.test(s)) return '"' + s + '"';
+	return s;
+}
+
+function dashboardifyBuildFlashCardsCsv(cards) {
+	var rows = ["question,answer"];
+	(cards || []).forEach(function (c) {
+		rows.push(dashboardifyFlashCardsCsvEscape(c.q || "") + "," + dashboardifyFlashCardsCsvEscape(c.a || ""));
+	});
+	return rows.join("\r\n");
+}
+
+function dashboardifyParseFlashCardsCsv(text) {
+	var rows = [];
+	var src = String(text || "");
+	var i = 0, cur = "", row = [], inQuotes = false;
+	while (i < src.length) {
+		var ch = src[i];
+		if (inQuotes) {
+			if (ch === '"') {
+				if (src[i + 1] === '"') { cur += '"'; i += 2; continue; }
+				inQuotes = false;
+				i++;
+				continue;
+			}
+			cur += ch;
+			i++;
+			continue;
+		}
+		if (ch === '"') { inQuotes = true; i++; continue; }
+		if (ch === ",") { row.push(cur); cur = ""; i++; continue; }
+		if (ch === "\n") { row.push(cur); rows.push(row); row = []; cur = ""; i++; continue; }
+		if (ch === "\r") { i++; continue; }
+		cur += ch;
+		i++;
+	}
+	row.push(cur);
+	rows.push(row);
+	var start = 0;
+	if (rows.length && String(rows[0][0] || "").trim().toLowerCase() === "question" && String(rows[0][1] || "").trim().toLowerCase() === "answer") {
+		start = 1;
+	}
+	var cards = [];
+	for (var r = start; r < rows.length; r++) {
+		var q = String((rows[r] && rows[r][0]) || "").trim();
+		var a = String((rows[r] && rows[r][1]) || "").trim();
+		if (!q && !a) continue;
+		cards.push({ q: q, a: a });
+	}
+	return cards;
+}
+
+function dashboardifyCloseFlashCardsManager() {
+	var d = document.getElementById("FlashCardsManagerDialog");
+	if (d) d.style.display = "none";
+}
+
+function dashboardifyCloseFlashCardsQuickAdd() {
+	var d = document.getElementById("FlashCardsQuickAddDialog");
+	if (d) d.style.display = "none";
+}
+
+window.dashboardifyCloseFlashCardsManager = dashboardifyCloseFlashCardsManager;
+window.dashboardifyCloseFlashCardsQuickAdd = dashboardifyCloseFlashCardsQuickAdd;
+
+function dashboardifyRenderFlashCardsManagerList() {
+	var state = window.DashboardifyFlashCardsEditorState;
+	var list = document.getElementById("flashCardsManagerList");
+	if (!state || !list) return;
+	list.innerHTML = "";
+	(state.model.cards || []).forEach(function (c, idx) {
+		var option = document.createElement("option");
+		var qShort = String(c.q || "");
+		if (qShort.length > 70) qShort = qShort.slice(0, 67) + "...";
+		option.value = String(idx);
+		option.textContent = (idx + 1) + ". " + qShort;
+		list.appendChild(option);
+	});
+}
+
+function dashboardifyLoadFlashCardsManagerSelection() {
+	var state = window.DashboardifyFlashCardsEditorState;
+	var list = document.getElementById("flashCardsManagerList");
+	var q = document.getElementById("flashCardManagerQuestion");
+	var a = document.getElementById("flashCardManagerAnswer");
+	if (!state || !list || !q || !a) return;
+	var idx = Number(list.value);
+	if (!Number.isFinite(idx) || idx < 0) {
+		q.value = "";
+		a.value = "";
+		return;
+	}
+	var card = state.model.cards[idx] || { q: "", a: "" };
+	q.value = card.q || "";
+	a.value = card.a || "";
+}
+
+function dashboardifyOpenFlashCardsManager(recId) {
+	var widget = dashboardifyGetWidgetByRecId(recId);
+	if (!widget) return;
+	window.DashboardifyFlashCardsEditorState = {
+		recId: String(recId),
+		model: dashboardifyParseFlashCardsNotes(widget.Notes),
+		importMode: "merge"
+	};
+	dashboardifyRenderFlashCardsManagerList();
+	var list = document.getElementById("flashCardsManagerList");
+	if (list && list.options.length) list.selectedIndex = 0;
+	dashboardifyLoadFlashCardsManagerSelection();
+	var dialog = document.getElementById("FlashCardsManagerDialog");
+	if (dialog) dialog.style.display = "block";
+}
+
+window.dashboardifyOpenFlashCardsManager = dashboardifyOpenFlashCardsManager;
+
+function dashboardifyOpenFlashCardsQuickAdd(recId) {
+	window.DashboardifyFlashCardsQuickAddRecId = String(recId);
+	var q = document.getElementById("flashCardQuickAddQuestion");
+	var a = document.getElementById("flashCardQuickAddAnswer");
+	if (q) q.value = "";
+	if (a) a.value = "";
+	var dialog = document.getElementById("FlashCardsQuickAddDialog");
+	if (dialog) dialog.style.display = "block";
+}
+
+window.dashboardifyOpenFlashCardsQuickAdd = dashboardifyOpenFlashCardsQuickAdd;
+
+document.addEventListener("DOMContentLoaded", function () {
+	var list = document.getElementById("flashCardsManagerList");
+	if (list) list.addEventListener("change", dashboardifyLoadFlashCardsManagerSelection);
+
+	var addBtn = document.getElementById("btnFlashCardsManagerAdd");
+	if (addBtn) addBtn.addEventListener("click", function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		var q = document.getElementById("flashCardManagerQuestion");
+		var a = document.getElementById("flashCardManagerAnswer");
+		if (!state || !q || !a) return;
+		var card = dashboardifyNormalizeFlashCard({ q: q.value, a: a.value });
+		if (!card) return;
+		state.model.cards.push(card);
+		dashboardifyRenderFlashCardsManagerList();
+		var listEl = document.getElementById("flashCardsManagerList");
+		if (listEl) listEl.value = String(state.model.cards.length - 1);
+		q.value = "";
+		a.value = "";
+		q.focus();
+	});
+
+	var updateBtn = document.getElementById("btnFlashCardsManagerUpdate");
+	if (updateBtn) updateBtn.addEventListener("click", function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		var listEl = document.getElementById("flashCardsManagerList");
+		var q = document.getElementById("flashCardManagerQuestion");
+		var a = document.getElementById("flashCardManagerAnswer");
+		if (!state || !listEl || !q || !a) return;
+		var idx = Number(listEl.value);
+		if (!Number.isFinite(idx) || idx < 0) return;
+		var card = dashboardifyNormalizeFlashCard({ q: q.value, a: a.value });
+		if (!card) return;
+		state.model.cards[idx] = card;
+		dashboardifyRenderFlashCardsManagerList();
+		listEl.value = String(idx);
+	});
+
+	var delBtn = document.getElementById("btnFlashCardsManagerDelete");
+	if (delBtn) delBtn.addEventListener("click", function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		var listEl = document.getElementById("flashCardsManagerList");
+		if (!state || !listEl) return;
+		var idx = Number(listEl.value);
+		if (!Number.isFinite(idx) || idx < 0) return;
+		state.model.cards.splice(idx, 1);
+		dashboardifyRenderFlashCardsManagerList();
+		dashboardifyLoadFlashCardsManagerSelection();
+	});
+
+	var saveBtn = document.getElementById("btnFlashCardsManagerSave");
+	if (saveBtn) saveBtn.addEventListener("click", async function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		var adapter = window.DashboardifyDataAdapter;
+		if (!state || !adapter || typeof adapter.patchWidget !== "function") return;
+		if (typeof window.DashboardifyEnsureCloudWriteAccess === "function" && !(await window.DashboardifyEnsureCloudWriteAccess())) return;
+		var widget = dashboardifyGetWidgetByRecId(state.recId);
+		var current = dashboardifyParseFlashCardsNotes(widget && widget.Notes);
+		current.cards = state.model.cards || [];
+		await adapter.patchWidget(state.recId, { Notes: dashboardifySerializeFlashCardsModel(current) });
+		dashboardifyCloseFlashCardsManager();
+		var dashboardId = (widget && widget.DashboardRecID) || "";
+		if (dashboardId && typeof getWidgetsForDashboard === "function") {
+			await getWidgetsForDashboard(dashboardId);
+		}
+	});
+
+	var exportBtn = document.getElementById("btnFlashCardsCsvExport");
+	if (exportBtn) exportBtn.addEventListener("click", function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		if (!state) return;
+		var csv = dashboardifyBuildFlashCardsCsv(state.model.cards || []);
+		var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+		var url = URL.createObjectURL(blob);
+		var a = document.createElement("a");
+		a.href = url;
+		a.download = "flash-cards.csv";
+		document.body.appendChild(a);
+		a.click();
+		a.remove();
+		URL.revokeObjectURL(url);
+	});
+
+	var importInput = document.getElementById("flashCardsCsvImportFile");
+	var importMergeBtn = document.getElementById("btnFlashCardsCsvImportMerge");
+	var importReplaceBtn = document.getElementById("btnFlashCardsCsvImportReplace");
+	if (importMergeBtn) importMergeBtn.addEventListener("click", function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		if (!state || !importInput) return;
+		state.importMode = "merge";
+		importInput.click();
+	});
+	if (importReplaceBtn) importReplaceBtn.addEventListener("click", function () {
+		var state = window.DashboardifyFlashCardsEditorState;
+		if (!state || !importInput) return;
+		state.importMode = "replace";
+		importInput.click();
+	});
+	if (importInput) importInput.addEventListener("change", async function (ev) {
+		var file = ev.target.files && ev.target.files[0];
+		ev.target.value = "";
+		var state = window.DashboardifyFlashCardsEditorState;
+		if (!file || !state) return;
+		var text = await file.text();
+		var incoming = dashboardifyParseFlashCardsCsv(text);
+		if (state.importMode === "replace") {
+			state.model.cards = incoming;
+		} else {
+			state.model.cards = (state.model.cards || []).concat(incoming);
+		}
+		dashboardifyRenderFlashCardsManagerList();
+	});
+
+	var quickSave = document.getElementById("btnFlashCardsQuickAddSave");
+	if (quickSave) quickSave.addEventListener("click", async function () {
+		var recId = window.DashboardifyFlashCardsQuickAddRecId;
+		var adapter = window.DashboardifyDataAdapter;
+		if (!recId || !adapter || typeof adapter.patchWidget !== "function") return;
+		if (typeof window.DashboardifyEnsureCloudWriteAccess === "function" && !(await window.DashboardifyEnsureCloudWriteAccess())) return;
+		var q = document.getElementById("flashCardQuickAddQuestion");
+		var a = document.getElementById("flashCardQuickAddAnswer");
+		var card = dashboardifyNormalizeFlashCard({ q: q && q.value, a: a && a.value });
+		if (!card) return;
+		var widget = dashboardifyGetWidgetByRecId(recId);
+		if (!widget) return;
+		var model = dashboardifyParseFlashCardsNotes(widget.Notes);
+		model.cards.push(card);
+		await adapter.patchWidget(recId, { Notes: dashboardifySerializeFlashCardsModel(model) });
+		dashboardifyCloseFlashCardsQuickAdd();
+		if (typeof getWidgetsForDashboard === "function") {
+			await getWidgetsForDashboard(widget.DashboardRecID);
+		}
+	});
+});

@@ -23,6 +23,7 @@ const DEFAULT_WIDGET_TYPES = [
   "Notes",
   "HTMLEmbed",
   "Image",
+  "Flash Cards",
   "Countdown",
   "CountUp_Hours",
   "CountUp_Days"
@@ -315,6 +316,29 @@ function collectWidgetPayloadFromForm() {
   if (widgetType === "Image") {
     const fitEl = document.getElementById("ddlImageObjectFit");
     notes = fitEl ? String(fitEl.value || "").trim() : "";
+  }
+  if (widgetType === "Flash Cards") {
+    const sortMethod = get("flashSortMethod") || "random";
+    const autoAdvanceEnabled = !!document.getElementById("flashAutoAdvanceEnabled")?.checked;
+    const autoAdvanceMsRaw = Number(get("flashAutoAdvanceMs"));
+    const autoAdvanceMs = Number.isFinite(autoAdvanceMsRaw) && autoAdvanceMsRaw > 0
+      ? Math.round(autoAdvanceMsRaw)
+      : 5000;
+    let cards = [];
+    try {
+      cards = JSON.parse(get("txtFlashCardsData") || "[]");
+      if (!Array.isArray(cards)) cards = [];
+    } catch {
+      cards = [];
+    }
+    if (typeof window.dashboardifySerializeFlashCardsModel === "function") {
+      notes = window.dashboardifySerializeFlashCardsModel({
+        sortMethod,
+        autoAdvanceEnabled,
+        autoAdvanceMs,
+        cards
+      });
+    }
   }
 
   let positionX = get("txtpositionx2") || "0";
