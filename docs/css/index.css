@@ -315,19 +315,74 @@ html, body{
 }
 
 .flashcards-question {
-	font-size: 16px;
 	font-weight: 600;
 	line-height: 1.35;
 	word-break: break-word;
 	overflow-wrap: anywhere;
+	font-size: 15px;
 }
 
 .flashcards-answer {
-	font-size: 14px;
 	line-height: 1.45;
 	color: #2f3b52;
 	word-break: break-word;
 	overflow-wrap: anywhere;
+	font-size: 14px;
+}
+
+/* Responsive emphasis: short text reads larger; long text scales down to fit. */
+.flashcards-question.flashcards-scale--xl {
+	font-size: clamp(1.2rem, 4.2vmin, 1.85rem);
+	line-height: 1.25;
+}
+.flashcards-question.flashcards-scale--lg {
+	font-size: clamp(1.05rem, 3.2vmin, 1.45rem);
+	line-height: 1.3;
+}
+.flashcards-question.flashcards-scale--md {
+	font-size: clamp(0.95rem, 2.4vmin, 1.2rem);
+	line-height: 1.32;
+}
+.flashcards-question.flashcards-scale--sm {
+	font-size: clamp(0.82rem, 1.8vmin, 1rem);
+	line-height: 1.38;
+}
+
+.flashcards-answer.flashcards-scale--xl {
+	font-size: clamp(1.05rem, 3.6vmin, 1.55rem);
+	line-height: 1.35;
+}
+.flashcards-answer.flashcards-scale--lg {
+	font-size: clamp(0.95rem, 2.8vmin, 1.25rem);
+	line-height: 1.4;
+}
+.flashcards-answer.flashcards-scale--md {
+	font-size: clamp(0.85rem, 2.1vmin, 1.05rem);
+	line-height: 1.42;
+}
+.flashcards-answer.flashcards-scale--sm {
+	font-size: clamp(0.78rem, 1.6vmin, 0.92rem);
+	line-height: 1.45;
+}
+
+.flashcards-answer--placeholder {
+	font-style: italic;
+	color: #64748b;
+	font-weight: 400;
+}
+
+.flashcards-reveal-btn {
+	float: none !important;
+	width: 100%;
+	max-width: 100%;
+	box-sizing: border-box;
+	margin-top: 10px;
+	text-align: center;
+	min-height: 64px;
+	padding: 14px 18px;
+	font-size: 1.2rem;
+	font-weight: 700;
+	border-radius: 12px;
 }
 
 .flashcards-nav-row {

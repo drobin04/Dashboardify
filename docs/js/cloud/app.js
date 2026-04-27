@@ -319,6 +319,11 @@ function collectWidgetPayloadFromForm() {
   }
   if (widgetType === "Flash Cards") {
     const sortMethod = get("flashSortMethod") || "random";
+    const displayStyleRaw = get("flashDisplayStyle");
+    const displayStyle =
+      String(displayStyleRaw || "").trim().toLowerCase() === "guess"
+        ? "guess"
+        : "full";
     const autoAdvanceEnabled = !!document.getElementById("flashAutoAdvanceEnabled")?.checked;
     const autoAdvanceMsRaw = Number(get("flashAutoAdvanceMs"));
     const autoAdvanceMs = Number.isFinite(autoAdvanceMsRaw) && autoAdvanceMsRaw > 0
@@ -334,6 +339,7 @@ function collectWidgetPayloadFromForm() {
     if (typeof window.dashboardifySerializeFlashCardsModel === "function") {
       notes = window.dashboardifySerializeFlashCardsModel({
         sortMethod,
+        displayStyle,
         autoAdvanceEnabled,
         autoAdvanceMs,
         cards

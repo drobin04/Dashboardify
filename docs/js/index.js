@@ -240,6 +240,8 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			var flashModel = dashboardifyParseFlashCardsNotes(result2.Notes);
 			var flashSort = document.getElementById("flashSortMethod");
 			if (flashSort) flashSort.value = flashModel.sortMethod || "random";
+			var flashStyle = document.getElementById("flashDisplayStyle");
+			if (flashStyle) flashStyle.value = flashModel.displayStyle === "guess" ? "guess" : "full";
 			var flashAuto = document.getElementById("flashAutoAdvanceEnabled");
 			if (flashAuto) flashAuto.checked = !!flashModel.autoAdvanceEnabled;
 			var flashAutoMs = document.getElementById("flashAutoAdvanceMs");
@@ -307,7 +309,20 @@ function dashboardifyEscapeHtmlText(s) {
 }
 
 function dashboardifyDefaultFlashCardsModel() {
-	return { sortMethod: "random", autoAdvanceEnabled: false, autoAdvanceMs: 5000, cards: [] };
+	return {
+		sortMethod: "random",
+		displayStyle: "full",
+		autoAdvanceEnabled: false,
+		autoAdvanceMs: 5000,
+		cards: []
+	};
+}
+
+/** Empty or unknown → "full". */
+function dashboardifyNormalizeFlashCardDisplayStyle(v) {
+	var s = String(v == null ? "" : v).trim().toLowerCase();
+	if (s === "guess") return "guess";
+	return "full";
 }
 
 function dashboardifyNormalizeFlashCard(card) {
@@ -324,6 +339,7 @@ function dashboardifyParseFlashCardsNotes(notes) {
 	try {
 		var parsed = typeof notes === "string" ? JSON.parse(notes) : notes;
 		model.sortMethod = parsed.sortMethod === "forward" || parsed.sortMethod === "reverse" ? parsed.sortMethod : "random";
+		model.displayStyle = dashboardifyNormalizeFlashCardDisplayStyle(parsed.displayStyle);
 		model.autoAdvanceEnabled = !!parsed.autoAdvanceEnabled;
 		var ms = Number(parsed.autoAdvanceMs);
 		model.autoAdvanceMs = Number.isFinite(ms) && ms > 0 ? Math.round(ms) : 5000;
@@ -340,6 +356,7 @@ function dashboardifySerializeFlashCardsModel(inputModel) {
 	var model = inputModel && typeof inputModel === "object" ? inputModel : {};
 	return JSON.stringify({
 		sortMethod: model.sortMethod === "forward" || model.sortMethod === "reverse" ? model.sortMethod : "random",
+		displayStyle: dashboardifyNormalizeFlashCardDisplayStyle(model.displayStyle),
 		autoAdvanceEnabled: !!model.autoAdvanceEnabled,
 		autoAdvanceMs: Number.isFinite(Number(model.autoAdvanceMs)) && Number(model.autoAdvanceMs) > 0 ? Math.round(Number(model.autoAdvanceMs)) : 5000,
 		cards: Array.isArray(model.cards) ? model.cards.map(dashboardifyNormalizeFlashCard).filter(function (x) { return !!x; }) : []
@@ -360,6 +377,30 @@ function dashboardifyBuildFlashCardOrder(count, sortMethod) {
 		order[k] = t;
 	}
 	return order;
+}
+
+/** Larger type for short prompts; smaller for long text (score = chars + words*8). */
+function dashboardifyFlashCardScaleClass(text) {
+	var t = String(text || "").trim();
+	var n = t.length;
+	var wc = t ? t.split(/\s+/).filter(Boolean).length : 0;
+	var score = n + wc * 8;
+	if (score <= 42) return "flashcards-scale--xl";
+	if (score <= 100) return "flashcards-scale--lg";
+	if (score <= 240) return "flashcards-scale--md";
+	return "flashcards-scale--sm";
+}
+
+function dashboardifyApplyFlashCardTextScale(el, text) {
+	if (!el) return;
+	var parts = String(el.className || "")
+		.split(/\s+/)
+		.filter(Boolean)
+		.filter(function (c) {
+			return c.indexOf("flashcards-scale--") !== 0;
+		});
+	parts.push(dashboardifyFlashCardScaleClass(text));
+	el.className = parts.join(" ");
 }
 
 function drawWidget(widget) {
@@ -630,6 +671,7 @@ function drawWidget(widget) {
 			var cards = flashModel.cards || [];
 			var firstQ = cards.length ? cards[0].q : "No questions yet.";
 			var firstA = cards.length ? cards[0].a : "Use edit mode to add your first card.";
+			var isGuess = flashModel.displayStyle === "guess";
 			var gearButton =
 				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsManager(\"" +
 				ridJs +
@@ -638,6 +680,20 @@ function drawWidget(widget) {
 				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsQuickAdd(\"" +
 				ridJs +
 				"\")' title='Add question'><span class='flashcards-edit-icon' aria-hidden='true'>+</span></a>";
+			var answerSection = isGuess
+				? "<div class='flashcards-answer-stack' id='flashcards-answer-stack-" +
+					ridJs +
+					"'>" +
+					"<div class='flashcards-answer' id='flashcards-answer-" +
+					ridJs +
+					"'></div>" +
+					"<button type='button' class='menubar flashcards-reveal-btn' id='flashcards-reveal-" +
+					ridJs +
+					"' onclick='dashboardifyFlashCardRevealAnswer(\"" +
+					ridJs +
+					"\")'>Show answer</button>" +
+					"</div>"
+				: "<div class='flashcards-answer' id='flashcards-answer-" + ridJs + "'></div>";
 			var markup =
 				"<div id='" +
 				RecID +
@@ -655,17 +711,15 @@ function drawWidget(widget) {
 				imgstylecss +
 				siteurl +
 				"icons/cancel.png'></img></a>" +
-				"<div class='flashcards-body'>" +
+				"<div class='flashcards-body" +
+				(isGuess ? " flashcards-body--guess" : " flashcards-body--full") +
+				"'>" +
 				"<div class='flashcards-question' id='flashcards-question-" +
 				ridJs +
 				"'>" +
 				dashboardifyEscapeHtmlText(firstQ) +
 				"</div>" +
-				"<div class='flashcards-answer' id='flashcards-answer-" +
-				ridJs +
-				"'>" +
-				dashboardifyEscapeHtmlText(firstA) +
-				"</div>" +
+				answerSection +
 				"<div class='flashcards-nav-row'>" +
 				"<button type='button' class='flashcards-nav-btn' onclick='dashboardifyFlashCardPrev(\"" +
 				ridJs +
@@ -680,7 +734,8 @@ function drawWidget(widget) {
 				model: flashModel,
 				order: dashboardifyBuildFlashCardOrder(cards.length, flashModel.sortMethod),
 				index: 0,
-				timerId: null
+				timerId: null,
+				revealed: false
 			};
 			dashboardifyRenderFlashCardState(String(RecID));
 			break;
@@ -737,18 +792,52 @@ function dashboardifyRenderFlashCardState(recId) {
 	}
 	var qEl = document.getElementById("flashcards-question-" + recId);
 	var aEl = document.getElementById("flashcards-answer-" + recId);
+	var revealBtn = document.getElementById("flashcards-reveal-" + recId);
 	if (!qEl || !aEl) return;
 	var cards = (st.model && st.model.cards) || [];
+	var isGuess = st.model && st.model.displayStyle === "guess";
 	if (!cards.length || !st.order.length) {
 		qEl.textContent = "No questions yet.";
 		aEl.textContent = "Use edit mode to add your first card.";
+		aEl.classList.remove("flashcards-answer--placeholder");
+		dashboardifyApplyFlashCardTextScale(qEl, qEl.textContent);
+		dashboardifyApplyFlashCardTextScale(aEl, aEl.textContent);
+		if (revealBtn) revealBtn.style.display = "none";
 		return;
 	}
 	if (st.index < 0) st.index = st.order.length - 1;
 	if (st.index >= st.order.length) st.index = 0;
 	var card = cards[st.order[st.index]] || { q: "", a: "" };
-	qEl.textContent = card.q || "";
-	aEl.textContent = card.a || "";
+	var qText = card.q || "";
+	var aText = card.a || "";
+	qEl.textContent = qText;
+	dashboardifyApplyFlashCardTextScale(qEl, qText);
+	if (isGuess) {
+		if (revealBtn) revealBtn.style.display = "";
+		if (!st.revealed) {
+			aEl.textContent =
+				'Try the answer in your head, then tap "Show answer" to check.';
+			aEl.classList.add("flashcards-answer--placeholder");
+			dashboardifyApplyFlashCardTextScale(aEl, aEl.textContent);
+			if (revealBtn) {
+				revealBtn.textContent = "Show answer";
+				revealBtn.setAttribute("aria-expanded", "false");
+			}
+		} else {
+			aEl.textContent = aText;
+			aEl.classList.remove("flashcards-answer--placeholder");
+			dashboardifyApplyFlashCardTextScale(aEl, aText);
+			if (revealBtn) {
+				revealBtn.style.display = "none";
+				revealBtn.setAttribute("aria-expanded", "true");
+			}
+		}
+	} else {
+		aEl.textContent = aText;
+		aEl.classList.remove("flashcards-answer--placeholder");
+		dashboardifyApplyFlashCardTextScale(aEl, aText);
+		if (revealBtn) revealBtn.style.display = "none";
+	}
 	if (st.model.autoAdvanceEnabled && st.order.length > 1) {
 		var delay = Number(st.model.autoAdvanceMs);
 		var ms = Number.isFinite(delay) && delay > 0 ? delay : 5000;
@@ -761,6 +850,7 @@ function dashboardifyRenderFlashCardState(recId) {
 function dashboardifyFlashCardNext(recId) {
 	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
 	if (!st || !st.order.length) return;
+	st.revealed = false;
 	st.index = (st.index + 1) % st.order.length;
 	dashboardifyRenderFlashCardState(recId);
 }
@@ -768,12 +858,21 @@ function dashboardifyFlashCardNext(recId) {
 function dashboardifyFlashCardPrev(recId) {
 	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
 	if (!st || !st.order.length) return;
+	st.revealed = false;
 	st.index = (st.index - 1 + st.order.length) % st.order.length;
+	dashboardifyRenderFlashCardState(recId);
+}
+
+function dashboardifyFlashCardRevealAnswer(recId) {
+	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
+	if (!st || st.model.displayStyle !== "guess") return;
+	st.revealed = true;
 	dashboardifyRenderFlashCardState(recId);
 }
 
 window.dashboardifyFlashCardNext = dashboardifyFlashCardNext;
 window.dashboardifyFlashCardPrev = dashboardifyFlashCardPrev;
+window.dashboardifyFlashCardRevealAnswer = dashboardifyFlashCardRevealAnswer;
 
 function escapeHtmlForTextarea(s) {
 	return String(s)
@@ -1322,6 +1421,7 @@ function drawNewWidgetBasedOnType() {
 	case "Flash Cards":
 		var flashFields =
 			"<hr><label>Widget Title: </label><input id='txtWidgetDisplayText' name='DisplayText'></input><br />" +
+			"<label>Style: </label><select id='flashDisplayStyle'><option value='full'>Full — show question and answer</option><option value='guess'>Guess — hide answer until you tap “Show answer”</option></select><br />" +
 			"<label>Sort Method: </label><select id='flashSortMethod'><option value='random' selected>Random</option><option value='forward'>Forward</option><option value='reverse'>Reverse</option></select><br />" +
 			"<label><input id='flashAutoAdvanceEnabled' type='checkbox' /> Auto advance cards</label><br />" +
 			"<label>Auto advance delay (ms): </label><input id='flashAutoAdvanceMs' type='number' min='50' step='50' value='5000'></input><br />" +
