@@ -189,6 +189,15 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			var NotesEl = document.getElementById("txtNotes");
 			if (NotesEl) NotesEl.value = result2.Notes || "";
 			break;
+		case "Clock": {
+			var ClockTitle = document.getElementById("txtWidgetDisplayText");
+			if (ClockTitle) ClockTitle.value = result2.BookmarkDisplayText || "";
+			var ClockTimezone = document.getElementById("ddlClockTimezone");
+			if (ClockTimezone && result2.Notes) {
+				ClockTimezone.value = result2.Notes;
+			}
+			break;
+		}
 		case "Countdown":
 		case "CountUp_Hours":
 			var CountdownTitle = document.getElementById("txtWidgetDisplayText");
@@ -567,6 +576,20 @@ function drawWidget(widget) {
 			echo(combined + "<p style='padding-left: 15px; padding-right: 15px;'><div style='text-align: center;'><div id='countdowntitle'><b>" + title + "</b></div><br /><div id='countdownvalue'>" + days + " Days Remaining.</div></div></p></div>");
 				
 			break;
+		case "Clock": {
+			var clockTitle = BookmarkDisplayText;
+			var timezone = Notes || "America/New_York";
+			var formattedTime = "";
+			try {
+				var clockNow = new Date();
+				var clockOptions = { timeZone: timezone, year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: true };
+				formattedTime = clockNow.toLocaleString("en-US", clockOptions);
+			} catch (e) {
+				formattedTime = "Invalid timezone";
+			}
+			echo(combined + "<div style='padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;'><div id='clocktitle' style='font-weight: bold; margin-bottom: 8px;'>" + clockTitle + "</div><div id='clockvalue' style='font-size: 1.5em;'>" + formattedTime + "</div></div></div>");
+			break;
+		}
 		case "CountUp_Hours":
 		
 			//stringValue = Notes; // Example: "2024-09-08T15:00:00"
@@ -1360,13 +1383,38 @@ function drawNewWidgetBasedOnType() {
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x;
 		break;
 		
-	case "Countdown":
-		var x = "<hr></span><label>Countdown Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
-		var y = "<input type=\"date\" id=\"datepicker\" name=\"Notes\"> <br/>";
-		//Fill content to the dialog
+case "Countdown":
+		var x = '<hr><label>Countdown Title: </label><input id="txtWidgetDisplayText" name="DisplayText"><br />';
+		var y = '<input type="date" id="datepicker" name="Notes"> <br/>';
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + x + y;
-		
 		break;
+
+	case "Clock":
+		var clockFields = 
+			'<hr><label>Clock Title: </label><input id="txtWidgetDisplayText" name="DisplayText"><br />' +
+			'<label>Timezone: </label>' +
+			'<select id="ddlClockTimezone" name="Notes">' +
+			'<option value="America/New_York">Eastern Time (ET)</option>' +
+			'<option value="America/Chicago">Central Time (CT)</option>' +
+			'<option value="America/Denver">Mountain Time (MT)</option>' +
+			'<option value="America/Los_Angeles">Pacific Time (PT)</option>' +
+			'<option value="America/Anchorage">Alaska Time (AKT)</option>' +
+			'<option value="Pacific/Honolulu">Hawaii Time (HT)</option>' +
+			'<option value="Europe/London">London (GMT/BST)</option>' +
+			'<option value="Europe/Paris">Paris (CET/CEST)</option>' +
+			'<option value="Europe/Berlin">Berlin (CET/CEST)</option>' +
+			'<option value="Europe/Moscow">Moscow (MSK)</option>' +
+			'<option value="Asia/Dubai">Dubai (GST)</option>' +
+			'<option value="Asia/Kolkata">India (IST)</option>' +
+			'<option value="Asia/Singapore">Singapore (SGT)</option>' +
+			'<option value="Asia/Tokyo">Tokyo (JST)</option>' +
+			'<option value="Asia/Shanghai">Shanghai (CST)</option>' +
+			'<option value="Australia/Sydney">Sydney (AEST/AEDT)</option>' +
+			'<option value="Pacific/Auckland">Auckland (NZST/NZDT)</option>' +
+			'</select><br />';
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + clockFields;
+		break;
+		
 	case "CountUp_Hours":
 		var x = "<hr></span><label>Title: </label><input ID=\"txtWidgetDisplayText\" name=\"DisplayText\"></input><br />";
 		var y = "<input type=\"datetime-local\" id=\"datepicker\" name=\"Notes\"> <br/>";
