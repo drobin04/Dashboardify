@@ -110,6 +110,12 @@
   white-space: nowrap;
 }
 
+.cloud-status-inline a {
+  color: #0066cc;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .cloud-menubar-wrap .cloud-dash-status-panel .cloud-status-inline {
   margin-left: 0;
   color: #0f172a;

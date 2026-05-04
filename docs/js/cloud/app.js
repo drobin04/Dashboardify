@@ -61,8 +61,8 @@ let backupImportMode = "merge";
 function setStatus(message, isError = false) {
   const el = byId("statusText");
   if (!el) return;
-  el.textContent = message;
-  el.title = message;
+  el.innerHTML = message;
+  el.title = message.replace(/<[^>]*>/g, "");
   el.style.color = isError ? "#a00" : "#333";
 }
 
@@ -469,7 +469,7 @@ async function boot() {
       adapter = new CloudStorageAdapter(null);
       adapter.hydrateFromLocalCacheModel(cached);
       setStatus(
-        "Viewing saved dashboards — sign in when you add or change anything."
+        "Viewing saved dashboards — <a href=\"cloud-login.html\">sign in</a> when you add or change anything."
       );
       scheduleBackgroundOnlineIfTokenValid();
     } else {
