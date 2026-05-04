@@ -1872,6 +1872,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			await getWidgetsForDashboard(widget.DashboardRecID);
 		}
 	});
+});
 
 var DashboardifyWidgetManagerState = { widgets: [], selectedRecId: null };
 
