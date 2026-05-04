@@ -17,6 +17,8 @@ let googleAuth = null;
 let writeAccessInFlight = null;
 
 const DEFAULT_WIDGET_TYPES = [
+  // NOTE: When adding a new widget type, you MUST add it here AND in cloud.html dropdown AND in index.js switch cases
+  // See drawNewWidgetBasedOnType(), fillEditWidgetFormFromRecord(), and drawWidget() in js/index.js
   "Bookmark",
   "IFrame",
   "Collapseable IFrame",
