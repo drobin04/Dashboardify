@@ -1,18 +1,22 @@
 /**
- * Minimal test stub for Dashboardify unit tests
- * Provides essential functions without loading the full app
+ * Test stub for Dashboardify unit tests
+ * Matches exact implementation from js/index.js
  */
 
 window.getrooturlpath = function() {
   return "";
 };
 
-window.escapeHtmlAttr = function(c) {
-  if (c == null) return "";
-  return String(c)
+window.escapeHtmlAttr = function(s) {
+  return String(s)
     .replace(/&/g, "&amp;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;")
+    .replace(/'/g, "&#39;");
+};
+
+window.dashboardifyEscapeHtmlText = function(s) {
+  return String(s || "")
+    .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 };
