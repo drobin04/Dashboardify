@@ -13,6 +13,12 @@
     #qunit { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     #testrunnerid { border: 1px solid #e5e7eb; border-radius: 4px; }
     #qunit-fixtures { display: none; }
+    #qunit-testresult-list { display: block !important; }
+    #test-results { margin-top: 20px; padding: 15px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    #test-results h2 { margin: 0 0 10px 0; font-size: 18px; }
+    #export-btn { margin-top: 10px; padding: 8px 16px; background: #4a5568; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; }
+    #export-btn:hover { background: #2d3748; }
+    #export-output { margin-top: 15px; padding: 10px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-family: monospace; font-size: 12px; white-space: pre-wrap; word-break: break-all; max-height: 300px; overflow-y: auto; }
     @media (max-width: 768px) {
       body { padding: 10px; }
       #header { padding: 15px; margin: -10px -10px 15px -10px; }
@@ -25,6 +31,12 @@
     <p>Unit tests for Dashboardify widget system</p>
   </div>
   <div id="qunit"></div>
+  <div id="test-results" style="display:none;">
+    <h2>Test Results</h2>
+    <div id="results-summary"></div>
+    <button type="button" id="export-btn">Export Failures</button>
+    <div id="export-output"></div>
+  </div>
   <div id="widgetcontainer" style="display: none;"></div>
 
   <!-- Widget Manager Dialog for testing -->
@@ -58,6 +70,11 @@
   <script src="js/tests/testhelper.js"></script>
   <script src="js/tests/drawwidget-stub.js"></script>
   <script src="js/index.js"></script>
+
+  <!-- Unit tests - pure functions -->
+  <script src="js/tests/unit.test.js"></script>
+
+  <!-- Integration tests (require DOM stubs) -->
   <script src="js/tests/widget-rendering.test.js"></script>
   <script src="js/tests/positioning.test.js"></script>
   <script src="js/tests/flash-cards.test.js"></script>
@@ -67,5 +84,43 @@
   <script src="js/tests/widget-manager.test.js"></script>
   <script src="js/tests/form.test.js"></script>
   <script src="js/tests/security.test.js"></script>
+
+  <script>
+    document.addEventListener("QUnit.done", function(details) {
+      var resultsDiv = document.getElementById("test-results");
+      var summaryDiv = document.getElementById("results-summary");
+      var exportBtn = document.getElementById("export-btn");
+      var exportOutput = document.getElementById("export-output");
+
+      resultsDiv.style.display = "block";
+      summaryDiv.innerHTML =
+        "<p><strong>Passed:</strong> " + details.passed + " | " +
+        "<strong>Failed:</strong> " + details.failed + " | " +
+        "<strong>Total:</strong> " + details.total + " | " +
+        "<strong>Runtime:</strong> " + details.runtime + "ms</p>";
+
+      exportBtn.onclick = function() {
+        var failed = [];
+        var testResults = document.querySelectorAll("#qunit-testresult .fail");
+
+        if (testResults.length === 0) {
+          exportOutput.textContent = "No failures!";
+        } else {
+          var lines = ["Failures (" + testResults.length + "):", ""];
+          testResults.forEach(function(el) {
+            var testName = el.querySelector(".test-name");
+            var moduleName = el.querySelector(".module-name");
+            var errorMsg = el.querySelector(".test-message");
+
+            if (testName) lines.push("Test: " + testName.textContent);
+            if (moduleName) lines.push("Module: " + moduleName.textContent);
+            if (errorMsg) lines.push("Error: " + errorMsg.textContent);
+            lines.push("");
+          });
+          exportOutput.textContent = lines.join("\n");
+        }
+      };
+    });
+  </script>
 </body>
 </html>

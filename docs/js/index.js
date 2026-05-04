@@ -1465,6 +1465,7 @@ case "Countdown":
 			"<option value='fill'>Stretch — distort to fill (fill)</option>" +
 			"<option value='none'>Original pixels (none)</option>" +
 			"<option value='scale-down'>Smaller of none or contain (scale-down)</option>" +
+    "</select><br />";
 			"</select><br />";
 		document.getElementById("NewWidget_Form").innerHTML =
 			SizeAndCSSClassMarkup + imgFields;
@@ -2028,3 +2029,5 @@ if (document.getElementById("btnWidgetManagerSave")) {
 if (document.getElementById("btnWidgetManagerDelete")) {
 	document.getElementById("btnWidgetManagerDelete").addEventListener("click", deleteWidgetFromManager);
 }
+
+// End of index.js
