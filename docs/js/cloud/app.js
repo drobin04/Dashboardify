@@ -25,6 +25,7 @@ const DEFAULT_WIDGET_TYPES = [
   "Image",
   "Flash Cards",
   "Countdown",
+  "Clock",
   "CountUp_Hours",
   "CountUp_Days"
 ];
