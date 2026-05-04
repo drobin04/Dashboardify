@@ -587,7 +587,7 @@ function drawWidget(widget) {
 			} catch (e) {
 				formattedTime = "Invalid timezone";
 			}
-			echo(combined + "<div style='padding: 15px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;'><div id='clocktitle' style='font-weight: bold; margin-bottom: 8px;'>" + clockTitle + "</div><div id='clockvalue' style='font-size: 1.5em;'>" + formattedTime + "</div></div></div>");
+			echo(combined + "<div style='padding: 15px; height: calc(100% - 30px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;'><div style='font-weight: bold; margin-bottom: 8px;'>" + clockTitle + "</div><div style='font-size: 1.5em;'>" + formattedTime + "</div></div>");
 			break;
 		}
 		case "CountUp_Hours":
