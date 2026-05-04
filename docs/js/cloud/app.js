@@ -610,6 +610,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     toggleDisplay("EditDashboardDialog");
   });
 
+  byId("btnSettingsWidgetManager").addEventListener("click", () => {
+    openWidgetManager();
+  });
+
   byId("btnSettingsUserData").addEventListener("click", () => {
     populateUserPreferencesForm();
     toggleDisplay("UserPreferencesDialog");

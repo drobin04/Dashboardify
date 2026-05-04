@@ -111,6 +111,7 @@ async function getWidgetsForDashboard(dashboardID) {
 }
 
 function renderwidgetsfromjson(widgets) {
+	window.DashboardifyAllWidgets = widgets;
 	// Create a new array for HTMLEmbed widgets
 	const htmlEmbedWidgets = [];
 	
@@ -1870,4 +1871,160 @@ document.addEventListener("DOMContentLoaded", function () {
 			await getWidgetsForDashboard(widget.DashboardRecID);
 		}
 	});
-});
+
+var DashboardifyWidgetManagerState = { widgets: [], selectedRecId: null };
+
+function openWidgetManager() {
+	var dialog = document.getElementById("widgetManagerDialog");
+	var list = document.getElementById("widgetManagerList");
+	var details = document.getElementById("widgetManagerDetails");
+	var noWidgets = document.getElementById("widgetManagerNoWidgets");
+	if (!dialog || !list) return;
+	DashboardifyWidgetManagerState.widgets = [];
+	DashboardifyWidgetManagerState.selectedRecId = null;
+	list.innerHTML = "";
+	details.style.display = "none";
+	noWidgets.style.display = "none";
+	var widgets = window.DashboardifyAllWidgets || [];
+	if (widgets.length === 0) {
+		noWidgets.style.display = "block";
+		dialog.style.display = "block";
+		return;
+	}
+	DashboardifyWidgetManagerState.widgets = widgets;
+	widgets.forEach(function(w) {
+		var opt = document.createElement("option");
+		opt.value = w.RecID;
+		var displayText = w.BookmarkDisplayText || w.WidgetType || "Widget";
+		opt.textContent = displayText + " (#" + w.RecID + ")";
+		list.appendChild(opt);
+	});
+	if (list.options.length > 0) {
+		list.selectedIndex = 0;
+		loadWidgetManagerDetails();
+	}
+	dialog.style.display = "block";
+}
+
+window.openWidgetManager = openWidgetManager;
+
+function closeWidgetManager() {
+	var dialog = document.getElementById("widgetManagerDialog");
+	if (dialog) dialog.style.display = "none";
+}
+
+window.closeWidgetManager = closeWidgetManager;
+
+function loadWidgetManagerDetails() {
+	var list = document.getElementById("widgetManagerList");
+	var details = document.getElementById("widgetManagerDetails");
+	if (!list || !details) return;
+	var recId = list.value;
+	if (!recId) {
+		details.style.display = "none";
+		return;
+	}
+	DashboardifyWidgetManagerState.selectedRecId = recId;
+	var widget = DashboardifyWidgetManagerState.widgets.find(function(w) { return String(w.RecID) === String(recId); });
+	if (!widget) {
+		details.style.display = "none";
+		return;
+	}
+	document.getElementById("widgetManagerType").textContent = widget.WidgetType || "Unknown";
+	document.getElementById("widgetManagerX").value = widget.PositionX || 0;
+	document.getElementById("widgetManagerY").value = widget.PositionY || 0;
+	document.getElementById("widgetManagerWidth").value = widget.SizeX || 200;
+	document.getElementById("widgetManagerHeight").value = widget.SizeY || 150;
+	details.style.display = "block";
+}
+
+function saveWidgetManagerChanges() {
+	var recId = DashboardifyWidgetManagerState.selectedRecId;
+	if (!recId) return;
+	var x = parseInt(document.getElementById("widgetManagerX").value) || 0;
+	var y = parseInt(document.getElementById("widgetManagerY").value) || 0;
+	var w = parseInt(document.getElementById("widgetManagerWidth").value) || 200;
+	var h = parseInt(document.getElementById("widgetManagerHeight").value) || 150;
+	var adapter = window.DashboardifyDataAdapter;
+	if (adapter && typeof adapter.patchWidget === "function") {
+		adapter.patchWidget(recId, { PositionX: x, PositionY: y, SizeX: w, SizeY: h }).then(function() {
+			var idx = DashboardifyWidgetManagerState.widgets.findIndex(function(wi) { return String(wi.RecID) === String(recId); });
+			if (idx >= 0) {
+				DashboardifyWidgetManagerState.widgets[idx].PositionX = x;
+				DashboardifyWidgetManagerState.widgets[idx].PositionY = y;
+				DashboardifyWidgetManagerState.widgets[idx].SizeX = w;
+				DashboardifyWidgetManagerState.widgets[idx].SizeY = h;
+			}
+			var currentDashboardId = document.getElementById("ddlSelectedDashboard") ? document.getElementById("ddlSelectedDashboard").value : null;
+			if (currentDashboardId && typeof getWidgetsForDashboard === "function") {
+				getWidgetsForDashboard(currentDashboardId);
+			}
+		}).catch(function(err) {
+			alert("Failed to save: " + err.message);
+		});
+	} else {
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", "actions/update_widget_position.php", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				var idx = DashboardifyWidgetManagerState.widgets.findIndex(function(wi) { return String(wi.RecID) === String(recId); });
+				if (idx >= 0) {
+					DashboardifyWidgetManagerState.widgets[idx].PositionX = x;
+					DashboardifyWidgetManagerState.widgets[idx].PositionY = y;
+					DashboardifyWidgetManagerState.widgets[idx].SizeX = w;
+					DashboardifyWidgetManagerState.widgets[idx].SizeY = h;
+				}
+				var currentDashboardId = document.getElementById("ddlSelectedDashboard") ? document.getElementById("ddlSelectedDashboard").value : null;
+				if (currentDashboardId && typeof getWidgetsForDashboard === "function") {
+					getWidgetsForDashboard(currentDashboardId);
+				}
+			}
+		};
+		xhr.send("recid=" + encodeURIComponent(recId) + "&x=" + x + "&y=" + y + "&width=" + w + "&height=" + h);
+	}
+}
+
+function deleteWidgetFromManager() {
+	var recId = DashboardifyWidgetManagerState.selectedRecId;
+	if (!recId) return;
+	if (!confirm("Are you sure you want to remove this widget?")) return;
+	var adapter = window.DashboardifyDataAdapter;
+	if (adapter && typeof adapter.deleteWidget === "function") {
+		adapter.deleteWidget(recId).then(function() {
+			openWidgetManager();
+			var currentDashboardId = document.getElementById("ddlSelectedDashboard") ? document.getElementById("ddlSelectedDashboard").value : null;
+			if (currentDashboardId && typeof getWidgetsForDashboard === "function") {
+				getWidgetsForDashboard(currentDashboardId);
+			}
+		}).catch(function(err) {
+			alert("Failed to delete: " + err.message);
+		});
+	} else {
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", "actions/DeleteWidget.php", true);
+		xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4 && xhr.status === 200) {
+				openWidgetManager();
+				var currentDashboardId = document.getElementById("ddlSelectedDashboard") ? document.getElementById("ddlSelectedDashboard").value : null;
+				if (currentDashboardId && typeof getWidgetsForDashboard === "function") {
+					getWidgetsForDashboard(currentDashboardId);
+				}
+			}
+		};
+		xhr.send("recid=" + encodeURIComponent(recId));
+	}
+}
+
+if (document.getElementById("widgetManagerList")) {
+	document.getElementById("widgetManagerList").addEventListener("change", loadWidgetManagerDetails);
+}
+
+if (document.getElementById("btnWidgetManagerSave")) {
+	document.getElementById("btnWidgetManagerSave").addEventListener("click", saveWidgetManagerChanges);
+}
+
+if (document.getElementById("btnWidgetManagerDelete")) {
+	document.getElementById("btnWidgetManagerDelete").addEventListener("click", deleteWidgetFromManager);
+}

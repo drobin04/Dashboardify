@@ -256,3 +256,15 @@ window.DashboardifyTestHelper = {
 
 window.DashboardifyTestHelper.DASHBOARDIFY_CLOUD_DATA_CACHE_KEY = "dashboardify_cloud_data_snapshot";
 window.DashboardifyTestHelper.GOOGLE_OAUTH_SESSION_KEY = "google_oauth_session";
+
+window.DashboardifyTestLoader = {
+  createWidget: function(overrides) {
+    return window.DashboardifyTestHelper.createWidget(overrides);
+  },
+  createDashboard: function(overrides) {
+    return window.DashboardifyTestHelper.createDashboard(overrides);
+  },
+  createAppData: function(overrides) {
+    return window.DashboardifyTestHelper.createAppData(overrides);
+  }
+};

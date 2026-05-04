@@ -27,16 +27,44 @@
   <div id="qunit"></div>
   <div id="widgetcontainer" style="display: none;"></div>
 
+  <!-- Widget Manager Dialog for testing -->
+  <div id="widgetManagerDialog" style="display:none;z-index:1000;position:fixed;top:10%;left:30%;width:600px;max-height:80%;">
+    <button type="button" style="float:right;" onclick="closeWidgetManager()">Close</button>
+    <h2>Widget Manager</h2>
+    <p class="cloud-dialog-muted">Manage widgets on this dashboard - edit positions or remove widgets.</p>
+    <label class="new-widget-field-label" for="widgetManagerList">Widgets</label>
+    <select id="widgetManagerList" size="8" style="width:100%;"></select>
+    <div id="widgetManagerDetails" style="display:none;margin-top:15px;padding:10px;background:#f5f5f5;border-radius:4px;">
+      <label class="new-widget-field-label">Widget Type:</label>
+      <div id="widgetManagerType" style="margin-bottom:10px;font-weight:bold;"></div>
+      <label class="new-widget-field-label" for="widgetManagerX">Position X (px):</label>
+      <input type="number" id="widgetManagerX" style="width:80px;margin-right:15px;">
+      <label class="new-widget-field-label" for="widgetManagerY">Position Y (px):</label>
+      <input type="number" id="widgetManagerY" style="width:80px;margin-right:15px;">
+      <br><br>
+      <label class="new-widget-field-label" for="widgetManagerWidth">Width (px):</label>
+      <input type="number" id="widgetManagerWidth" style="width:80px;margin-right:15px;">
+      <label class="new-widget-field-label" for="widgetManagerHeight">Height (px):</label>
+      <input type="number" id="widgetManagerHeight" style="width:80px;">
+      <br><br>
+      <button type="button" class="menubar" id="btnWidgetManagerSave">Save Changes</button>
+      <button type="button" class="menubar dialog-btn-danger" id="btnWidgetManagerDelete">Remove Widget</button>
+    </div>
+    <div id="widgetManagerNoWidgets" style="margin-top:20px;color:#666;display:none;">No widgets on this dashboard.</div>
+  </div>
+
   <script src="https://unpkg.com/qunit@2.21.0/qunit/qunit.js"></script>
   <script src="js/tests/teststub.js"></script>
   <script src="js/tests/testhelper.js"></script>
   <script src="js/tests/drawwidget-stub.js"></script>
+  <script src="js/index.js"></script>
   <script src="js/tests/widget-rendering.test.js"></script>
   <script src="js/tests/positioning.test.js"></script>
   <script src="js/tests/flash-cards.test.js"></script>
   <script src="js/tests/time.test.js"></script>
   <script src="js/tests/caching.test.js"></script>
   <script src="js/tests/data-model.test.js"></script>
+  <script src="js/tests/widget-manager.test.js"></script>
   <script src="js/tests/form.test.js"></script>
   <script src="js/tests/security.test.js"></script>
 </body>
