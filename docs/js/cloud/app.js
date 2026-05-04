@@ -320,6 +320,10 @@ function collectWidgetPayloadFromForm() {
     const fitEl = document.getElementById("ddlImageObjectFit");
     notes = fitEl ? String(fitEl.value || "").trim() : "";
   }
+  if (widgetType === "Clock") {
+    const tzEl = document.getElementById("ddlClockTimezone");
+    notes = tzEl ? String(tzEl.value || "").trim() : "";
+  }
   if (widgetType === "Flash Cards") {
     const sortMethod = get("flashSortMethod") || "random";
     const displayStyleRaw = get("flashDisplayStyle");
