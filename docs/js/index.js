@@ -695,6 +695,7 @@ function drawWidget(widget) {
 			var firstQ = cards.length ? cards[0].q : "No questions yet.";
 			var firstA = cards.length ? cards[0].a : "Use edit mode to add your first card.";
 			var isGuess = flashModel.displayStyle === "guess";
+			var flashTitle = BookmarkDisplayText;
 			var gearButton =
 				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsManager(\"" +
 				ridJs +
@@ -737,6 +738,7 @@ function drawWidget(widget) {
 				"<div class='flashcards-body" +
 				(isGuess ? " flashcards-body--guess" : " flashcards-body--full") +
 				"'>" +
+				(flashTitle ? "<div class='flashcards-title'>" + dashboardifyEscapeHtmlText(flashTitle) + "</div>" : "") +
 				"<div class='flashcards-question' id='flashcards-question-" +
 				ridJs +
 				"'>" +
