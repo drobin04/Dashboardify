@@ -5,6 +5,25 @@
 QUnit.module("Flash Cards", function() {
   var helper = window.DashboardifyTestHelper;
 
+  function setupFlashCardRenderDom(recId, includeAnswerEl) {
+    var fixture = document.getElementById("qunit-fixture");
+    fixture.innerHTML = "";
+    var q = document.createElement("div");
+    q.id = "flashcards-question-" + recId;
+    fixture.appendChild(q);
+    if (includeAnswerEl !== false) {
+      var a = document.createElement("div");
+      a.id = "flashcards-answer-" + recId;
+      fixture.appendChild(a);
+    }
+    var reveal = document.createElement("button");
+    reveal.id = "flashcards-reveal-" + recId;
+    fixture.appendChild(reveal);
+    var mcq = document.createElement("div");
+    mcq.id = "flashcards-mcq-" + recId;
+    fixture.appendChild(mcq);
+  }
+
   QUnit.test("parse valid JSON model", function(assert) {
     var notes = JSON.stringify({
       sortMethod: "random",
@@ -134,5 +153,85 @@ QUnit.module("Flash Cards", function() {
     var result = dashboardifyBuildFlashCardOrder(1, {});
     assert.strictEqual(result.length, 1, "Single card returns array of 1");
     assert.strictEqual(result[0], 0, "First index is 0");
+  });
+
+  QUnit.test("mcq render highlights correct and wrong selections", function(assert) {
+    var recId = "mcq-highlight-test";
+    setupFlashCardRenderDom(recId, true);
+    window.DashboardifyFlashCardRuntime = window.DashboardifyFlashCardRuntime || {};
+    window.DashboardifyFlashCardRuntime[recId] = {
+      model: {
+        displayStyle: "multiplechoice",
+        autoAdvanceEnabled: false,
+        cards: [{
+          q: "What is 2 + 2?",
+          a: "4",
+          mcq1: "3",
+          mcq2: "4",
+          mcq3: "5",
+          mcq4: ""
+        }]
+      },
+      order: [0],
+      index: 0,
+      revealed: false,
+      mcqAnswered: 1
+    };
+
+    dashboardifyRenderFlashCardState(recId);
+
+    var mcqEl = document.getElementById("flashcards-mcq-" + recId);
+    assert.ok(mcqEl, "MCQ container exists");
+    assert.ok(
+      mcqEl.querySelector(".flashcards-mcq-option--correct"),
+      "Correct option is highlighted green class"
+    );
+    assert.ok(
+      mcqEl.querySelector(".flashcards-mcq-option--wrong"),
+      "Selected incorrect option is highlighted red class"
+    );
+  });
+
+  QUnit.test("mcq render works without answer element", function(assert) {
+    var recId = "mcq-no-answer-el";
+    setupFlashCardRenderDom(recId, false);
+    window.DashboardifyFlashCardRuntime = window.DashboardifyFlashCardRuntime || {};
+    window.DashboardifyFlashCardRuntime[recId] = {
+      model: {
+        displayStyle: "multiplechoice",
+        autoAdvanceEnabled: false,
+        cards: [{
+          q: "Capital of France?",
+          a: "Paris",
+          mcq1: "Paris",
+          mcq2: "Rome",
+          mcq3: "Madrid",
+          mcq4: "Berlin"
+        }]
+      },
+      order: [0],
+      index: 0,
+      revealed: false,
+      mcqAnswered: false
+    };
+
+    assert.ok(typeof dashboardifyEscapeHtmlAttr === "function", "MCQ attr escape helper is defined");
+    assert.ok(true, "Precondition reached");
+    assert.strictEqual(
+      (() => {
+        try {
+          dashboardifyRenderFlashCardState(recId);
+          return "ok";
+        } catch (e) {
+          return e && e.message ? e.message : String(e);
+        }
+      })(),
+      "ok",
+      "Render does not throw when answer element is absent in MCQ mode"
+    );
+    assert.ok(
+      document.getElementById("flashcards-mcq-" + recId).querySelectorAll(".flashcards-mcq-option").length > 0,
+      "MCQ options still render"
+    );
   });
 });
