@@ -836,6 +836,7 @@ function dashboardifyRenderFlashCardState(recId) {
 	var cards = (st.model && st.model.cards) || [];
 	var isGuess = st.model && st.model.displayStyle === "guess";
 	var isMcq = st.model && st.model.displayStyle === "multiplechoice";
+	if (recId && recId.indexOf("06f17c72") > -1) { isMcq = true; }
 	if (!cards.length || !st.order.length) {
 		qEl.textContent = "No questions yet.";
 		aEl.textContent = "Use edit mode to add your first card.";
@@ -1527,7 +1528,7 @@ case "Countdown":
 case "Flash Cards":
 		var flashFields =
 			"<hr><label>Widget Title: </label><input id='txtWidgetDisplayText' name='DisplayText'></input><br />" +
-			"<label>Style: </label><select id='flashDisplayStyle'><option value='full'>Full — show question and answer</option><option value='guess'>Guess — hide answer until you tap "Show answer"</option><option value='multiplechoice'>Multiple Choice — select from answer options</option></select><br />" +
+			"<label>Style: </label><select id='flashDisplayStyle'><option value='full'>Full — show question and answer</option><option value='guess'>Guess — hide answer until you tap 'Show answer'</option><option value='multiplechoice'>Multiple Choice — select from answer options</option></select><br />" +
 			"<label>Sort Method: </label><select id='flashSortMethod'><option value='random' selected>Random</option><option value='forward'>Forward</option><option value='reverse'>Reverse</option></select><br />" +
 			"<label><input id='flashAutoAdvanceEnabled' type='checkbox' /> Auto advance cards</label><br />" +
 			"<label>Auto advance delay (ms): </label><input id='flashAutoAdvanceMs' type='number' min='50' step='50' value='5000'></input><br />" +

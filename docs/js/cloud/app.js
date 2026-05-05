@@ -330,7 +330,9 @@ function collectWidgetPayloadFromForm() {
     const displayStyle =
       String(displayStyleRaw || "").trim().toLowerCase() === "guess"
         ? "guess"
-        : "full";
+        : String(displayStyleRaw || "").trim().toLowerCase() === "multiplechoice"
+          ? "multiplechoice"
+          : "full";
     const autoAdvanceEnabled = !!document.getElementById("flashAutoAdvanceEnabled")?.checked;
     const autoAdvanceMsRaw = Number(get("flashAutoAdvanceMs"));
     const autoAdvanceMs = Number.isFinite(autoAdvanceMsRaw) && autoAdvanceMsRaw > 0
