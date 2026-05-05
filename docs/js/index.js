@@ -875,9 +875,12 @@ function dashboardifyRenderFlashCardState(recId) {
 		if (mcqOptions.length > 0) {
 			var optionsHtml = "";
 			mcqOptions.forEach(function (opt) {
-				var selectedClass = st.mcqAnswered === opt.id ? " flashcards-mcq-option--selected" : "";
-				var correctClass = st.mcqAnswered && st.mcqAnswered === opt.id && opt.label.toLowerCase() === aText.toLowerCase() ? " flashcards-mcq-option--correct" : (st.mcqAnswered && st.mcqAnswered === opt.id ? " flashcards-mcq-option--wrong" : "");
-				optionsHtml += "<label class='flashcards-mcq-option" + selectedClass + correctClass + "'>" +
+				var isSelected = st.mcqAnswered === opt.id;
+				var isCorrect = st.mcqAnswered && String(opt.label || "").trim().toLowerCase() === String(aText || "").trim().toLowerCase();
+				var selectedClass = isSelected ? " flashcards-mcq-option--selected" : "";
+				var correctClass = isCorrect ? " flashcards-mcq-option--correct" : "";
+				var wrongClass = st.mcqAnswered && isSelected && !isCorrect ? " flashcards-mcq-option--wrong" : "";
+				optionsHtml += "<label class='flashcards-mcq-option" + selectedClass + correctClass + wrongClass + "'>" +
 					"<input type='radio' name='flashcards-mcq-" + recId + "' value='" + opt.id + "'" +
 					(st.mcqAnswered === opt.id ? " checked" : "") +
 					(st.mcqAnswered ? " disabled" : "") +
@@ -888,7 +891,7 @@ function dashboardifyRenderFlashCardState(recId) {
 		} else {
 			mcqEl.innerHTML = noteHtml + "<div class='flashcards-mcq-empty'>No multiple choice options defined.</div>";
 		}
-		aEl.textContent = "";
+		if (aEl) aEl.textContent = "";
 		if (revealBtn) revealBtn.style.display = "none";
 	} else if (isGuess) {
 		if (revealBtn) revealBtn.style.display = "";
