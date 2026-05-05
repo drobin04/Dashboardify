@@ -251,7 +251,7 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			var flashSort = document.getElementById("flashSortMethod");
 			if (flashSort) flashSort.value = flashModel.sortMethod || "random";
 			var flashStyle = document.getElementById("flashDisplayStyle");
-			if (flashStyle) flashStyle.value = flashModel.displayStyle === "guess" ? "guess" : "full";
+			if (flashStyle) flashStyle.value = flashModel.displayStyle === "guess" ? "guess" : (flashModel.displayStyle === "multiplechoice" ? "multiplechoice" : "full");
 			var flashAuto = document.getElementById("flashAutoAdvanceEnabled");
 			if (flashAuto) flashAuto.checked = !!flashModel.autoAdvanceEnabled;
 			var flashAutoMs = document.getElementById("flashAutoAdvanceMs");
@@ -332,6 +332,7 @@ function dashboardifyDefaultFlashCardsModel() {
 function dashboardifyNormalizeFlashCardDisplayStyle(v) {
 	var s = String(v == null ? "" : v).trim().toLowerCase();
 	if (s === "guess") return "guess";
+	if (s === "multiplechoice") return "multiplechoice";
 	return "full";
 }
 
@@ -339,8 +340,13 @@ function dashboardifyNormalizeFlashCard(card) {
 	if (!card || typeof card !== "object") return null;
 	var q = String(card.q || card.question || "").trim();
 	var a = String(card.a || card.answer || "").trim();
-	if (!q && !a) return null;
-	return { q: q, a: a };
+	var note = String(card.note || "").trim();
+	var mcq1 = String(card.mcq1 || "").trim();
+	var mcq2 = String(card.mcq2 || "").trim();
+	var mcq3 = String(card.mcq3 || "").trim();
+	var mcq4 = String(card.mcq4 || "").trim();
+	if (!q && !a && !note && !mcq1 && !mcq2 && !mcq3 && !mcq4) return null;
+	return { q: q, a: a, note: note, mcq1: mcq1, mcq2: mcq2, mcq3: mcq3, mcq4: mcq4 };
 }
 
 function dashboardifyParseFlashCardsNotes(notes) {
@@ -696,6 +702,7 @@ function drawWidget(widget) {
 			var firstQ = cards.length ? cards[0].q : "No questions yet.";
 			var firstA = cards.length ? cards[0].a : "Use edit mode to add your first card.";
 			var isGuess = flashModel.displayStyle === "guess";
+			var isMcq = flashModel.displayStyle === "multiplechoice";
 			var flashTitle = BookmarkDisplayText;
 			var gearButton =
 				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsManager(\"" +
@@ -705,8 +712,11 @@ function drawWidget(widget) {
 				"<a class='editbuttons flashcards-edit-extra' style='display:none;height:24px; width:24px;' onclick='dashboardifyOpenFlashCardsQuickAdd(\"" +
 				ridJs +
 				"\")' title='Add question'><span class='flashcards-edit-icon' aria-hidden='true'>+</span></a>";
-			var answerSection = isGuess
-				? "<div class='flashcards-answer-stack' id='flashcards-answer-stack-" +
+			var answerSection;
+			if (isMcq) {
+				answerSection = "<div class='flashcards-mcq' id='flashcards-mcq-" + ridJs + "'></div>";
+			} else if (isGuess) {
+				answerSection = "<div class='flashcards-answer-stack' id='flashcards-answer-stack-" +
 					ridJs +
 					"'>" +
 					"<div class='flashcards-answer' id='flashcards-answer-" +
@@ -717,8 +727,11 @@ function drawWidget(widget) {
 					"' onclick='dashboardifyFlashCardRevealAnswer(\"" +
 					ridJs +
 					"\")'>Show answer</button>" +
-					"</div>"
-				: "<div class='flashcards-answer' id='flashcards-answer-" + ridJs + "'></div>";
+					"</div>";
+			} else {
+				answerSection = "<div class='flashcards-answer' id='flashcards-answer-" + ridJs + "'></div>";
+			}
+			var bodyClass = isMcq ? " flashcards-body--mcq" : (isGuess ? " flashcards-body--guess" : " flashcards-body--full");
 			var markup =
 				"<div id='" +
 				RecID +
@@ -736,9 +749,7 @@ function drawWidget(widget) {
 				imgstylecss +
 				siteurl +
 				"icons/cancel.png'></img></a>" +
-				"<div class='flashcards-body" +
-				(isGuess ? " flashcards-body--guess" : " flashcards-body--full") +
-				"'>" +
+				"<div class='flashcards-body" + bodyClass + "'>" +
 				(flashTitle ? "<div class='flashcards-title'>" + dashboardifyEscapeHtmlText(flashTitle) + "</div>" : "") +
 				"<div class='flashcards-question' id='flashcards-question-" +
 				ridJs +
@@ -761,7 +772,8 @@ function drawWidget(widget) {
 				order: dashboardifyBuildFlashCardOrder(cards.length, flashModel.sortMethod),
 				index: 0,
 				timerId: null,
-				revealed: false
+				revealed: false,
+				mcqAnswered: false
 			};
 			dashboardifyRenderFlashCardState(String(RecID));
 			break;
@@ -819,9 +831,11 @@ function dashboardifyRenderFlashCardState(recId) {
 	var qEl = document.getElementById("flashcards-question-" + recId);
 	var aEl = document.getElementById("flashcards-answer-" + recId);
 	var revealBtn = document.getElementById("flashcards-reveal-" + recId);
+	var mcqEl = document.getElementById("flashcards-mcq-" + recId);
 	if (!qEl || !aEl) return;
 	var cards = (st.model && st.model.cards) || [];
 	var isGuess = st.model && st.model.displayStyle === "guess";
+	var isMcq = st.model && st.model.displayStyle === "multiplechoice";
 	if (!cards.length || !st.order.length) {
 		qEl.textContent = "No questions yet.";
 		aEl.textContent = "Use edit mode to add your first card.";
@@ -829,6 +843,7 @@ function dashboardifyRenderFlashCardState(recId) {
 		dashboardifyApplyFlashCardTextScale(qEl, qEl.textContent);
 		dashboardifyApplyFlashCardTextScale(aEl, aEl.textContent);
 		if (revealBtn) revealBtn.style.display = "none";
+		if (mcqEl) mcqEl.innerHTML = "";
 		return;
 	}
 	if (st.index < 0) st.index = st.order.length - 1;
@@ -836,9 +851,35 @@ function dashboardifyRenderFlashCardState(recId) {
 	var card = cards[st.order[st.index]] || { q: "", a: "" };
 	var qText = card.q || "";
 	var aText = card.a || "";
+	var noteText = card.note || "";
 	qEl.textContent = qText;
 	dashboardifyApplyFlashCardTextScale(qEl, qText);
-	if (isGuess) {
+	if (isMcq) {
+		var mcqOptions = [];
+		if (card.mcq1) mcqOptions.push({ label: card.mcq1, id: 1 });
+		if (card.mcq2) mcqOptions.push({ label: card.mcq2, id: 2 });
+		if (card.mcq3) mcqOptions.push({ label: card.mcq3, id: 3 });
+		if (card.mcq4) mcqOptions.push({ label: card.mcq4, id: 4 });
+		var noteHtml = noteText ? "<div class='flashcards-note'>" + dashboardifyEscapeHtmlText(noteText) + "</div>" : "";
+		if (mcqOptions.length > 0) {
+			var optionsHtml = "";
+			mcqOptions.forEach(function (opt) {
+				var selectedClass = st.mcqAnswered === opt.id ? " flashcards-mcq-option--selected" : "";
+				var correctClass = st.mcqAnswered && st.mcqAnswered === opt.id && opt.label.toLowerCase() === aText.toLowerCase() ? " flashcards-mcq-option--correct" : (st.mcqAnswered && st.mcqAnswered === opt.id ? " flashcards-mcq-option--wrong" : "");
+				optionsHtml += "<label class='flashcards-mcq-option" + selectedClass + correctClass + "'>" +
+					"<input type='radio' name='flashcards-mcq-" + recId + "' value='" + opt.id + "'" +
+					(st.mcqAnswered === opt.id ? " checked" : "") +
+					(st.mcqAnswered ? " disabled" : "") +
+					" onchange='dashboardifyFlashCardSelectMcq(\"" + recId + "\", " + opt.id + ", \"" + dashboardifyEscapeHtmlAttr(aText) + "\")'>" +
+					"<span class='flashcards-mcq-option-text'>" + dashboardifyEscapeHtmlText(opt.label) + "</span></label>";
+			});
+			mcqEl.innerHTML = noteHtml + "<div class='flashcards-mcq-options'>" + optionsHtml + "</div>";
+		} else {
+			mcqEl.innerHTML = noteHtml + "<div class='flashcards-mcq-empty'>No multiple choice options defined.</div>";
+		}
+		aEl.textContent = "";
+		if (revealBtn) revealBtn.style.display = "none";
+	} else if (isGuess) {
 		if (revealBtn) revealBtn.style.display = "";
 		if (!st.revealed) {
 			aEl.textContent =
@@ -850,7 +891,7 @@ function dashboardifyRenderFlashCardState(recId) {
 				revealBtn.setAttribute("aria-expanded", "false");
 			}
 		} else {
-			aEl.textContent = aText;
+			aEl.textContent = noteText ? noteText + "<br><br>" + aText : aText;
 			aEl.classList.remove("flashcards-answer--placeholder");
 			dashboardifyApplyFlashCardTextScale(aEl, aText);
 			if (revealBtn) {
@@ -858,11 +899,13 @@ function dashboardifyRenderFlashCardState(recId) {
 				revealBtn.setAttribute("aria-expanded", "true");
 			}
 		}
+		if (mcqEl) mcqEl.innerHTML = "";
 	} else {
-		aEl.textContent = aText;
+		aEl.textContent = noteText ? noteText + "<br><br>" + aText : aText;
 		aEl.classList.remove("flashcards-answer--placeholder");
 		dashboardifyApplyFlashCardTextScale(aEl, aText);
 		if (revealBtn) revealBtn.style.display = "none";
+		if (mcqEl) mcqEl.innerHTML = "";
 	}
 	if (st.model.autoAdvanceEnabled && st.order.length > 1) {
 		var delay = Number(st.model.autoAdvanceMs);
@@ -877,6 +920,7 @@ function dashboardifyFlashCardNext(recId) {
 	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
 	if (!st || !st.order.length) return;
 	st.revealed = false;
+	st.mcqAnswered = false;
 	st.index = (st.index + 1) % st.order.length;
 	dashboardifyRenderFlashCardState(recId);
 }
@@ -885,6 +929,7 @@ function dashboardifyFlashCardPrev(recId) {
 	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
 	if (!st || !st.order.length) return;
 	st.revealed = false;
+	st.mcqAnswered = false;
 	st.index = (st.index - 1 + st.order.length) % st.order.length;
 	dashboardifyRenderFlashCardState(recId);
 }
@@ -895,6 +940,15 @@ function dashboardifyFlashCardRevealAnswer(recId) {
 	st.revealed = true;
 	dashboardifyRenderFlashCardState(recId);
 }
+
+function dashboardifyFlashCardSelectMcq(recId, selectedId, correctAnswer) {
+	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
+	if (!st || st.mcqAnswered) return;
+	st.mcqAnswered = selectedId;
+	dashboardifyRenderFlashCardState(recId);
+}
+
+window.dashboardifyFlashCardSelectMcq = dashboardifyFlashCardSelectMcq;
 
 window.dashboardifyFlashCardNext = dashboardifyFlashCardNext;
 window.dashboardifyFlashCardPrev = dashboardifyFlashCardPrev;
@@ -1470,10 +1524,10 @@ case "Countdown":
 		document.getElementById("NewWidget_Form").innerHTML =
 			SizeAndCSSClassMarkup + imgFields;
 		break;
-	case "Flash Cards":
+case "Flash Cards":
 		var flashFields =
 			"<hr><label>Widget Title: </label><input id='txtWidgetDisplayText' name='DisplayText'></input><br />" +
-			"<label>Style: </label><select id='flashDisplayStyle'><option value='full'>Full — show question and answer</option><option value='guess'>Guess — hide answer until you tap “Show answer”</option></select><br />" +
+			"<label>Style: </label><select id='flashDisplayStyle'><option value='full'>Full — show question and answer</option><option value='guess'>Guess — hide answer until you tap "Show answer"</option><option value='multiplechoice'>Multiple Choice — select from answer options</option></select><br />" +
 			"<label>Sort Method: </label><select id='flashSortMethod'><option value='random' selected>Random</option><option value='forward'>Forward</option><option value='reverse'>Reverse</option></select><br />" +
 			"<label><input id='flashAutoAdvanceEnabled' type='checkbox' /> Auto advance cards</label><br />" +
 			"<label>Auto advance delay (ms): </label><input id='flashAutoAdvanceMs' type='number' min='50' step='50' value='5000'></input><br />" +
@@ -1618,9 +1672,28 @@ function dashboardifyFlashCardsCsvEscape(v) {
 }
 
 function dashboardifyBuildFlashCardsCsv(cards) {
-	var rows = ["question,answer"];
+	var hasNote = false;
+	var hasMcq = false;
 	(cards || []).forEach(function (c) {
-		rows.push(dashboardifyFlashCardsCsvEscape(c.q || "") + "," + dashboardifyFlashCardsCsvEscape(c.a || ""));
+		if (c.note) hasNote = true;
+		if (c.mcq1 || c.mcq2 || c.mcq3 || c.mcq4) hasMcq = true;
+	});
+	var headers = ["question", "answer"];
+	if (hasNote) headers.push("note");
+	if (hasMcq) {
+		headers.push("mcq1", "mcq2", "mcq3", "mcq4");
+	}
+	var rows = [headers.join(",")];
+	(cards || []).forEach(function (c) {
+		var fields = [dashboardifyFlashCardsCsvEscape(c.q || ""), dashboardifyFlashCardsCsvEscape(c.a || "")];
+		if (hasNote) fields.push(dashboardifyFlashCardsCsvEscape(c.note || ""));
+		if (hasMcq) {
+			fields.push(dashboardifyFlashCardsCsvEscape(c.mcq1 || ""));
+			fields.push(dashboardifyFlashCardsCsvEscape(c.mcq2 || ""));
+			fields.push(dashboardifyFlashCardsCsvEscape(c.mcq3 || ""));
+			fields.push(dashboardifyFlashCardsCsvEscape(c.mcq4 || ""));
+		}
+		rows.push(fields.join(","));
 	});
 	return rows.join("\r\n");
 }
@@ -1652,15 +1725,24 @@ function dashboardifyParseFlashCardsCsv(text) {
 	row.push(cur);
 	rows.push(row);
 	var start = 0;
-	if (rows.length && String(rows[0][0] || "").trim().toLowerCase() === "question" && String(rows[0][1] || "").trim().toLowerCase() === "answer") {
+	var header0 = rows.length ? String(rows[0][0] || "").trim().toLowerCase() : "";
+	var header1 = rows.length ? String(rows[0][1] || "").trim().toLowerCase() : "";
+	if (header0 === "question" && header1 === "answer") {
 		start = 1;
 	}
+	var hasNote = header0 === "note" || (rows.length && rows[0].indexOf("note") >= 0);
+	var hasMcq = header0 === "mcq1" || (rows.length && rows[0].some(function (h) { return /^mcq\d+$/.test(String(h).trim()); }));
 	var cards = [];
 	for (var r = start; r < rows.length; r++) {
 		var q = String((rows[r] && rows[r][0]) || "").trim();
 		var a = String((rows[r] && rows[r][1]) || "").trim();
-		if (!q && !a) continue;
-		cards.push({ q: q, a: a });
+		var note = hasNote ? String((rows[r] && rows[r][2]) || "").trim() : "";
+		var mcq1 = hasMcq ? String((rows[r] && rows[r][2 + (hasNote ? 1 : 0)]) || "").trim() : "";
+		var mcq2 = hasMcq ? String((rows[r] && rows[r][3 + (hasNote ? 1 : 0)]) || "").trim() : "";
+		var mcq3 = hasMcq ? String((rows[r] && rows[r][4 + (hasNote ? 1 : 0)]) || "").trim() : "";
+		var mcq4 = hasMcq ? String((rows[r] && rows[r][5 + (hasNote ? 1 : 0)]) || "").trim() : "";
+		if (!q && !a && !note && !mcq1 && !mcq2 && !mcq3 && !mcq4) continue;
+		cards.push({ q: q, a: a, note: note, mcq1: mcq1, mcq2: mcq2, mcq3: mcq3, mcq4: mcq4 });
 	}
 	return cards;
 }
@@ -1698,16 +1780,31 @@ function dashboardifyLoadFlashCardsManagerSelection() {
 	var list = document.getElementById("flashCardsManagerList");
 	var q = document.getElementById("flashCardManagerQuestion");
 	var a = document.getElementById("flashCardManagerAnswer");
+	var note = document.getElementById("flashCardManagerNote");
+	var mcq1 = document.getElementById("flashCardManagerMcq1");
+	var mcq2 = document.getElementById("flashCardManagerMcq2");
+	var mcq3 = document.getElementById("flashCardManagerMcq3");
+	var mcq4 = document.getElementById("flashCardManagerMcq4");
 	if (!state || !list || !q || !a) return;
 	var idx = Number(list.value);
 	if (!Number.isFinite(idx) || idx < 0) {
 		q.value = "";
 		a.value = "";
+		if (note) note.value = "";
+		if (mcq1) mcq1.value = "";
+		if (mcq2) mcq2.value = "";
+		if (mcq3) mcq3.value = "";
+		if (mcq4) mcq4.value = "";
 		return;
 	}
 	var card = state.model.cards[idx] || { q: "", a: "" };
 	q.value = card.q || "";
 	a.value = card.a || "";
+	if (note) note.value = card.note || "";
+	if (mcq1) mcq1.value = card.mcq1 || "";
+	if (mcq2) mcq2.value = card.mcq2 || "";
+	if (mcq3) mcq3.value = card.mcq3 || "";
+	if (mcq4) mcq4.value = card.mcq4 || "";
 }
 
 function dashboardifyOpenFlashCardsManager(recId) {
@@ -1732,8 +1829,18 @@ function dashboardifyOpenFlashCardsQuickAdd(recId) {
 	window.DashboardifyFlashCardsQuickAddRecId = String(recId);
 	var q = document.getElementById("flashCardQuickAddQuestion");
 	var a = document.getElementById("flashCardQuickAddAnswer");
+	var note = document.getElementById("flashCardQuickAddNote");
+	var mcq1 = document.getElementById("flashCardQuickAddMcq1");
+	var mcq2 = document.getElementById("flashCardQuickAddMcq2");
+	var mcq3 = document.getElementById("flashCardQuickAddMcq3");
+	var mcq4 = document.getElementById("flashCardQuickAddMcq4");
 	if (q) q.value = "";
 	if (a) a.value = "";
+	if (note) note.value = "";
+	if (mcq1) mcq1.value = "";
+	if (mcq2) mcq2.value = "";
+	if (mcq3) mcq3.value = "";
+	if (mcq4) mcq4.value = "";
 	var dialog = document.getElementById("FlashCardsQuickAddDialog");
 	if (dialog) dialog.style.display = "block";
 }
@@ -1749,8 +1856,21 @@ document.addEventListener("DOMContentLoaded", function () {
 		var state = window.DashboardifyFlashCardsEditorState;
 		var q = document.getElementById("flashCardManagerQuestion");
 		var a = document.getElementById("flashCardManagerAnswer");
+		var note = document.getElementById("flashCardManagerNote");
+		var mcq1 = document.getElementById("flashCardManagerMcq1");
+		var mcq2 = document.getElementById("flashCardManagerMcq2");
+		var mcq3 = document.getElementById("flashCardManagerMcq3");
+		var mcq4 = document.getElementById("flashCardManagerMcq4");
 		if (!state || !q || !a) return;
-		var card = dashboardifyNormalizeFlashCard({ q: q.value, a: a.value });
+		var card = dashboardifyNormalizeFlashCard({
+			q: q.value,
+			a: a.value,
+			note: note ? note.value : "",
+			mcq1: mcq1 ? mcq1.value : "",
+			mcq2: mcq2 ? mcq2.value : "",
+			mcq3: mcq3 ? mcq3.value : "",
+			mcq4: mcq4 ? mcq4.value : ""
+		});
 		if (!card) return;
 		state.model.cards.push(card);
 		dashboardifyRenderFlashCardsManagerList();
@@ -1758,6 +1878,11 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (listEl) listEl.value = String(state.model.cards.length - 1);
 		q.value = "";
 		a.value = "";
+		if (note) note.value = "";
+		if (mcq1) mcq1.value = "";
+		if (mcq2) mcq2.value = "";
+		if (mcq3) mcq3.value = "";
+		if (mcq4) mcq4.value = "";
 		q.focus();
 	});
 
@@ -1767,10 +1892,23 @@ document.addEventListener("DOMContentLoaded", function () {
 		var listEl = document.getElementById("flashCardsManagerList");
 		var q = document.getElementById("flashCardManagerQuestion");
 		var a = document.getElementById("flashCardManagerAnswer");
+		var note = document.getElementById("flashCardManagerNote");
+		var mcq1 = document.getElementById("flashCardManagerMcq1");
+		var mcq2 = document.getElementById("flashCardManagerMcq2");
+		var mcq3 = document.getElementById("flashCardManagerMcq3");
+		var mcq4 = document.getElementById("flashCardManagerMcq4");
 		if (!state || !listEl || !q || !a) return;
 		var idx = Number(listEl.value);
 		if (!Number.isFinite(idx) || idx < 0) return;
-		var card = dashboardifyNormalizeFlashCard({ q: q.value, a: a.value });
+		var card = dashboardifyNormalizeFlashCard({
+			q: q.value,
+			a: a.value,
+			note: note ? note.value : "",
+			mcq1: mcq1 ? mcq1.value : "",
+			mcq2: mcq2 ? mcq2.value : "",
+			mcq3: mcq3 ? mcq3.value : "",
+			mcq4: mcq4 ? mcq4.value : ""
+		});
 		if (!card) return;
 		state.model.cards[idx] = card;
 		dashboardifyRenderFlashCardsManagerList();
@@ -1860,7 +1998,20 @@ document.addEventListener("DOMContentLoaded", function () {
 		if (typeof window.DashboardifyEnsureCloudWriteAccess === "function" && !(await window.DashboardifyEnsureCloudWriteAccess())) return;
 		var q = document.getElementById("flashCardQuickAddQuestion");
 		var a = document.getElementById("flashCardQuickAddAnswer");
-		var card = dashboardifyNormalizeFlashCard({ q: q && q.value, a: a && a.value });
+		var note = document.getElementById("flashCardQuickAddNote");
+		var mcq1 = document.getElementById("flashCardQuickAddMcq1");
+		var mcq2 = document.getElementById("flashCardQuickAddMcq2");
+		var mcq3 = document.getElementById("flashCardQuickAddMcq3");
+		var mcq4 = document.getElementById("flashCardQuickAddMcq4");
+		var card = dashboardifyNormalizeFlashCard({
+			q: q && q.value,
+			a: a && a.value,
+			note: note ? note.value : "",
+			mcq1: mcq1 ? mcq1.value : "",
+			mcq2: mcq2 ? mcq2.value : "",
+			mcq3: mcq3 ? mcq3.value : "",
+			mcq4: mcq4 ? mcq4.value : ""
+		});
 		if (!card) return;
 		var widget = dashboardifyGetWidgetByRecId(recId);
 		if (!widget) return;
