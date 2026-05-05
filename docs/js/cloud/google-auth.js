@@ -2,13 +2,21 @@ export const GOOGLE_OAUTH_SESSION_KEY = "dashboardify_google_oauth";
 
 /** Read persisted OAuth payload; prefers localStorage (shared across tabs), migrates legacy sessionStorage. */
 function readPersistedOAuthRaw() {
+  let fromLocal = null;
   try {
-    const fromLocal = localStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
-    if (fromLocal) return fromLocal;
+    fromLocal = localStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
+  if (fromLocal) return fromLocal;
+  try {
     const fromSession = sessionStorage.getItem(GOOGLE_OAUTH_SESSION_KEY);
-    if (fromSession) {
+    if (!fromSession) return null;
+    try {
       localStorage.setItem(GOOGLE_OAUTH_SESSION_KEY, fromSession);
       sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+      return fromSession;
+    } catch {
       return fromSession;
     }
   } catch {
@@ -18,9 +26,23 @@ function readPersistedOAuthRaw() {
 }
 
 function writePersistedOAuthRaw(json) {
+  let wroteLocal = false;
   try {
     localStorage.setItem(GOOGLE_OAUTH_SESSION_KEY, json);
-    sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+    wroteLocal = true;
+  } catch {
+    /* localStorage unavailable in some privacy contexts */
+  }
+  if (wroteLocal) {
+    try {
+      sessionStorage.removeItem(GOOGLE_OAUTH_SESSION_KEY);
+    } catch {
+      /* ignore */
+    }
+    return;
+  }
+  try {
+    sessionStorage.setItem(GOOGLE_OAUTH_SESSION_KEY, json);
   } catch {
     /* ignore quota / private mode */
   }

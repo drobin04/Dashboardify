@@ -37,7 +37,14 @@ window.addEventListener("DOMContentLoaded", () => {
       const auth = new GoogleAuthProvider(dashboardifyCloudConfig);
       await auth.init();
       await auth.signIn();
-      window.location.href = "cloud.html";
+      const handoffPayload = {
+        accessToken: auth.accessToken || "",
+        expiresAtMs: Number(auth.tokenExpiresAtMs) || 0
+      };
+      const handoff = btoa(
+        unescape(encodeURIComponent(JSON.stringify(handoffPayload)))
+      );
+      window.location.href = `cloud.html#oauth_handoff=${encodeURIComponent(handoff)}`;
     } catch (e) {
       errEl.textContent = e.message || String(e);
     } finally {

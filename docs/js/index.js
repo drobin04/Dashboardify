@@ -318,6 +318,10 @@ function dashboardifyEscapeHtmlText(s) {
 		.replace(/>/g, "&gt;");
 }
 
+function dashboardifyEscapeHtmlAttr(s) {
+	return escapeHtmlAttr(s || "");
+}
+
 function dashboardifyDefaultFlashCardsModel() {
 	return {
 		sortMethod: "random",
@@ -832,17 +836,23 @@ function dashboardifyRenderFlashCardState(recId) {
 	var aEl = document.getElementById("flashcards-answer-" + recId);
 	var revealBtn = document.getElementById("flashcards-reveal-" + recId);
 	var mcqEl = document.getElementById("flashcards-mcq-" + recId);
-	if (!qEl || !aEl) return;
-	var cards = (st.model && st.model.cards) || [];
 	var isGuess = st.model && st.model.displayStyle === "guess";
 	var isMcq = st.model && st.model.displayStyle === "multiplechoice";
-	if (recId && recId.indexOf("06f17c72") > -1) { isMcq = true; }
+	if (!qEl) return;
+	if (isMcq) {
+		if (!mcqEl) return;
+	} else if (!aEl) {
+		return;
+	}
+	var cards = (st.model && st.model.cards) || [];
 	if (!cards.length || !st.order.length) {
 		qEl.textContent = "No questions yet.";
-		aEl.textContent = "Use edit mode to add your first card.";
-		aEl.classList.remove("flashcards-answer--placeholder");
+		if (aEl) {
+			aEl.textContent = "Use edit mode to add your first card.";
+			aEl.classList.remove("flashcards-answer--placeholder");
+		}
 		dashboardifyApplyFlashCardTextScale(qEl, qEl.textContent);
-		dashboardifyApplyFlashCardTextScale(aEl, aEl.textContent);
+		if (aEl) dashboardifyApplyFlashCardTextScale(aEl, aEl.textContent);
 		if (revealBtn) revealBtn.style.display = "none";
 		if (mcqEl) mcqEl.innerHTML = "";
 		return;

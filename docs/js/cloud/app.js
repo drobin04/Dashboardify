@@ -16,6 +16,39 @@ let currentDashboardId = "";
 let googleAuth = null;
 let writeAccessInFlight = null;
 
+function tryApplyOAuthHandoffFromUrl(auth) {
+  if (!auth || !window.location || !window.location.hash) return false;
+  const hash = String(window.location.hash || "");
+  const marker = "oauth_handoff=";
+  const idx = hash.indexOf(marker);
+  if (idx < 0) return false;
+  const tokenPart = hash.slice(idx + marker.length).split("&")[0];
+  if (!tokenPart) return false;
+  try {
+    const decodedJson = decodeURIComponent(escape(atob(decodeURIComponent(tokenPart))));
+    const payload = JSON.parse(decodedJson);
+    const accessToken = String(payload?.accessToken || "").trim();
+    const expiresAtMs = Number(payload?.expiresAtMs || 0);
+    if (!accessToken || !Number.isFinite(expiresAtMs) || Date.now() >= expiresAtMs) {
+      return false;
+    }
+    auth.accessToken = accessToken;
+    auth.tokenExpiresAtMs = expiresAtMs;
+    if (window.history && typeof window.history.replaceState === "function") {
+      window.history.replaceState(
+        null,
+        document.title,
+        window.location.pathname + window.location.search
+      );
+    } else {
+      window.location.hash = "";
+    }
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 const DEFAULT_WIDGET_TYPES = [
   // NOTE: When adding a new widget type, you MUST add it here AND in cloud.html dropdown AND in index.js switch cases
   // See drawNewWidgetBasedOnType(), fillEditWidgetFormFromRecord(), and drawWidget() in js/index.js
@@ -64,6 +97,17 @@ function setStatus(message, isError = false) {
   el.innerHTML = message;
   el.title = message.replace(/<[^>]*>/g, "");
   el.style.color = isError ? "#a00" : "#333";
+}
+
+function describeError(err) {
+  if (!err) return "Unknown error";
+  if (typeof err === "string") return err;
+  if (err.message) return String(err.message);
+  try {
+    return JSON.stringify(err);
+  } catch {
+    return String(err);
+  }
 }
 
 function applyDashboardPresentation() {
@@ -265,7 +309,7 @@ async function ensureCloudWriteAccess() {
   writeAccessInFlight = (async () => {
     try {
       if (!(await googleAuth.restoreSessionOrSilentRefresh())) {
-        window.location.href = "cloud-login.html";
+        setStatus("Sign in required to save changes. Use the sign-in link.", true);
         return false;
       }
       adapter.driveClient = new GoogleDriveAppDataClient(googleAuth);
@@ -276,7 +320,7 @@ async function ensureCloudWriteAccess() {
       return true;
     } catch (e) {
       console.error(e);
-      window.location.href = "cloud-login.html";
+      setStatus(`Could not enable cloud write access: ${describeError(e)}`, true);
       return false;
     } finally {
       writeAccessInFlight = null;
@@ -475,9 +519,10 @@ async function boot() {
       );
       scheduleBackgroundOnlineIfTokenValid();
     } else {
-      const signedIn = await googleAuth.restoreSessionOrSilentRefresh();
+      const signedInFromHandoff = tryApplyOAuthHandoffFromUrl(googleAuth);
+      const signedIn = signedInFromHandoff || (await googleAuth.restoreSessionOrSilentRefresh());
       if (!signedIn) {
-        window.location.href = "cloud-login.html";
+        setStatus("Sign-in required. Open cloud-login.html to continue.", true);
         return false;
       }
       adapter = new CloudStorageAdapter(
@@ -515,7 +560,7 @@ async function boot() {
     if (adapter?.driveClient) {
       googleAuth?.clearPersistedSession();
     }
-    window.location.href = "cloud-login.html";
+    setStatus(`Cloud boot failed: ${describeError(err)}`, true);
     return false;
   }
 }
