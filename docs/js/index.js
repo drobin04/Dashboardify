@@ -905,7 +905,7 @@ function dashboardifyRenderFlashCardState(recId) {
 				revealBtn.setAttribute("aria-expanded", "false");
 			}
 		} else {
-			aEl.textContent = noteText ? noteText + "<br><br>" + aText : aText;
+			aEl.innerHTML = noteText ? "<em>" + noteText + "</em><br><br>" + aText : aText;
 			aEl.classList.remove("flashcards-answer--placeholder");
 			dashboardifyApplyFlashCardTextScale(aEl, aText);
 			if (revealBtn) {
@@ -915,7 +915,7 @@ function dashboardifyRenderFlashCardState(recId) {
 		}
 		if (mcqEl) mcqEl.innerHTML = "";
 	} else {
-		aEl.textContent = noteText ? noteText + "<br><br>" + aText : aText;
+		aEl.innerHTML = noteText ? "<em>" + noteText + "</em><br><br>" + aText : aText;
 		aEl.classList.remove("flashcards-answer--placeholder");
 		dashboardifyApplyFlashCardTextScale(aEl, aText);
 		if (revealBtn) revealBtn.style.display = "none";
