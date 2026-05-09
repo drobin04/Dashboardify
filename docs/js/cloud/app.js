@@ -400,6 +400,13 @@ function collectWidgetPayloadFromForm() {
       });
     }
   }
+  if (widgetType === "Website Down Detector") {
+    const sizeEl = document.getElementById("ddlWebsiteDetectorSize");
+    const colorEl = document.getElementById("txtWebsiteDetectorColor");
+    const size = sizeEl ? String(sizeEl.value || "32").trim() : "32";
+    const color = colorEl ? String(colorEl.value || "#000000").trim() : "#000000";
+    notes = JSON.stringify({ size, color });
+  }
 
   let positionX = get("txtpositionx2") || "0";
   let positionY = get("txtpositiony2") || "0";

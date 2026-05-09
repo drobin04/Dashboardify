@@ -266,8 +266,15 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			if (detectorTitle) detectorTitle.value = result2.BookmarkDisplayText || "";
 			var detectorUrl = document.getElementById("txtWidgetURL");
 			if (detectorUrl) detectorUrl.value = result2.WidgetURL || "";
-			var detectorSize = document.getElementById("ddlWebsiteDetectorSize");
-			if (detectorSize) detectorSize.value = result2.Notes || "32";
+			var detectorSizeEl = document.getElementById("ddlWebsiteDetectorSize");
+			var detectorColorEl = document.getElementById("txtWebsiteDetectorColor");
+			var detectorNotesHidden = document.getElementById("txtWebsiteDetectorNotes");
+			var savedNotes = result2.Notes || "{}";
+			var parsedNotes = {};
+			try { parsedNotes = JSON.parse(savedNotes); } catch(e) {}
+			if (detectorSizeEl) detectorSizeEl.value = parsedNotes.size || "32";
+			if (detectorColorEl) detectorColorEl.value = parsedNotes.color || "#000000";
+			if (detectorNotesHidden) detectorNotesHidden.value = savedNotes;
 			break;
 		default:
 			break;
@@ -793,17 +800,21 @@ function drawWidget(widget) {
 		case "Website Down Detector": {
 			var detectorUrl = String(WidgetURL || "").trim();
 			var detectorTitle = String(BookmarkDisplayText || "Status").trim();
-			var detectorSize = parseInt(Notes) || 32;
-			var isSmall = detectorSize === 32;
+			var savedNotes = Notes || "{}";
+			var parsedNotes = {};
+			try { parsedNotes = JSON.parse(savedNotes); } catch(e) {}
+			var detectorSize = parsedNotes.size || "32";
+			var detectorColor = parsedNotes.color || "#000000";
+			var isSmall = detectorSize === "32";
 			var checkUrl = escapeHtmlAttr(detectorUrl);
 
 			echo("<div id='" + RecID + "' class='widget resize " + WidgetCSSClass + " website-detector-widget' style='position:absolute;" + PositionAndSize + "'>" +
 				editbuttonscss + "><img style='height:24px; width:24px;' src='" + siteurl + "icons/edit.png'></img></a>" + deletebuttoncss + "><img style='height:24px; width:24px;' src='" + siteurl + "icons/cancel.png'></img></a>" +
 				"<div class='detector-inner' style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 24px);'>" +
-				"<div id='detector-circle-" + ridJs + "' class='detector-circle' style='width:" + detectorSize + "px;height:" + detectorSize + "px;border:1px solid black;border-radius:50%;background-color:white;display:flex;align-items:center;justify-content:center;font-size:" + Math.floor(detectorSize * 0.35) + "px;color:white;font-weight:bold;text-align:center;overflow:hidden;line-height:1.2;'>" +
+				"<div id='detector-circle-" + ridJs + "' class='detector-circle' style='width:" + detectorSize + "px;height:" + detectorSize + "px;border:1px solid black;border-radius:50%;background-color:white;display:flex;align-items:center;justify-content:center;font-size:" + Math.floor(detectorSize * 0.35) + "px;color:" + detectorColor + ";font-weight:bold;text-align:center;overflow:hidden;line-height:1.2;'>" +
 				(isSmall ? "" : dashboardifyEscapeHtmlText(detectorTitle)) +
 				"</div>" +
-				(isSmall ? "<div class='detector-label' style='margin-top:4px;font-size:12px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'>" + dashboardifyEscapeHtmlText(detectorTitle) + "</div>" : "") +
+				(isSmall ? "<div class='detector-label' style='margin-top:4px;font-size:12px;color:" + detectorColor + ";text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'>" + dashboardifyEscapeHtmlText(detectorTitle) + "</div>" : "") +
 				"</div>" +
 				"<img id='detector-img-" + ridJs + "' src='" + checkUrl + "' style='display:none;' onload=\"document.getElementById('detector-circle-" + ridJs + "').style.backgroundColor='#90EE90';\" onerror=\"document.getElementById('detector-circle-" + ridJs + "').style.backgroundColor='#FFA07A';\">" +
 				"</div>");
@@ -1633,7 +1644,9 @@ case "Flash Cards":
 			"<option value='32'>32×32 px (text below)</option>" +
 			"<option value='64'>64×64 px (text inside)</option>" +
 			"<option value='128'>128×128 px (text inside)</option>" +
-			"</select><br />";
+			"</select><br />" +
+			"<label>Text color: </label><input ID='txtWebsiteDetectorColor' type='color' value='#000000'></input><br />" +
+			"<input id='txtWebsiteDetectorNotes' type='hidden' name='Notes'>";
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + websiteFields;
 		break;	
 		
