@@ -62,7 +62,8 @@ const DEFAULT_WIDGET_TYPES = [
   "Countdown",
   "Clock",
   "CountUp_Hours",
-  "CountUp_Days"
+  "CountUp_Days",
+  "Website Down Detector"
 ];
 
 const SQL_WIDGET_TYPES = [

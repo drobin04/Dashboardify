@@ -261,6 +261,14 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			var flashHint = document.getElementById("flashCardsCountHint");
 			if (flashHint) flashHint.textContent = (flashModel.cards || []).length + " questions saved.";
 			break;
+		case "Website Down Detector":
+			var detectorTitle = document.getElementById("txtWidgetDisplayText");
+			if (detectorTitle) detectorTitle.value = result2.BookmarkDisplayText || "";
+			var detectorUrl = document.getElementById("txtWidgetURL");
+			if (detectorUrl) detectorUrl.value = result2.WidgetURL || "";
+			var detectorSize = document.getElementById("ddlWebsiteDetectorSize");
+			if (detectorSize) detectorSize.value = result2.Notes || "32";
+			break;
 		default:
 			break;
 	}
@@ -780,6 +788,25 @@ function drawWidget(widget) {
 				mcqAnswered: false
 			};
 			dashboardifyRenderFlashCardState(String(RecID));
+			break;
+		}
+		case "Website Down Detector": {
+			var detectorUrl = String(WidgetURL || "").trim();
+			var detectorTitle = String(BookmarkDisplayText || "Status").trim();
+			var detectorSize = parseInt(Notes) || 32;
+			var isSmall = detectorSize === 32;
+			var checkUrl = escapeHtmlAttr(detectorUrl);
+
+			echo("<div id='" + RecID + "' class='widget resize " + WidgetCSSClass + " website-detector-widget' style='position:absolute;" + PositionAndSize + "'>" +
+				editbuttonscss + "><img style='height:24px; width:24px;' src='" + siteurl + "icons/edit.png'></img></a>" + deletebuttoncss + "><img style='height:24px; width:24px;' src='" + siteurl + "icons/cancel.png'></img></a>" +
+				"<div class='detector-inner' style='display:flex;flex-direction:column;align-items:center;justify-content:center;height:calc(100% - 24px);'>" +
+				"<div id='detector-circle-" + ridJs + "' class='detector-circle' style='width:" + detectorSize + "px;height:" + detectorSize + "px;border:1px solid black;border-radius:50%;background-color:white;display:flex;align-items:center;justify-content:center;font-size:" + Math.floor(detectorSize * 0.35) + "px;color:white;font-weight:bold;text-align:center;overflow:hidden;line-height:1.2;'>" +
+				(isSmall ? "" : dashboardifyEscapeHtmlText(detectorTitle)) +
+				"</div>" +
+				(isSmall ? "<div class='detector-label' style='margin-top:4px;font-size:12px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'>" + dashboardifyEscapeHtmlText(detectorTitle) + "</div>" : "") +
+				"</div>" +
+				"<img id='detector-img-" + ridJs + "' src='" + checkUrl + "' style='display:none;' onload=\"document.getElementById('detector-circle-" + ridJs + "').style.backgroundColor='#90EE90';\" onerror=\"document.getElementById('detector-circle-" + ridJs + "').style.backgroundColor='#FFA07A';\">" +
+				"</div>");
 			break;
 		}
 		default: 
@@ -1596,6 +1623,18 @@ case "Flash Cards":
 		//var x = "<br />HTML:<br /> <textarea ID=\"txtNotes\" rows=\"4\" cols=\"50\" name=\"Notes\"></textarea><br />";
 		//Fill content to the dialog
 		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + sqlcontent;
+		break;
+	case "Website Down Detector":
+		var websiteFields =
+			"<hr><label>Display Name: </label><input ID='txtWidgetDisplayText' name='DisplayText'></input><br />" +
+			"<label>Image URL path (server-side): </label><input ID='txtWidgetURL' name='URL' type='text' placeholder='/path/to/image.png'></input><br />" +
+			"<label>Circle size: </label>" +
+			"<select id='ddlWebsiteDetectorSize' name='Notes'>" +
+			"<option value='32'>32×32 px (text below)</option>" +
+			"<option value='64'>64×64 px (text inside)</option>" +
+			"<option value='128'>128×128 px (text inside)</option>" +
+			"</select><br />";
+		document.getElementById('NewWidget_Form').innerHTML = SizeAndCSSClassMarkup + websiteFields;
 		break;	
 		
 
@@ -2194,6 +2233,45 @@ if (document.getElementById("btnWidgetManagerSave")) {
 
 if (document.getElementById("btnWidgetManagerDelete")) {
 	document.getElementById("btnWidgetManagerDelete").addEventListener("click", deleteWidgetFromManager);
+}
+
+function dashboardifyCheckWebsiteStatus(recId, url, size) {
+	var circle = document.getElementById("detector-circle-" + recId);
+	if (!circle) return;
+
+	fetch(url, { method: "HEAD", mode: "no-cors" })
+		.then(function() {
+			circle.style.backgroundColor = "#90EE90";
+		})
+		.catch(function() {
+			circle.style.backgroundColor = "#FFA07A";
+		});
+}
+
+function dashboardifyCheckWebsiteStatusWithResult(recId, url, size) {
+	var circle = document.getElementById("detector-circle-" + recId);
+	if (!circle) return;
+
+	var xhr = new XMLHttpRequest();
+	xhr.open("GET", url, true);
+	xhr.timeout = 10000;
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState === 4) {
+			var status = xhr.status;
+			if (status >= 200 && status < 300) {
+				circle.style.backgroundColor = "#90EE90";
+			} else {
+				circle.style.backgroundColor = "#FFA07A";
+			}
+		}
+	};
+	xhr.onerror = function() {
+		circle.style.backgroundColor = "#FFA07A";
+	};
+	xhr.ontimeout = function() {
+		circle.style.backgroundColor = "#FFA07A";
+	};
+	xhr.send();
 }
 
 // End of index.js
