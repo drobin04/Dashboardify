@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.dashboardify.tv.app-mergeDebugResources-28:/values-v19/values-v19.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Douglas\\.gradle\\caches\\8.11.1\\transforms\\a44407e9ed655f72191ea9e0b2e88947\\transformed\\leanback-1.0.0\\res\\values-v19\\values-v19.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "10",
+                        "endColumns": "12",
+                        "endOffsets": "659"
+                    }
+                }
+            ]
+        }
+    ]
+}

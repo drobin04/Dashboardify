@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.dashboardify.tv.app-mergeDebugResources-28:/values-ldltr-v21/values-ldltr-v21.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\Douglas\\.gradle\\caches\\8.11.1\\transforms\\e5317df76a22a2b0d227c281548b0a3b\\transformed\\appcompat-1.7.0\\res\\values-ldltr-v21\\values-ldltr-v21.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "112",
+                        "endOffsets": "163"
+                    }
+                }
+            ]
+        }
+    ]
+}

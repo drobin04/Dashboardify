@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string msgid="5976598919945601918" name="abc_action_bar_home_description">"​ទៅទំព័រដើម"</string>
+    <string msgid="8388173803310557296" name="abc_action_bar_up_description">"រំកិលឡើងលើ"</string>
+    <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"ជម្រើសច្រើនទៀត"</string>
+    <string msgid="4692188335987374352" name="abc_action_mode_done">"រួចរាល់"</string>
+    <string msgid="1189761859438369441" name="abc_activity_chooser_view_see_all">"មើលទាំងអស់"</string>
+    <string msgid="2165779757652331008" name="abc_activitychooserview_choose_application">"ជ្រើសរើស​កម្មវិធី​​"</string>
+    <string msgid="4215997306490295099" name="abc_capital_off">"បិទ"</string>
+    <string msgid="884982626291842264" name="abc_capital_on">"បើក"</string>
+    <string msgid="8833365367933412986" name="abc_menu_alt_shortcut_label">"Alt+"</string>
+    <string msgid="2223301931652355242" name="abc_menu_ctrl_shortcut_label">"Ctrl+"</string>
+    <string msgid="838001238306846836" name="abc_menu_delete_shortcut_label">"លុប"</string>
+    <string msgid="7986526966204849475" name="abc_menu_enter_shortcut_label">"enter"</string>
+    <string msgid="375214403600139847" name="abc_menu_function_shortcut_label">"Function+"</string>
+    <string msgid="4192209724446364286" name="abc_menu_meta_shortcut_label">"Meta+"</string>
+    <string msgid="4741552369836443843" name="abc_menu_shift_shortcut_label">"Shift+"</string>
+    <string msgid="5473865519181928982" name="abc_menu_space_shortcut_label">"space"</string>
+    <string msgid="6180552449598693998" name="abc_menu_sym_shortcut_label">"Sym+"</string>
+    <string msgid="5520303668377388990" name="abc_prepend_shortcut_label">"Menu+"</string>
+    <string msgid="7208076849092622260" name="abc_search_hint">"ស្វែងរក…"</string>
+    <string msgid="3741173234950517107" name="abc_searchview_description_clear">"សម្អាត​សំណួរ"</string>
+    <string msgid="693312494995508443" name="abc_searchview_description_query">"ស្វែងរកសំណួរ​"</string>
+    <string msgid="3417662926640357176" name="abc_searchview_description_search">"ស្វែងរក"</string>
+    <string msgid="1486535517437947103" name="abc_searchview_description_submit">"ដាក់បញ្ជូន​សំណួរ"</string>
+    <string msgid="2293578557972875415" name="abc_searchview_description_voice">"ស្វែងរក​តាម​សំឡេង"</string>
+    <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"ចែករំលែក​ជា​មួយ"</string>
+    <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"ចែក​រំលែក​ជា​មួយ <ns1:g id="APPLICATION_NAME">%s</ns1:g>"</string>
+    <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"បង្រួម"</string>
+    <string msgid="881409763997275156" name="call_notification_answer_action">"ឆ្លើយ"</string>
+    <string msgid="8793775615905189152" name="call_notification_answer_video_action">"វីដេអូ"</string>
+    <string msgid="3229508546291798546" name="call_notification_decline_action">"បដិសេធ"</string>
+    <string msgid="2659457946726154263" name="call_notification_hang_up_action">"ដាក់​ចុះ"</string>
+    <string msgid="6107532579223922871" name="call_notification_incoming_text">"ការ​ហៅ​ចូល"</string>
+    <string msgid="8623827134497363134" name="call_notification_ongoing_text">"ការ​ហៅដែលកំពុងដំណើរការ"</string>
+    <string msgid="59049573811482460" name="call_notification_screening_text">"កំពុងពិនិត្យការ​ហៅ​ចូល"</string>
+    <string msgid="2523291102206661146" name="common_google_play_services_enable_button">បើក</string>
+    <string msgid="227660514972886228" name="common_google_play_services_enable_text">%1$s នឹងមិនដំណើរការទេ លុះត្រាតែអ្នកបើកសេវាកម្ម Google Play។</string>
+    <string msgid="5122002158466380389" name="common_google_play_services_enable_title">បើកសេវាកម្ម Google Play</string>
+    <string msgid="7153882981874058840" name="common_google_play_services_install_button">ដំឡើង</string>
+    <string name="common_google_play_services_install_text">%1$s នឹងមិនដំណើរការទេ ប្រសិនបើមិនមានសេវាកម្មនានារបស់ Google Play ដែលបានបាត់ពីឧបករណ៍របស់អ្នក។</string>
+    <string msgid="7215213145546190223" name="common_google_play_services_install_title">ទាញយកសេវាកម្ម Google Play</string>
+    <string name="common_google_play_services_notification_channel_name">លទ្ធភាព​ប្រើប្រាស់សេវាកម្ម Google Play</string>
+    <string name="common_google_play_services_notification_ticker">កំហុស​​សេវាកម្ម​ Google កម្សាន្ត</string>
+    <string name="common_google_play_services_unknown_issue">%1$s កំពុងមានបញ្ហាជាមួយសេវាកម្មរបស់ Google Play ។ សូមព្យាយាមម្តងទៀតនៅពេលក្រោយ។</string>
+    <string name="common_google_play_services_unsupported_text">%1$s នឹងមិនដំណើរការដោយគ្មានសេវាកម្មរបស់ Google Play ដែលឧបករណ៍របស់អ្នកមិនគាំទ្រនោះទេ។</string>
+    <string msgid="6556509956452265614" name="common_google_play_services_update_button">ធ្វើបច្ចុប្បន្នភាព</string>
+    <string msgid="9053896323427875356" name="common_google_play_services_update_text">%1$s នឹងមិនដំណើរការទេ លុះត្រាតែអ្នកធ្វើបច្ចុប្បន្នភាពសេវាកម្ម Google Play។</string>
+    <string msgid="6006316683626838685" name="common_google_play_services_update_title">អាប់ដេតសេវាកម្ម Google Play</string>
+    <string name="common_google_play_services_updating_text">%1$s នឹងមិនដំណើរការទេ បើមិនមានសេវាកម្ម Google Play ដោយសារតែវាកំពុងអាប់ដេត។</string>
+    <string name="common_google_play_services_wear_update_text">តម្រូវឲ្យមានកំណែថ្មីនៃសេវាកម្ម Google Play។ វានឹងអាប់ដេតដោយខ្លួនវានៅពេលបន្តិចទៀតនេះ។</string>
+    <string name="common_open_on_phone">បើកតាមទូរស័ព្ទ</string>
+    <string name="common_signin_button_text">ចូល</string>
+    <string name="common_signin_button_text_long">ចូលដោយប្រើ Google</string>
+    <string msgid="2721825378927619928" name="lb_control_display_fast_forward_multiplier">"%1$dX"</string>
+    <string msgid="6173753802428649303" name="lb_control_display_rewind_multiplier">"%1$dX"</string>
+    <string msgid="1122271825827282965" name="lb_guidedaction_continue_title">"បន្ត"</string>
+    <string msgid="7747913934287176843" name="lb_guidedaction_finish_title">"បញ្ចប់"</string>
+    <string msgid="8748646000835486516" name="lb_media_player_error">"លេខកូដ​បញ្ហា​ MediaPlayer %1$d extra %2$d"</string>
+    <string msgid="8126335323963415494" name="lb_navigation_menu_contentDescription">"ម៉ឺនុយរុករក"</string>
+    <string msgid="4213611627196077555" name="lb_onboarding_accessibility_next">"បន្ទាប់"</string>
+    <string msgid="7674487829030291492" name="lb_onboarding_get_started">"ចាប់ផ្ដើម"</string>
+    <string msgid="5508271941331836786" name="lb_playback_controls_closed_captioning_disable">"បិទ​អក្សរ​រត់"</string>
+    <string msgid="3934392140182327163" name="lb_playback_controls_closed_captioning_enable">"បើក​អក្សរ​រត់"</string>
+    <string msgid="8966769845721269304" name="lb_playback_controls_fast_forward">"ទៅមុខ​រហ័ស"</string>
+    <string msgid="801276177839339511" name="lb_playback_controls_fast_forward_multiplier">"ទៅមុខ​រហ័ស %1$dX"</string>
+    <string msgid="619396299825306757" name="lb_playback_controls_hidden">"ការ​គ្រប់គ្រង​មេឌៀ​ត្រូវ​បាន​លាក់ សូមចុច d-pad ដើម្បី​បង្ហាញ"</string>
+    <string msgid="3000046054608531995" name="lb_playback_controls_high_quality_disable">"បិទ​គុណភាព​ខ្ពស់"</string>
+    <string msgid="1862669142355962638" name="lb_playback_controls_high_quality_enable">"បើក​គុណភាព​ខ្ពស់"</string>
+    <string msgid="2827883329510404797" name="lb_playback_controls_more_actions">"សកម្មភាព​ច្រើន​ទៀត"</string>
+    <string msgid="1769131316742618433" name="lb_playback_controls_pause">"ផ្អាក"</string>
+    <string msgid="8800305194045609275" name="lb_playback_controls_picture_in_picture">"បញ្ចូល​មុខងារ​រូបក្នុងរូប"</string>
+    <string msgid="1590369760862605402" name="lb_playback_controls_play">"ចាក់"</string>
+    <string msgid="5164826436271322261" name="lb_playback_controls_repeat_all">"ចាក់​ឡើងវិញ​ទាំងអស់"</string>
+    <string msgid="5812341701962930499" name="lb_playback_controls_repeat_none">"មិន​ចាក់​ឡើង​វិញ​"</string>
+    <string msgid="7675097479246139440" name="lb_playback_controls_repeat_one">"ចាក់​ឡើងវិញ​មួយ"</string>
+    <string msgid="1412664391757869774" name="lb_playback_controls_rewind">"ខា​ថយ​ក្រោយ"</string>
+    <string msgid="8651612807713092781" name="lb_playback_controls_rewind_multiplier">"ខា​ថយ​ក្រោយ %1$dX"</string>
+    <string msgid="7794717158616536936" name="lb_playback_controls_shown">"ការ​គ្រប់គ្រង​មេឌៀ​ត្រូវ​បាន​បង្ហាញ"</string>
+    <string msgid="8182435535948303910" name="lb_playback_controls_shuffle_disable">"បិទ​ការ​ច្របល់"</string>
+    <string msgid="7809089255981448519" name="lb_playback_controls_shuffle_enable">"បើក​ការ​​ច្របល់"</string>
+    <string msgid="4877009494447817003" name="lb_playback_controls_skip_next">"រំលងទៅ​បន្ទាប់"</string>
+    <string msgid="3147124289285911980" name="lb_playback_controls_skip_previous">"រំលង​ទៅពី​មុន"</string>
+    <string msgid="5075744418630733006" name="lb_playback_controls_thumb_down">"ឈប់​ជ្រើស​រើស​ការឲ្យ​មេដៃ​ចុះ"</string>
+    <string msgid="2847309435442474470" name="lb_playback_controls_thumb_down_outline">"ជ្រើស​រើស​ការឲ្យ​មេ​ដៃ​ចុះ"</string>
+    <string msgid="8332816524260995892" name="lb_playback_controls_thumb_up">"ឈប់​ជ្រើស​រើស​ការ​លើក​មេដៃ"</string>
+    <string msgid="1038344559734334272" name="lb_playback_controls_thumb_up_outline">"ជ្រើសរើស​ការ​លើកមេ​ដៃ"</string>
+    <string msgid="6549544638083578695" name="lb_playback_time_separator">"/"</string>
+    <string msgid="4819380969103509861" name="lb_search_bar_hint">"ស្វែងរក"</string>
+    <string msgid="2795474673510974502" name="lb_search_bar_hint_speech">"និយាយ​​ដើម្បី​ស្វែងរក"</string>
+    <string msgid="7453744869467668159" name="lb_search_bar_hint_with_title">"ស្វែងរក <ns1:g id="SEARCH_CONTEXT">%1$s</ns1:g>"</string>
+    <string msgid="5851694095153624617" name="lb_search_bar_hint_with_title_speech">"និយាយ​ដើម្បី​ស្វែងរក <ns1:g id="SEARCH_CONTEXT">%1$s</ns1:g>"</string>
+    <string msgid="7534843523462177008" name="orb_search_action">"​ស្វែងរក​សកម្មភាព"</string>
+    <string msgid="6264217191555673260" name="search_menu_title">"ស្វែងរក"</string>
+    <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+</resources>

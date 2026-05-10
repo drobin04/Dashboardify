@@ -1,0 +1,4 @@
+com.dashboardify.tv.test.app-androidTest-0 C:\Users\Douglas\Documents\GitHub\Dashboardify\androidTv\app\build\generated\res\resValues\androidTest\debug
+com.dashboardify.tv.test.app-mergeDebugAndroidTestResources-1 C:\Users\Douglas\Documents\GitHub\Dashboardify\androidTv\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
+com.dashboardify.tv.test.app-mergeDebugAndroidTestResources-2 C:\Users\Douglas\Documents\GitHub\Dashboardify\androidTv\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
+com.dashboardify.tv.test.app-debugAndroidTest-3 C:\Users\Douglas\Documents\GitHub\Dashboardify\androidTv\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
