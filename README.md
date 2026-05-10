@@ -45,9 +45,3 @@ A thin wrapper that loads the Dashboardify web app in a fullscreen WebView with 
 ├── ANDROID_TV.md   Android TV app documentation
 └── README.md       This file
 ```
-
----
-
-## License
-
-See individual source files for license information.
