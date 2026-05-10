@@ -1,15 +1,53 @@
-# Legacy PHP Site Setup
+# Dashboardify
 
-If you're not familiar with docker, download and install Docker Desktop, and then open this directory in a terminal and run 'docker build .' , and then wait for it to complete the build process to build an image in docker.
+A personal dashboard builder — arrange widgets (bookmarks, notes, iframes, images, countdowns, flash cards, and more) on a canvas, switch between dashboards, and keep everything organized in one place.
 
-Then, open Docker Desktop's 'Images' page, find your new image created for this app, and click start.
+**Two versions:**
 
-Under optional settings, configure ports / port mappings for 80 / 443. You can feel free to map them to 8080 or anything else.
+| Version | Status | Docs |
+|---|---|---|
+| **Serverless Cloud App** (HTML/JS) | Current | [`DOCS.md`](DOCS.md) |
+| **Android TV Wrapper** | In development | [`ANDROID_TV.md`](ANDROID_TV.md) |
+| PHP App | Deprecated (not used) | — |
 
-You need to map a volume for the container path /var/www/html/Dashboardify/data , and copy the included Dashboardify.s3db demo database to this folder afterwards. 
+---
 
-Next you can go to the Containers section of Docker Desktop and start the newly created container instance.
+## Quick Links
 
-Now you can sign into Dashboardify (your url should be server:port/Dashboardify/ ) using the default user 'DashboardifyAdmin', pass 'DashboardifyAdmin!'. 
+- **Live site:** https://drobin04.github.io/Dashboardify/
+- **Serverless app docs:** [`DOCS.md`](DOCS.md) — architecture, auth flow, widget system, data model
+- **Android TV app docs:** [`ANDROID_TV.md`](ANDROID_TV.md) — setup, build, testing, troubleshooting
 
-You should immediately change the default password. 
+---
+
+## Cloud App (serverless)
+
+The main Dashboardify app runs entirely in the browser as a static site hosted on GitHub Pages. Data syncs with Google Drive's app data folder using OAuth authentication.
+
+No backend, no server, no build step. Open the live site and sign in with Google to get started.
+
+---
+
+## Android TV App
+
+A thin wrapper that loads the Dashboardify web app in a fullscreen WebView with native Google Sign-In. Designed for always-on dashboard displays on Android TV hardware.
+
+---
+
+## Repository Structure
+
+```
+/
+├── docs/           Serverless HTML/JS app (deployed to GitHub Pages)
+├── androidTv/      Android TV wrapper app
+├── src/html/       Deprecated PHP version (not used)
+├── DOCS.md         Serverless app documentation
+├── ANDROID_TV.md   Android TV app documentation
+└── README.md       This file
+```
+
+---
+
+## License
+
+See individual source files for license information.
