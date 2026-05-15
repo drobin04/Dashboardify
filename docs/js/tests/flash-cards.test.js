@@ -30,6 +30,9 @@ QUnit.module("Flash Cards", function() {
       displayStyle: "full",
       autoAdvanceEnabled: false,
       autoAdvanceMs: 5000,
+      speakEnabled: true,
+      questionLang: "es-ES",
+      answerLang: "en-US",
       cards: [{ q: "Question 1", a: "Answer 1" }, { q: "Q2", a: "A2" }]
     });
 
@@ -40,6 +43,9 @@ QUnit.module("Flash Cards", function() {
     assert.strictEqual(result.displayStyle, "full", "Display style parsed");
     assert.strictEqual(result.autoAdvanceEnabled, false, "Auto advance parsed");
     assert.strictEqual(result.autoAdvanceMs, 5000, "Auto advance ms parsed");
+    assert.strictEqual(result.speakEnabled, true, "Speak enabled parsed");
+    assert.strictEqual(result.questionLang, "es-ES", "Question lang parsed");
+    assert.strictEqual(result.answerLang, "en-US", "Answer lang parsed");
     assert.strictEqual(result.cards.length, 2, "Cards array parsed");
     assert.strictEqual(result.cards[0].q, "Question 1", "First question parsed");
     assert.strictEqual(result.cards[0].a, "Answer 1", "First answer parsed");
@@ -77,6 +83,9 @@ QUnit.module("Flash Cards", function() {
       sortMethod: "sequential",
       displayStyle: "guess",
       autoAdvanceEnabled: true,
+      speakEnabled: true,
+      questionLang: "de-DE",
+      answerLang: "fr-FR",
       autoAdvanceMs: 3000,
       cards: [{ q: "Test Q", a: "Test A" }]
     };
@@ -88,6 +97,9 @@ QUnit.module("Flash Cards", function() {
     assert.strictEqual(parsed.sortMethod, "sequential", "Sort method serialized");
     assert.strictEqual(parsed.displayStyle, "guess", "Display style serialized");
     assert.strictEqual(parsed.autoAdvanceEnabled, true, "Auto advance serialized");
+    assert.strictEqual(parsed.speakEnabled, true, "Speak enabled serialized");
+    assert.strictEqual(parsed.questionLang, "de-DE", "Question lang serialized");
+    assert.strictEqual(parsed.answerLang, "fr-FR", "Answer lang serialized");
     assert.strictEqual(parsed.autoAdvanceMs, 3000, "Auto advance ms serialized");
     assert.strictEqual(parsed.cards.length, 1, "Cards serialized");
   });
@@ -107,6 +119,9 @@ QUnit.module("Flash Cards", function() {
       sortMethod: "random",
       displayStyle: "full",
       autoAdvanceEnabled: true,
+      speakEnabled: true,
+      questionLang: "pt-BR",
+      answerLang: "en-GB",
       autoAdvanceMs: 7000,
       cards: [{ q: "Q1", a: "A1" }, { q: "Q2", a: "A2" }, { q: "Q3", a: "A3" }]
     };
@@ -117,6 +132,9 @@ QUnit.module("Flash Cards", function() {
     assert.strictEqual(parsed.sortMethod, original.sortMethod, "Sort method preserved");
     assert.strictEqual(parsed.displayStyle, original.displayStyle, "Display style preserved");
     assert.strictEqual(parsed.autoAdvanceEnabled, original.autoAdvanceEnabled, "Auto enable preserved");
+    assert.strictEqual(parsed.speakEnabled, original.speakEnabled, "Speak enabled preserved");
+    assert.strictEqual(parsed.questionLang, original.questionLang, "Question lang preserved");
+    assert.strictEqual(parsed.answerLang, original.answerLang, "Answer lang preserved");
     assert.strictEqual(parsed.autoAdvanceMs, original.autoAdvanceMs, "Auto ms preserved");
     assert.strictEqual(parsed.cards.length, original.cards.length, "Card count preserved");
   });
@@ -163,6 +181,7 @@ QUnit.module("Flash Cards", function() {
       model: {
         displayStyle: "multiplechoice",
         autoAdvanceEnabled: false,
+        speakEnabled: false,
         cards: [{
           q: "What is 2 + 2?",
           a: "4",
@@ -214,6 +233,7 @@ QUnit.module("Flash Cards", function() {
         sortMethod: "forward",
         displayStyle: "guess",
         autoAdvanceEnabled: true,
+        speakEnabled: true,
         autoAdvanceMs: 3000,
         cards: [{ q: "Q1", a: "A1" }, { q: "Q2", a: "A2" }]
       })
@@ -234,6 +254,7 @@ QUnit.module("Flash Cards", function() {
       model: {
         displayStyle: "multiplechoice",
         autoAdvanceEnabled: false,
+        speakEnabled: false,
         cards: [{
           q: "Capital of France?",
           a: "Paris",

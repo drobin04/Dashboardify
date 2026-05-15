@@ -42,7 +42,7 @@ window.dashboardifyImageObjectFitFromNotes = function(notes) {
 
 window.dashboardifyParseFlashCardsNotes = function(notes) {
   if (!notes) {
-    return { sortMethod: "random", displayStyle: "full", autoAdvanceEnabled: false, autoAdvanceMs: 5000, cards: [] };
+    return { sortMethod: "random", displayStyle: "full", autoAdvanceEnabled: false, speakEnabled: false, questionLang: "", answerLang: "", autoAdvanceMs: 5000, cards: [] };
   }
   try {
     var parsed = JSON.parse(notes);
@@ -50,11 +50,14 @@ window.dashboardifyParseFlashCardsNotes = function(notes) {
       sortMethod: parsed.sortMethod || "random",
       displayStyle: parsed.displayStyle || "full",
       autoAdvanceEnabled: parsed.autoAdvanceEnabled || false,
+      speakEnabled: parsed.speakEnabled || false,
+      questionLang: parsed.questionLang || "",
+      answerLang: parsed.answerLang || "",
       autoAdvanceMs: parsed.autoAdvanceMs || 5000,
       cards: parsed.cards || []
     };
   } catch (e) {
-    return { sortMethod: "random", displayStyle: "full", autoAdvanceEnabled: false, autoAdvanceMs: 5000, cards: [] };
+    return { sortMethod: "random", displayStyle: "full", autoAdvanceEnabled: false, speakEnabled: false, questionLang: "", answerLang: "", autoAdvanceMs: 5000, cards: [] };
   }
 };
 
@@ -63,6 +66,9 @@ window.dashboardifySerializeFlashCardsModel = function(inputModel) {
     sortMethod: inputModel.sortMethod || "random",
     displayStyle: inputModel.displayStyle || "full",
     autoAdvanceEnabled: inputModel.autoAdvanceEnabled || false,
+    speakEnabled: inputModel.speakEnabled || false,
+    questionLang: inputModel.questionLang || "",
+    answerLang: inputModel.answerLang || "",
     autoAdvanceMs: inputModel.autoAdvanceMs || 5000,
     cards: inputModel.cards || []
   });

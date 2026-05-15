@@ -379,6 +379,9 @@ function collectWidgetPayloadFromForm() {
           ? "multiplechoice"
           : "full";
     const autoAdvanceEnabled = !!document.getElementById("flashAutoAdvanceEnabled")?.checked;
+    const speakEnabled = !!document.getElementById("flashSpeakEnabled")?.checked;
+    const questionLang = String(document.getElementById("flashQuestionLang")?.value || "").trim();
+    const answerLang = String(document.getElementById("flashAnswerLang")?.value || "").trim();
     const autoAdvanceMsRaw = Number(get("flashAutoAdvanceMs"));
     const autoAdvanceMs = Number.isFinite(autoAdvanceMsRaw) && autoAdvanceMsRaw > 0
       ? Math.round(autoAdvanceMsRaw)
@@ -395,6 +398,9 @@ function collectWidgetPayloadFromForm() {
         sortMethod,
         displayStyle,
         autoAdvanceEnabled,
+        speakEnabled,
+        questionLang,
+        answerLang,
         autoAdvanceMs,
         cards
       });
