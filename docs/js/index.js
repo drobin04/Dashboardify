@@ -256,12 +256,6 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			if (flashStyle) flashStyle.value = flashModel.displayStyle === "guess" ? "guess" : (flashModel.displayStyle === "multiplechoice" ? "multiplechoice" : "full");
 			var flashAuto = document.getElementById("flashAutoAdvanceEnabled");
 			if (flashAuto) flashAuto.checked = !!flashModel.autoAdvanceEnabled;
-			var flashSpeak = document.getElementById("flashSpeakEnabled");
-			if (flashSpeak) flashSpeak.checked = !!flashModel.speakEnabled;
-			var flashQLang = document.getElementById("flashQuestionLang");
-			if (flashQLang) flashQLang.value = flashModel.questionLang || "";
-			var flashALang = document.getElementById("flashAnswerLang");
-			if (flashALang) flashALang.value = flashModel.answerLang || "";
 			var flashAutoMs = document.getElementById("flashAutoAdvanceMs");
 			if (flashAutoMs) flashAutoMs.value = flashModel.autoAdvanceMs || 5000;
 			var flashData = document.getElementById("txtFlashCardsData");
@@ -351,9 +345,6 @@ function dashboardifyDefaultFlashCardsModel() {
 		displayStyle: "full",
 		autoAdvanceEnabled: false,
 		autoAdvanceMs: 5000,
-		speakEnabled: false,
-		questionLang: "",
-		answerLang: "",
 		cards: []
 	};
 }
@@ -387,9 +378,6 @@ function dashboardifyParseFlashCardsNotes(notes) {
 		model.sortMethod = parsed.sortMethod === "forward" || parsed.sortMethod === "reverse" ? parsed.sortMethod : "random";
 		model.displayStyle = dashboardifyNormalizeFlashCardDisplayStyle(parsed.displayStyle);
 		model.autoAdvanceEnabled = !!parsed.autoAdvanceEnabled;
-		model.speakEnabled = !!parsed.speakEnabled;
-		model.questionLang = typeof parsed.questionLang === "string" ? parsed.questionLang : "";
-		model.answerLang = typeof parsed.answerLang === "string" ? parsed.answerLang : "";
 		var ms = Number(parsed.autoAdvanceMs);
 		model.autoAdvanceMs = Number.isFinite(ms) && ms > 0 ? Math.round(ms) : 5000;
 		model.cards = Array.isArray(parsed.cards)
@@ -407,9 +395,6 @@ function dashboardifySerializeFlashCardsModel(inputModel) {
 		sortMethod: model.sortMethod === "forward" || model.sortMethod === "reverse" ? model.sortMethod : "random",
 		displayStyle: dashboardifyNormalizeFlashCardDisplayStyle(model.displayStyle),
 		autoAdvanceEnabled: !!model.autoAdvanceEnabled,
-		speakEnabled: !!model.speakEnabled,
-		questionLang: typeof model.questionLang === "string" ? model.questionLang : "",
-		answerLang: typeof model.answerLang === "string" ? model.answerLang : "",
 		autoAdvanceMs: Number.isFinite(Number(model.autoAdvanceMs)) && Number(model.autoAdvanceMs) > 0 ? Math.round(Number(model.autoAdvanceMs)) : 5000,
 		cards: Array.isArray(model.cards) ? model.cards.map(dashboardifyNormalizeFlashCard).filter(function (x) { return !!x; }) : []
 	});
@@ -755,16 +740,9 @@ function drawWidget(widget) {
 				answerSection = "<div class='flashcards-answer-stack' id='flashcards-answer-stack-" +
 					ridJs +
 					"'>" +
-					"<div class='flashcards-answer-row'>" +
 					"<div class='flashcards-answer' id='flashcards-answer-" +
 					ridJs +
 					"'></div>" +
-					"<button type='button' class='flashcards-speak-btn' id='flashcards-speak-a-" +
-					ridJs +
-					"' onclick='dashboardifyFlashCardSpeak(\"" +
-					ridJs +
-					"\",\"a\")' aria-label='Read answer aloud' style='display:none'>🔊</button>" +
-					"</div>" +
 					"<button type='button' class='menubar flashcards-reveal-btn' id='flashcards-reveal-" +
 					ridJs +
 					"' onclick='dashboardifyFlashCardRevealAnswer(\"" +
@@ -772,16 +750,7 @@ function drawWidget(widget) {
 					"\")'>Show answer</button>" +
 					"</div>";
 			} else {
-				answerSection = "<div class='flashcards-answer-row'>" +
-					"<div class='flashcards-answer' id='flashcards-answer-" +
-					ridJs +
-					"'></div>" +
-					"<button type='button' class='flashcards-speak-btn' id='flashcards-speak-a-" +
-					ridJs +
-					"' onclick='dashboardifyFlashCardSpeak(\"" +
-					ridJs +
-					"\",\"a\")' aria-label='Read answer aloud' style='display:none'>🔊</button>" +
-					"</div>";
+				answerSection = "<div class='flashcards-answer' id='flashcards-answer-" + ridJs + "'></div>";
 			}
 			var bodyClass = isMcq ? " flashcards-body--mcq" : (isGuess ? " flashcards-body--guess" : " flashcards-body--full");
 			var markup =
@@ -803,17 +772,10 @@ function drawWidget(widget) {
 				"icons/cancel.png'></img></a>" +
 				"<div class='flashcards-body" + bodyClass + "'>" +
 				(flashTitle ? "<div class='flashcards-title'>" + dashboardifyEscapeHtmlText(flashTitle) + "</div>" : "") +
-				"<div class='flashcards-question-row'>" +
 				"<div class='flashcards-question' id='flashcards-question-" +
 				ridJs +
 				"'>" +
 				dashboardifyEscapeHtmlText(firstQ) +
-				"</div>" +
-				"<button type='button' class='flashcards-speak-btn' id='flashcards-speak-q-" +
-				ridJs +
-				"' onclick='dashboardifyFlashCardSpeak(\"" +
-				ridJs +
-				"\",\"q\")' aria-label='Read question aloud' style='display:none'>🔊</button>" +
 				"</div>" +
 				answerSection +
 				"<div class='flashcards-nav-row'>" +
@@ -933,10 +895,6 @@ function dashboardifyRenderFlashCardState(recId) {
 		if (aEl) dashboardifyApplyFlashCardTextScale(aEl, aEl.textContent);
 		if (revealBtn) revealBtn.style.display = "none";
 		if (mcqEl) mcqEl.innerHTML = "";
-		var noCardSpeakQ = document.getElementById("flashcards-speak-q-" + recId);
-		var noCardSpeakA = document.getElementById("flashcards-speak-a-" + recId);
-		if (noCardSpeakQ) noCardSpeakQ.style.display = "none";
-		if (noCardSpeakA) noCardSpeakA.style.display = "none";
 		return;
 	}
 	if (st.index < 0) st.index = st.order.length - 1;
@@ -1003,16 +961,6 @@ function dashboardifyRenderFlashCardState(recId) {
 		if (revealBtn) revealBtn.style.display = "none";
 		if (mcqEl) mcqEl.innerHTML = "";
 	}
-	var speakQBtn = document.getElementById("flashcards-speak-q-" + recId);
-	var speakABtn = document.getElementById("flashcards-speak-a-" + recId);
-	var speakEnabled = st.model && st.model.speakEnabled;
-	if (speakQBtn) {
-		speakQBtn.style.display = speakEnabled && qText ? "" : "none";
-	}
-	if (speakABtn) {
-		var showA = speakEnabled && aText && !isMcq && (!isGuess || st.revealed);
-		speakABtn.style.display = showA ? "" : "none";
-	}
 	if (st.model.autoAdvanceEnabled && st.order.length > 1) {
 		var delay = Number(st.model.autoAdvanceMs);
 		var ms = Number.isFinite(delay) && delay > 0 ? delay : 5000;
@@ -1059,40 +1007,6 @@ window.dashboardifyFlashCardSelectMcq = dashboardifyFlashCardSelectMcq;
 window.dashboardifyFlashCardNext = dashboardifyFlashCardNext;
 window.dashboardifyFlashCardPrev = dashboardifyFlashCardPrev;
 window.dashboardifyFlashCardRevealAnswer = dashboardifyFlashCardRevealAnswer;
-
-function dashboardifyFindBestVoice(lang) {
-	if (!lang) return null;
-	var voices = window.speechSynthesis.getVoices();
-	for (var i = 0; i < voices.length; i++) {
-		if (voices[i].lang === lang) return voices[i];
-	}
-	var prefix = lang.split("-")[0];
-	for (var j = 0; j < voices.length; j++) {
-		if (voices[j].lang && voices[j].lang.indexOf(prefix) === 0) return voices[j];
-	}
-	return null;
-}
-
-function dashboardifyFlashCardSpeak(recId, mode) {
-	var st = window.DashboardifyFlashCardRuntime && window.DashboardifyFlashCardRuntime[String(recId)];
-	if (!st) return;
-	var cards = (st.model && st.model.cards) || [];
-	var card = cards[st.order[st.index]];
-	if (!card) return;
-	var text = mode === "q" ? card.q : card.a;
-	if (!text) return;
-	var lang = mode === "q" ? st.model.questionLang : st.model.answerLang;
-	window.speechSynthesis.cancel();
-	var utterance = new SpeechSynthesisUtterance(text);
-	if (lang) {
-		utterance.lang = lang;
-		var voice = dashboardifyFindBestVoice(lang);
-		if (voice) utterance.voice = voice;
-	}
-	window.speechSynthesis.speak(utterance);
-}
-
-window.dashboardifyFlashCardSpeak = dashboardifyFlashCardSpeak;
 
 function escapeHtmlForTextarea(s) {
 	return String(s)
@@ -1670,9 +1584,6 @@ case "Flash Cards":
 			"<label>Style: </label><select id='flashDisplayStyle'><option value='full'>Full — show question and answer</option><option value='guess'>Guess — hide answer until you tap 'Show answer'</option><option value='multiplechoice'>Multiple Choice — select from answer options</option></select><br />" +
 			"<label>Sort Method: </label><select id='flashSortMethod'><option value='random' selected>Random</option><option value='forward'>Forward</option><option value='reverse'>Reverse</option></select><br />" +
 			"<label><input id='flashAutoAdvanceEnabled' type='checkbox' /> Auto advance cards</label><br />" +
-			"<label><input id='flashSpeakEnabled' type='checkbox' /> Read questions/answers aloud</label><br />" +
-			"<label>Question language: </label><select id='flashQuestionLang' class='flashcards-lang-select'><option value=''>Browser default</option><option value='en-US'>English (US)</option><option value='en-GB'>English (UK)</option><option value='es-ES'>Spanish</option><option value='de-DE'>German</option><option value='fr-FR'>French</option><option value='it-IT'>Italian</option><option value='pt-BR'>Portuguese (Brazil)</option><option value='nl-NL'>Dutch</option><option value='pl-PL'>Polish</option><option value='ru-RU'>Russian</option><option value='ja-JP'>Japanese</option><option value='ko-KR'>Korean</option><option value='zh-CN'>Chinese (Simplified)</option><option value='ar-SA'>Arabic</option></select><br />" +
-			"<label>Answer language: </label><select id='flashAnswerLang' class='flashcards-lang-select'><option value=''>Browser default</option><option value='en-US'>English (US)</option><option value='en-GB'>English (UK)</option><option value='es-ES'>Spanish</option><option value='de-DE'>German</option><option value='fr-FR'>French</option><option value='it-IT'>Italian</option><option value='pt-BR'>Portuguese (Brazil)</option><option value='nl-NL'>Dutch</option><option value='pl-PL'>Polish</option><option value='ru-RU'>Russian</option><option value='ja-JP'>Japanese</option><option value='ko-KR'>Korean</option><option value='zh-CN'>Chinese (Simplified)</option><option value='ar-SA'>Arabic</option></select><br />" +
 			"<label>Auto advance delay (ms): </label><input id='flashAutoAdvanceMs' type='number' min='50' step='50' value='5000'></input><br />" +
 			"<label id='flashCardsCountHint' class='cloud-dialog-muted'>0 questions saved.</label>" +
 			"<textarea id='txtFlashCardsData' style='display:none;'>[]</textarea>";

@@ -387,30 +387,6 @@ html, body{
 	border-radius: 12px;
 }
 
-.flashcards-question-row,
-.flashcards-answer-row {
-	display: flex;
-	align-items: flex-start;
-	gap: 6px;
-}
-
-.flashcards-speak-btn {
-	flex-shrink: 0;
-	background: none;
-	border: 1px solid transparent;
-	cursor: pointer;
-	font-size: 18px;
-	line-height: 1;
-	padding: 2px 4px;
-	border-radius: 4px;
-	color: #3b82f6;
-}
-
-.flashcards-speak-btn:hover {
-	background: #f0f4fa;
-	border-color: #c8cfdb;
-}
-
 .flashcards-nav-row {
 	margin-top: auto;
 	display: flex;
@@ -453,11 +429,6 @@ html, body{
 	color: #1f2a44;
 	font-size: 14px;
 	line-height: 1;
-}
-
-.flashcards-lang-select {
-	margin-left: 4px;
-	max-width: 180px;
 }
 
 .flashcards-note {
