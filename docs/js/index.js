@@ -248,6 +248,8 @@ function fillEditWidgetFormFromRecord(result2, RecID) {
 			break;
 		case "Flash Cards":
 			var flashModel = dashboardifyParseFlashCardsNotes(result2.Notes);
+			var flashTitle = document.getElementById("txtWidgetDisplayText");
+			if (flashTitle) flashTitle.value = result2.BookmarkDisplayText || "";
 			var flashSort = document.getElementById("flashSortMethod");
 			if (flashSort) flashSort.value = flashModel.sortMethod || "random";
 			var flashStyle = document.getElementById("flashDisplayStyle");

@@ -1,6 +1,6 @@
 /**
  * Flash Cards Tests
- * Tests for flash card parsing, serialization, and ordering
+ * Tests for flash card parsing, serialization, ordering, and form population
  */
 QUnit.module("Flash Cards", function() {
   var helper = window.DashboardifyTestHelper;
@@ -190,6 +190,40 @@ QUnit.module("Flash Cards", function() {
       mcqEl.querySelector(".flashcards-mcq-option--wrong"),
       "Selected incorrect option is highlighted red class"
     );
+  });
+
+  QUnit.test("fillEditWidgetFormFromRecord populates Title field for Flash Cards", function(assert) {
+    var fixture = document.getElementById("qunit-fixture");
+
+    var ddl = document.createElement("select");
+    ddl.id = "ddlWidgetType2";
+    fixture.appendChild(ddl);
+
+    var form = document.createElement("div");
+    form.id = "NewWidget_Form";
+    fixture.appendChild(form);
+
+    var widgetIdEl = document.createElement("input");
+    widgetIdEl.id = "txtWidgetID";
+    fixture.appendChild(widgetIdEl);
+
+    var widget = window.DashboardifyTestHelper.createWidget({
+      WidgetType: "Flash Cards",
+      BookmarkDisplayText: "My Study Deck",
+      Notes: JSON.stringify({
+        sortMethod: "forward",
+        displayStyle: "guess",
+        autoAdvanceEnabled: true,
+        autoAdvanceMs: 3000,
+        cards: [{ q: "Q1", a: "A1" }, { q: "Q2", a: "A2" }]
+      })
+    });
+
+    fillEditWidgetFormFromRecord(widget, widget.RecID);
+
+    var titleEl = document.getElementById("txtWidgetDisplayText");
+    assert.ok(titleEl, "Title input element exists after form setup");
+    assert.strictEqual(titleEl.value, "My Study Deck", "Title field is populated with widget's BookmarkDisplayText");
   });
 
   QUnit.test("mcq render works without answer element", function(assert) {
