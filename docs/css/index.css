@@ -432,10 +432,11 @@ html, body{
 }
 
 .flashcards-note {
-	font-size: 12px;
+	font-size: 11px;
 	font-style: italic;
 	color: #64748b;
 	margin-bottom: 8px;
+	line-height: 1.4;
 }
 
 .flashcards-mcq {
